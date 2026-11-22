@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-title" content="MindPaper" />
+  <meta name="apple-mobile-web-app-title" content="Spotify More" />
   <link rel="manifest" href="./manifest.json" />
   <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png" />
@@ -876,7 +876,7 @@
     <div class="setup-brand">
       <div>
         <span class="step-pill">Step 1 of 2 • Stays on your phone</span>
-        <h1 class="setup-title">Set Up MindPaper</h1>
+        <h1 class="setup-title">Set Up Spotify More</h1>
         <p class="setup-sub">Pick the music you already enjoy. Everything runs privately on your device.</p>
       </div>
       <button id="cancelSetupBtn" type="button" class="subtle-link hidden">Close</button>
@@ -975,7 +975,7 @@
       <div>
         <span class="step-pill">Step 2 of 2 • Quick Baseline</span>
         <h1 class="setup-title">Tune to Your Normal Rhythm</h1>
-        <p class="setup-sub">Speak or type one ordinary sentence so MindPaper learns your natural voice &amp; pace for today.</p>
+        <p class="setup-sub">Speak or type one ordinary sentence so Spotify More learns your natural voice &amp; pace for today.</p>
       </div>
     </div>
 
@@ -2366,7 +2366,7 @@
         const intentNames = { current: "aligned with my current mood", calm: "calming & unwinding", focus: "deep focus", lift: "uplifting & energising" };
         const seedList = chosen.map(c => `"${c.title}" by ${c.artist}`).join(", ");
         state.spotifyPrompt = `Create a Spotify playlist ${intentNames[state.intent]} (${analysis.tag} — around ${target.tBpm} BPM) blending ${state.profile.genres.join(", ")}. Use tracks like ${seedList} as the sonic anchor, mixing mostly fresh discoveries with a couple of familiar gems.`;
-        state.shareText = `My MindPaper mood right now: ${analysis.tag}\n` + chosen.map(c => `• ${c.genre}: ${c.title} — ${c.artist}`).join("\n");
+        state.shareText = `My Spotify More mood right now: ${analysis.tag}\n` + chosen.map(c => `• ${c.genre}: ${c.title} — ${c.artist}`).join("\n");
 
         // Populate hidden dev drawer (invisible unless Rob triple-taps the mood pill)
         const b = analysis.bio;
@@ -2422,7 +2422,7 @@
         if (!state.shareText) return;
         if (navigator.share) {
           try {
-            await navigator.share({ title: "My MindPaper Picks", text: state.shareText });
+            await navigator.share({ title: "My Spotify More Picks", text: state.shareText });
             return;
           } catch (e) {
             if (e && e.name === "AbortError") return;
@@ -2455,10 +2455,10 @@
         state.profile.feedbackLog = (state.profile.feedbackLog || []).concat(entry).slice(-30);
         saveProfile(state.profile);
 
-        const fbText = `MindPaper Feedback (${entry.rating}): Mood="${entry.mood}" • Intent="${entry.intent}"${note ? " • Note: " + note : ""}`;
+        const fbText = `Spotify More Feedback (${entry.rating}): Mood="${entry.mood}" • Intent="${entry.intent}"${note ? " • Note: " + note : ""}`;
         if (navigator.share) {
           try {
-            await navigator.share({ title: "MindPaper Feedback", text: fbText });
+            await navigator.share({ title: "Spotify More Feedback", text: fbText });
             showToast("Thanks for the feedback!");
             el.fbNoteInput.value = "";
             return;
