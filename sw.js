@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mindpaper-v3-cache';
+const CACHE_NAME = 'SpotifyMore-v3-cache';
 const ASSETS = [
   './',
   './index.html',
