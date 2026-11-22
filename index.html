@@ -11,7 +11,7 @@
   <link rel="manifest" href="./manifest.json" />
   <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png" />
-  <title>SpotifyMore — Mood to Spotify</title>
+  <title>Spotify More — Mood to Music</title>
 
   <style>
     :root {
@@ -52,7 +52,7 @@
     button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
     button:active { opacity: 0.85; }
 
-    /* ================= SETUP & CALIBRATION (S24 FE / iOS / MAC) ================= */
+    /* ================= SETUP & CALIBRATION ================= */
     .setup-screen {
       min-height: 100dvh;
       width: 100%;
@@ -444,12 +444,14 @@
       flex: 1;
       width: 100%;
       min-height: 360px;
+      background: transparent;
     }
     #inkCanvas {
       display: block;
       width: 100%;
       height: 100%;
       min-height: 360px;
+      background: transparent;
       touch-action: none;
       user-select: none;
       -webkit-user-select: none;
@@ -516,7 +518,7 @@
       font-size: 0.92rem;
     }
 
-    /* ================= RESULTS SCREEN (FULL-WIDTH PHONE S24 FE FIRST) ================= */
+    /* ================= RESULTS SCREEN ================= */
     .results-screen {
       min-height: 100dvh;
       width: 100%;
@@ -571,6 +573,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 0.4rem;
+      flex-wrap: wrap;
     }
     .state-tag {
       font-size: 0.72rem;
@@ -582,6 +585,24 @@
       background: rgba(29, 185, 84, 0.14);
       color: var(--spotify-dark);
       user-select: none;
+    }
+    .badge-cluster {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .engine-pill {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 0.18rem 0.52rem;
+      border-radius: 9999px;
+      background: #F1F5F9;
+      color: #475569;
+    }
+    .engine-pill.ai-live {
+      background: #ECFDF5;
+      color: #047857;
+      border: 1px solid #A7F3D0;
     }
     .input-badge {
       font-size: 0.7rem;
@@ -603,7 +624,6 @@
       line-height: 1.42;
     }
 
-    /* 2x2 Intent Grid for crisp thumb-friendly phone layout */
     .intent-row {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -627,7 +647,7 @@
       color: #065F46;
     }
 
-    /* Full-Width Genre Pick Cards */
+    /* Full-Width Genre Pick Cards with Album Art + 30s Preview */
     .picks-list {
       width: 100%;
       display: flex;
@@ -639,7 +659,7 @@
       border-radius: 1.1rem;
       border: 1.5px solid var(--border);
       background: #FFFFFF;
-      padding: 1rem 1rem 0.85rem;
+      padding: 0.95rem 0.95rem 0.82rem;
       display: flex;
       flex-direction: column;
       gap: 0.65rem;
@@ -649,72 +669,128 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 0.5rem;
+      gap: 0.45rem;
+    }
+    .genre-left {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      flex-wrap: wrap;
     }
     .genre-badge {
-      font-size: 0.7rem;
+      font-size: 0.69rem;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.04em;
       color: #0F766E;
       background: #F0FDFA;
       border: 1px solid #CCFBF1;
-      padding: 0.2rem 0.6rem;
+      padding: 0.2rem 0.58rem;
+      border-radius: 9999px;
+    }
+    .ai-gem-badge {
+      font-size: 0.66rem;
+      font-weight: 800;
+      color: #6D28D9;
+      background: #F5F3FF;
+      border: 1px solid #DDD6FE;
+      padding: 0.18rem 0.5rem;
       border-radius: 9999px;
     }
     .fit-meta {
-      font-size: 0.74rem;
+      font-size: 0.72rem;
       font-weight: 600;
       color: var(--muted);
     }
+
     .track-main-row {
       display: flex;
       align-items: center;
-      justify-content: space-between;
       gap: 0.75rem;
+    }
+    .cover-art {
+      width: 62px;
+      height: 62px;
+      border-radius: 0.75rem;
+      flex-shrink: 0;
+      object-fit: cover;
+      background: #191414;
+      border: 1px solid rgba(15, 23, 42, 0.08);
     }
     .track-info { min-width: 0; flex: 1; }
     .track-name {
       margin: 0;
-      font-size: 1.18rem;
+      font-size: 1.12rem;
       font-weight: 800;
       letter-spacing: -0.015em;
       color: var(--ink);
       line-height: 1.22;
     }
     .track-artist {
-      margin: 0.2rem 0 0;
-      font-size: 0.92rem;
+      margin: 0.18rem 0 0;
+      font-size: 0.88rem;
       font-weight: 600;
       color: #475569;
     }
     .track-reason {
-      margin: 0;
-      font-size: 0.8rem;
+      margin: 0.15rem 0 0;
+      font-size: 0.76rem;
       color: var(--muted);
-      line-height: 1.38;
+      line-height: 1.35;
+    }
+
+    .play-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .preview-btn {
+      flex: 1;
+      min-height: 40px;
+      padding: 0.42rem 0.75rem;
+      border-radius: 9999px;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      color: var(--ink);
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+    }
+    .preview-btn.playing {
+      border-color: var(--spotify);
+      background: rgba(29, 185, 84, 0.13);
+      color: #065F46;
+    }
+    .preview-btn:disabled {
+      opacity: 0.45;
+      cursor: default;
     }
     .spotify-open-btn {
-      flex-shrink: 0;
-      min-height: 44px;
-      padding: 0.5rem 1rem;
+      flex: 1.15;
+      min-height: 40px;
+      padding: 0.45rem 0.9rem;
       border-radius: 9999px;
       background: var(--spotify);
       color: #FFFFFF;
       text-decoration: none;
-      font-size: 0.84rem;
+      font-size: 0.82rem;
       font-weight: 800;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 0.35rem;
       box-shadow: 0 4px 12px -4px rgba(29, 185, 84, 0.55);
     }
+
     .pick-footer {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 0.5rem;
-      padding-top: 0.55rem;
+      padding-top: 0.52rem;
       border-top: 1px solid #F1F5F9;
     }
     .star-bar {
@@ -723,15 +799,15 @@
       gap: 0.1rem;
     }
     .star-label {
-      font-size: 0.76rem;
+      font-size: 0.74rem;
       font-weight: 600;
       color: var(--muted);
-      margin-right: 0.25rem;
+      margin-right: 0.2rem;
     }
     .star-btn {
-      font-size: 1.4rem;
+      font-size: 1.38rem;
       line-height: 1;
-      padding: 0.15rem 0.18rem;
+      padding: 0.12rem 0.16rem;
       color: #CBD5E1;
     }
     .star-btn.lit { color: #F59E0B; }
@@ -744,6 +820,100 @@
       font-size: 0.78rem;
       font-weight: 700;
       color: var(--ink-soft);
+    }
+
+    /* 12-Track Session Mix Expander */
+    .mix-card {
+      width: 100%;
+      border-radius: 1.1rem;
+      border: 1.5px solid var(--border);
+      background: #FFFFFF;
+      overflow: hidden;
+    }
+    .mix-toggle {
+      width: 100%;
+      min-height: 50px;
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: var(--ink);
+      text-align: left;
+    }
+    .mix-body {
+      border-top: 1px solid #F1F5F9;
+      padding: 0.5rem 0.85rem 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+    .mix-top-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.15rem 0 0.35rem;
+    }
+    .mix-row {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.48rem 0.2rem;
+      border-top: 1px solid #F1F5F9;
+    }
+    .mix-num {
+      width: 1.25rem;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .mix-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .mix-title {
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .mix-sub {
+      font-size: 0.72rem;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .mix-mini-play {
+      width: 34px;
+      height: 34px;
+      border-radius: 9999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--ink);
+      font-size: 0.74rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      text-decoration: none;
+    }
+    .mix-mini-play.sp {
+      border-color: var(--spotify);
+      background: var(--spotify);
+      color: #FFFFFF;
+    }
+    .mix-mini-play.playing {
+      border-color: var(--spotify);
+      background: rgba(29, 185, 84, 0.15);
+      color: #065F46;
     }
 
     /* Action Row: Copy Spotify Prompt + Share */
@@ -919,7 +1089,6 @@
       </div>
     </div>
 
-    <!-- Optional Voluntary Context Column -->
     <div class="optional-card">
       <button id="toggleOptBtn" type="button" class="optional-toggle">
         <span>Optional: Help dial it in faster (100% optional)</span>
@@ -1039,6 +1208,7 @@
           <span class="mic-dot"></span>
           <span id="paperMicLabel">Speak</span>
         </button>
+        <button id="undoPaperBtn" type="button" class="subtle-link hidden">↶ Undo</button>
         <button id="clearPaperBtn" type="button" class="subtle-link">Clear</button>
       </div>
       <button id="analyzeBtn" type="button" class="primary-cta">Get My Music</button>
@@ -1055,7 +1225,10 @@
     <div class="state-banner">
       <div class="state-row">
         <span id="stateTag" class="state-tag">—</span>
-        <span id="inputBadge" class="input-badge">—</span>
+        <span class="badge-cluster">
+          <span id="enginePill" class="engine-pill">⚡ Instant</span>
+          <span id="inputBadge" class="input-badge">—</span>
+        </span>
       </div>
       <h2 id="stateHeading" class="state-heading">—</h2>
       <p id="stateDesc" class="state-desc">—</p>
@@ -1071,13 +1244,28 @@
     <!-- Full-width Per-Genre Pick Cards -->
     <div id="picksList" class="picks-list"></div>
 
+    <!-- 1-Tap 12-Track Session Mix Expander -->
+    <div class="mix-card">
+      <button id="mixToggleBtn" type="button" class="mix-toggle">
+        <span>🎧 Full 12-Track Session Mix</span>
+        <span id="mixArrow">▾</span>
+      </button>
+      <div id="mixBody" class="mix-body hidden">
+        <div class="mix-top-actions">
+          <span class="field-hint">Sequenced across your chosen genres</span>
+          <button id="copyMixBtn" type="button" class="swap-btn">📋 Copy List</button>
+        </div>
+        <div id="mixList"></div>
+      </div>
+    </div>
+
     <!-- Copy Spotify Prompt + Share -->
     <div class="utility-row">
       <button id="copyPromptBtn" type="button" class="util-btn accent">📋 Copy Spotify Prompt</button>
       <button id="shareBtn" type="button" class="util-btn">↗ Share Picks</button>
     </div>
 
-    <!-- Lightweight Feedback Ask -->
+    <!-- Lightweight Feedback Ask (Logs directly to Supabase + Local) -->
     <div class="feedback-card">
       <p class="fb-title">How close did these picks feel?</p>
       <div id="fbChips" class="fb-chips">
@@ -1086,12 +1274,12 @@
         <button type="button" data-fb="off" class="fb-chip">Way off</button>
       </div>
       <div class="fb-input-row">
-        <input id="fbNoteInput" type="text" class="fb-input" placeholder="Quick note (optional) — helps improve the app…" />
+        <input id="fbNoteInput" type="text" class="fb-input" placeholder="Quick note (optional) — helps improve Spotify More…" />
         <button id="fbSendBtn" type="button" class="fb-send">Send</button>
       </div>
     </div>
 
-    <!-- Hidden Dev Audit Drawer (Strictly invisible unless state badge is triple-tapped) -->
+    <!-- Hidden Dev Audit Drawer (Opens via triple-tap on green mood pill) -->
     <div id="devDrawer" class="dev-drawer hidden"></div>
   </section>
 
@@ -1107,7 +1295,15 @@
       }
 
       /* =====================================================================
-       * 1. PROMPTS, GENRES & 160-TRACK NEUTRAL MULTI-GENRE CATALOG
+       * 0. SUPABASE CLOUD CONFIG (Publishable Key — Safe for Public Browser)
+       * ===================================================================== */
+      const SUPABASE_URL = "https://qnnnnvlissdqdwmkgrao.supabase.co";
+      const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_SJObgU1fCCpVANkZIaETxw_ZbPua7Ky";
+      const CURATE_ENDPOINT = SUPABASE_URL + "/functions/v1/spotifymore-curate";
+      const FEEDBACK_ENDPOINT = SUPABASE_URL + "/rest/v1/spotifymore_feedback";
+
+      /* =====================================================================
+       * 1. PROMPTS, GENRES & 160-TRACK OFFLINE MULTI-GENRE CATALOG
        * ===================================================================== */
       const PROMPTS = [
         "“Right now, without tidying it up — what’s sitting loudest in your head?”",
@@ -1124,11 +1320,18 @@
 
       const CATALOG = [{"id":"pop1","genre":"Pop","title":"Blinding Lights","artist":"The Weeknd","year":2019,"bpm":171,"v":64,"a":82,"ac":5,"inst":2,"vibe":"Neon synth rush"},{"id":"pop2","genre":"Pop","title":"Levitating","artist":"Dua Lipa","year":2020,"bpm":103,"v":88,"a":80,"ac":6,"inst":0,"vibe":"Weightless upbeat lift"},{"id":"pop3","genre":"Pop","title":"Liability","artist":"Lorde","year":2017,"bpm":78,"v":18,"a":24,"ac":88,"inst":0,"vibe":"Quiet piano honesty"},{"id":"pop4","genre":"Pop","title":"Dancing On My Own","artist":"Robyn","year":2010,"bpm":117,"v":32,"a":84,"ac":4,"inst":0,"vibe":"Cathartic high-energy ache"},{"id":"pop5","genre":"Pop","title":"Dreams","artist":"Fleetwood Mac","year":1977,"bpm":120,"v":62,"a":48,"ac":46,"inst":2,"vibe":"Smooth timeless glide"},{"id":"pop6","genre":"Pop","title":"As It Was","artist":"Harry Styles","year":2022,"bpm":174,"v":68,"a":72,"ac":28,"inst":2,"vibe":"Bright bittersweet motion"},{"id":"pop7","genre":"Pop","title":"When the Party's Over","artist":"Billie Eilish","year":2018,"bpm":83,"v":20,"a":16,"ac":92,"inst":4,"vibe":"Hushed weightless exhale"},{"id":"pop8","genre":"Pop","title":"Take On Me","artist":"a-ha","year":1985,"bpm":169,"v":86,"a":88,"ac":8,"inst":2,"vibe":"Pure 80s ignition"},{"id":"pop9","genre":"Pop","title":"Toxic","artist":"Britney Spears","year":2003,"bpm":143,"v":72,"a":86,"ac":4,"inst":4,"vibe":"Sharp restless drive"},{"id":"pop10","genre":"Pop","title":"Style","artist":"Taylor Swift","year":2014,"bpm":95,"v":66,"a":68,"ac":12,"inst":4,"vibe":"Crisp steady cruise"},{"id":"pop11","genre":"Pop","title":"Birds of a Feather","artist":"Billie Eilish","year":2024,"bpm":105,"v":76,"a":54,"ac":34,"inst":4,"vibe":"Warm sunlit devotion"},{"id":"pop12","genre":"Pop","title":"Espresso","artist":"Sabrina Carpenter","year":2024,"bpm":104,"v":90,"a":76,"ac":14,"inst":2,"vibe":"Playful sparkling bounce"},{"id":"pop13","genre":"Pop","title":"Running Up That Hill","artist":"Kate Bush","year":1985,"bpm":108,"v":42,"a":74,"ac":22,"inst":10,"vibe":"Driving atmospheric surge"},{"id":"pop14","genre":"Pop","title":"Someone Like You","artist":"Adele","year":2011,"bpm":68,"v":22,"a":32,"ac":89,"inst":0,"vibe":"Raw piano release"},{"id":"pop15","genre":"Pop","title":"Green Light","artist":"Lorde","year":2017,"bpm":129,"v":60,"a":80,"ac":10,"inst":2,"vibe":"Forward-moving release"},{"id":"pop16","genre":"Pop","title":"Put Your Records On","artist":"Corinne Bailey Rae","year":2006,"bpm":96,"v":82,"a":42,"ac":66,"inst":4,"vibe":"Easy breezy calm"},{"id":"hh1","genre":"Hip-Hop / Rap","title":"N.Y. State of Mind","artist":"Nas","year":1994,"bpm":84,"v":38,"a":70,"ac":18,"inst":4,"vibe":"Gritty focused cadence"},{"id":"hh2","genre":"Hip-Hop / Rap","title":"Electric Relaxation","artist":"A Tribe Called Quest","year":1993,"bpm":94,"v":72,"a":52,"ac":34,"inst":12,"vibe":"Laid-back jazz-hop flow"},{"id":"hh3","genre":"Hip-Hop / Rap","title":"Alright","artist":"Kendrick Lamar","year":2015,"bpm":110,"v":74,"a":82,"ac":12,"inst":2,"vibe":"Resilient upward fire"},{"id":"hh4","genre":"Hip-Hop / Rap","title":"Lose Yourself","artist":"Eminem","year":2002,"bpm":171,"v":36,"a":88,"ac":8,"inst":2,"vibe":"Locked-in high tension"},{"id":"hh5","genre":"Hip-Hop / Rap","title":"2009","artist":"Mac Miller","year":2018,"bpm":78,"v":36,"a":34,"ac":62,"inst":10,"vibe":"Reflective strings & calm"},{"id":"hh6","genre":"Hip-Hop / Rap","title":"Rapp Snitch Knishes","artist":"MF DOOM","year":2004,"bpm":93,"v":64,"a":62,"ac":28,"inst":16,"vibe":"Sharp cerebral groove"},{"id":"hh7","genre":"Hip-Hop / Rap","title":"93 'Til Infinity","artist":"Souls of Mischief","year":1993,"bpm":92,"v":76,"a":56,"ac":26,"inst":10,"vibe":"Effortless sunlit head-nod"},{"id":"hh8","genre":"Hip-Hop / Rap","title":"DNA.","artist":"Kendrick Lamar","year":2017,"bpm":140,"v":30,"a":94,"ac":4,"inst":2,"vibe":"Raw adrenaline release"},{"id":"hh9","genre":"Hip-Hop / Rap","title":"Ms. Jackson","artist":"Outkast","year":2000,"bpm":95,"v":66,"a":74,"ac":16,"inst":2,"vibe":"Bouncy clear momentum"},{"id":"hh10","genre":"Hip-Hop / Rap","title":"Luv(sic) Pt. 3","artist":"Nujabes feat. Shing02","year":2005,"bpm":90,"v":60,"a":44,"ac":44,"inst":35,"vibe":"Warm nostalgic focus"},{"id":"hh11","genre":"Hip-Hop / Rap","title":"Not Like Us","artist":"Kendrick Lamar","year":2024,"bpm":101,"v":72,"a":86,"ac":6,"inst":2,"vibe":"High-voltage swagger"},{"id":"hh12","genre":"Hip-Hop / Rap","title":"Good Days","artist":"SZA","year":2020,"bpm":121,"v":58,"a":46,"ac":42,"inst":6,"vibe":"Floating hopeful exhale"},{"id":"hh13","genre":"Hip-Hop / Rap","title":"See You Again","artist":"Tyler, The Creator","year":2017,"bpm":79,"v":64,"a":56,"ac":34,"inst":6,"vibe":"Warm dreamy bounce"},{"id":"hh14","genre":"Hip-Hop / Rap","title":"Self Care","artist":"Mac Miller","year":2018,"bpm":154,"v":34,"a":48,"ac":28,"inst":12,"vibe":"Late-night steady reset"},{"id":"hh15","genre":"Hip-Hop / Rap","title":"C.R.E.A.M.","artist":"Wu-Tang Clan","year":1993,"bpm":90,"v":30,"a":60,"ac":24,"inst":8,"vibe":"Raw streetwise grit"},{"id":"hh16","genre":"Hip-Hop / Rap","title":"It Was A Good Day","artist":"Ice Cube","year":1992,"bpm":82,"v":84,"a":54,"ac":28,"inst":6,"vibe":"Smooth coasting ease"},{"id":"rb1","genre":"R&B / Soul","title":"Redbone","artist":"Childish Gambino","year":2016,"bpm":80,"v":56,"a":42,"ac":26,"inst":14,"vibe":"Slow hypnotic midnight groove"},{"id":"rb2","genre":"R&B / Soul","title":"Lovely Day","artist":"Bill Withers","year":1977,"bpm":98,"v":88,"a":66,"ac":42,"inst":4,"vibe":"Warm golden mood lift"},{"id":"rb3","genre":"R&B / Soul","title":"Pink + White","artist":"Frank Ocean","year":2016,"bpm":80,"v":68,"a":40,"ac":64,"inst":8,"vibe":"Floating serene clarity"},{"id":"rb4","genre":"R&B / Soul","title":"Superstition","artist":"Stevie Wonder","year":1972,"bpm":101,"v":84,"a":80,"ac":18,"inst":8,"vibe":"Funky unstoppable momentum"},{"id":"rb5","genre":"R&B / Soul","title":"Snooze","artist":"SZA","year":2022,"bpm":143,"v":46,"a":44,"ac":36,"inst":4,"vibe":"Lush soft emotional haze"},{"id":"rb6","genre":"R&B / Soul","title":"Cranes in the Sky","artist":"Solange","year":2016,"bpm":76,"v":32,"a":28,"ac":68,"inst":6,"vibe":"Gentle weightless decompression"},{"id":"rb7","genre":"R&B / Soul","title":"Untitled (How Does It Feel)","artist":"D'Angelo","year":2000,"bpm":74,"v":42,"a":38,"ac":48,"inst":6,"vibe":"Slow simmering soul"},{"id":"rb8","genre":"R&B / Soul","title":"Cold Little Heart","artist":"Michael Kiwanuka","year":2016,"bpm":78,"v":34,"a":46,"ac":52,"inst":20,"vibe":"Deep honest catharsis"},{"id":"rb9","genre":"R&B / Soul","title":"Leave the Door Open","artist":"Silk Sonic","year":2021,"bpm":74,"v":74,"a":52,"ac":38,"inst":4,"vibe":"Silky confident ease"},{"id":"rb10","genre":"R&B / Soul","title":"Crazy","artist":"Gnarls Barkley","year":2006,"bpm":112,"v":50,"a":74,"ac":16,"inst":4,"vibe":"Restless kinetic soul"},{"id":"rb11","genre":"R&B / Soul","title":"Best Part","artist":"Daniel Caesar feat. H.E.R.","year":2017,"bpm":75,"v":72,"a":24,"ac":86,"inst":4,"vibe":"Soft acoustic warmth"},{"id":"rb12","genre":"R&B / Soul","title":"Get You","artist":"Daniel Caesar","year":2016,"bpm":74,"v":64,"a":30,"ac":58,"inst":6,"vibe":"Velvet unhurried sway"},{"id":"rb13","genre":"R&B / Soul","title":"Doo Wop (That Thing)","artist":"Lauryn Hill","year":1998,"bpm":100,"v":78,"a":78,"ac":18,"inst":2,"vibe":"Crisp classic bounce"},{"id":"rb14","genre":"R&B / Soul","title":"No Scrubs","artist":"TLC","year":1999,"bpm":93,"v":62,"a":68,"ac":12,"inst":2,"vibe":"Sharp confident pulse"},{"id":"rb15","genre":"R&B / Soul","title":"Kill Bill","artist":"SZA","year":2022,"bpm":89,"v":40,"a":72,"ac":10,"inst":2,"vibe":"Dark catchy tension release"},{"id":"rb16","genre":"R&B / Soul","title":"Ain't No Sunshine","artist":"Bill Withers","year":1971,"bpm":78,"v":26,"a":32,"ac":72,"inst":6,"vibe":"Stark timeless weight"},{"id":"rk1","genre":"Rock / Alt","title":"Everlong","artist":"Foo Fighters","year":1997,"bpm":158,"v":54,"a":90,"ac":6,"inst":6,"vibe":"Surging urgent release"},{"id":"rk2","genre":"Rock / Alt","title":"No Surprises","artist":"Radiohead","year":1997,"bpm":76,"v":20,"a":24,"ac":62,"inst":8,"vibe":"Fragile quiet exhale"},{"id":"rk3","genre":"Rock / Alt","title":"Mr. Brightside","artist":"The Killers","year":2003,"bpm":148,"v":52,"a":92,"ac":4,"inst":2,"vibe":"Full-throttle tension burn"},{"id":"rk4","genre":"Rock / Alt","title":"Wish You Were Here","artist":"Pink Floyd","year":1975,"bpm":60,"v":36,"a":30,"ac":84,"inst":18,"vibe":"Spacious reflective acoustic"},{"id":"rk5","genre":"Rock / Alt","title":"The Less I Know The Better","artist":"Tame Impala","year":2015,"bpm":117,"v":72,"a":74,"ac":10,"inst":14,"vibe":"Elastic driving bassline"},{"id":"rk6","genre":"Rock / Alt","title":"Do I Wanna Know?","artist":"Arctic Monkeys","year":2013,"bpm":85,"v":40,"a":62,"ac":16,"inst":6,"vibe":"Heavy swaggering focus"},{"id":"rk7","genre":"Rock / Alt","title":"Here Comes the Sun","artist":"The Beatles","year":1969,"bpm":129,"v":90,"a":54,"ac":78,"inst":8,"vibe":"Clear bright reset"},{"id":"rk8","genre":"Rock / Alt","title":"Black","artist":"Pearl Jam","year":1991,"bpm":77,"v":24,"a":56,"ac":32,"inst":4,"vibe":"Raw heavy emotional weight"},{"id":"rk9","genre":"Rock / Alt","title":"Weird Fishes / Arpeggi","artist":"Radiohead","year":2007,"bpm":153,"v":46,"a":64,"ac":28,"inst":28,"vibe":"Hypnotic layered focus"},{"id":"rk10","genre":"Rock / Alt","title":"Don't Stop Me Now","artist":"Queen","year":1978,"bpm":156,"v":94,"a":90,"ac":16,"inst":2,"vibe":"Explosive upbeat spark"},{"id":"rk11","genre":"Rock / Alt","title":"Scar Tissue","artist":"Red Hot Chili Peppers","year":1999,"bpm":89,"v":58,"a":58,"ac":22,"inst":10,"vibe":"Sun-bleached easy stride"},{"id":"rk12","genre":"Rock / Alt","title":"1979","artist":"The Smashing Pumpkins","year":1995,"bpm":127,"v":64,"a":68,"ac":14,"inst":12,"vibe":"Nostalgic twilight cruise"},{"id":"rk13","genre":"Rock / Alt","title":"Fade Into You","artist":"Mazzy Star","year":1993,"bpm":78,"v":34,"a":22,"ac":72,"inst":10,"vibe":"Hazy slow decompression"},{"id":"rk14","genre":"Rock / Alt","title":"Seven Nation Army","artist":"The White Stripes","year":2003,"bpm":124,"v":46,"a":82,"ac":6,"inst":14,"vibe":"Stomping focused grit"},{"id":"rk15","genre":"Rock / Alt","title":"Linger","artist":"The Cranberries","year":1993,"bpm":95,"v":44,"a":42,"ac":54,"inst":6,"vibe":"Tender nostalgic sway"},{"id":"rk16","genre":"Rock / Alt","title":"Float On","artist":"Modest Mouse","year":2004,"bpm":101,"v":82,"a":72,"ac":16,"inst":4,"vibe":"Buoyant shake-it-off groove"},{"id":"if1","genre":"Indie / Folk","title":"Holocene","artist":"Bon Iver","year":2011,"bpm":74,"v":42,"a":26,"ac":86,"inst":12,"vibe":"Wide-angle quiet calm"},{"id":"if2","genre":"Indie / Folk","title":"Anchor","artist":"Novo Amor","year":2015,"bpm":74,"v":40,"a":20,"ac":92,"inst":16,"vibe":"Soft nervous-system exhale"},{"id":"if3","genre":"Indie / Folk","title":"Home","artist":"Edward Sharpe & The Magnetic Zeros","year":2009,"bpm":112,"v":88,"a":70,"ac":72,"inst":4,"vibe":"Sunlit communal lift"},{"id":"if4","genre":"Indie / Folk","title":"Motion Sickness","artist":"Phoebe Bridgers","year":2017,"bpm":114,"v":36,"a":64,"ac":34,"inst":4,"vibe":"Sharp bittersweet drive"},{"id":"if5","genre":"Indie / Folk","title":"San Luis","artist":"Gregory Alan Isakov","year":2018,"bpm":80,"v":48,"a":32,"ac":88,"inst":14,"vibe":"Open-sky twilight stillness"},{"id":"if6","genre":"Indie / Folk","title":"Heartbeats (Acoustic)","artist":"José González","year":2003,"bpm":92,"v":56,"a":30,"ac":96,"inst":18,"vibe":"Steady nylon-string grounding"},{"id":"if7","genre":"Indie / Folk","title":"Pink Moon","artist":"Nick Drake","year":1972,"bpm":88,"v":34,"a":18,"ac":96,"inst":12,"vibe":"Intimate acoustic solitude"},{"id":"if8","genre":"Indie / Folk","title":"White Winter Hymnal","artist":"Fleet Foxes","year":2008,"bpm":120,"v":74,"a":56,"ac":82,"inst":6,"vibe":"Crisp harmonic clarity"},{"id":"if9","genre":"Indie / Folk","title":"El Dorado","artist":"Hermanos Gutiérrez","year":2022,"bpm":84,"v":64,"a":34,"ac":88,"inst":96,"vibe":"Wordless desert horizon"},{"id":"if10","genre":"Indie / Folk","title":"Jackie Down the Line","artist":"Fontaines D.C.","year":2022,"bpm":132,"v":34,"a":84,"ac":14,"inst":8,"vibe":"Edgy post-punk drive"},{"id":"if11","genre":"Indie / Folk","title":"Stick Season","artist":"Noah Kahan","year":2022,"bpm":118,"v":48,"a":68,"ac":74,"inst":4,"vibe":"Brisk cathartic stomp"},{"id":"if12","genre":"Indie / Folk","title":"Riptide","artist":"Vance Joy","year":2013,"bpm":102,"v":82,"a":66,"ac":62,"inst":2,"vibe":"Light carefree strum"},{"id":"if13","genre":"Indie / Folk","title":"Skinny Love","artist":"Bon Iver","year":2007,"bpm":76,"v":22,"a":42,"ac":92,"inst":4,"vibe":"Raw acoustic release"},{"id":"if14","genre":"Indie / Folk","title":"Your Hand in Mine","artist":"Explosions in the Sky","year":2003,"bpm":106,"v":68,"a":64,"ac":42,"inst":98,"vibe":"Soaring instrumental clarity"},{"id":"if15","genre":"Indie / Folk","title":"First Day of My Life","artist":"Bright Eyes","year":2005,"bpm":96,"v":74,"a":28,"ac":94,"inst":4,"vibe":"Warm tender acoustic"},{"id":"if16","genre":"Indie / Folk","title":"Tieduprightnow","artist":"Parcels","year":2018,"bpm":104,"v":86,"a":74,"ac":26,"inst":24,"vibe":"Crisp indie-funk spark"},{"id":"el1","genre":"Electronic / Dance","title":"Glue","artist":"Bicep","year":2017,"bpm":130,"v":66,"a":78,"ac":8,"inst":84,"vibe":"Euphoric kinetic release"},{"id":"el2","genre":"Electronic / Dance","title":"Around the World","artist":"Daft Punk","year":1997,"bpm":121,"v":82,"a":80,"ac":4,"inst":74,"vibe":"Playful robotic lift"},{"id":"el3","genre":"Electronic / Dance","title":"Awake","artist":"Tycho","year":2014,"bpm":118,"v":74,"a":62,"ac":28,"inst":96,"vibe":"Clear sunlit focus"},{"id":"el4","genre":"Electronic / Dance","title":"Teardrop","artist":"Massive Attack","year":1998,"bpm":77,"v":34,"a":36,"ac":34,"inst":22,"vibe":"Deep trip-hop calm"},{"id":"el5","genre":"Electronic / Dance","title":"Open Eye Signal","artist":"Jon Hopkins","year":2013,"bpm":122,"v":46,"a":86,"ac":6,"inst":96,"vibe":"Relentless deep-work drive"},{"id":"el6","genre":"Electronic / Dance","title":"Midnight City","artist":"M83","year":2011,"bpm":105,"v":70,"a":78,"ac":6,"inst":36,"vibe":"Widescreen soaring rush"},{"id":"el7","genre":"Electronic / Dance","title":"Porcelain","artist":"Moby","year":1999,"bpm":95,"v":44,"a":34,"ac":32,"inst":64,"vibe":"Floating bittersweet calm"},{"id":"el8","genre":"Electronic / Dance","title":"Looped","artist":"Kiasmos","year":2014,"bpm":120,"v":54,"a":66,"ac":20,"inst":94,"vibe":"Minimal rhythmic focus"},{"id":"el9","genre":"Electronic / Dance","title":"Strobe","artist":"deadmau5","year":2009,"bpm":128,"v":60,"a":72,"ac":6,"inst":96,"vibe":"Patient architectural build"},{"id":"el10","genre":"Electronic / Dance","title":"Breathe","artist":"The Prodigy","year":1996,"bpm":130,"v":32,"a":95,"ac":2,"inst":30,"vibe":"High-voltage pressure valve"},{"id":"el11","genre":"Electronic / Dance","title":"Delilah (pull me out of this)","artist":"Fred again..","year":2022,"bpm":134,"v":54,"a":84,"ac":10,"inst":26,"vibe":"Cathartic euphoric pulse"},{"id":"el12","genre":"Electronic / Dance","title":"Sunset Lover","artist":"Petit Biscuit","year":2015,"bpm":91,"v":76,"a":50,"ac":34,"inst":82,"vibe":"Light warm breeze"},{"id":"el13","genre":"Electronic / Dance","title":"Breathe","artist":"Télépopmusik","year":2001,"bpm":95,"v":62,"a":38,"ac":32,"inst":52,"vibe":"Gentle mental reset"},{"id":"el14","genre":"Electronic / Dance","title":"Innerbloom","artist":"RÜFÜS DU SOL","year":2016,"bpm":122,"v":48,"a":58,"ac":14,"inst":46,"vibe":"Deep expansive release"},{"id":"el15","genre":"Electronic / Dance","title":"Kiara","artist":"Bonobo","year":2010,"bpm":108,"v":66,"a":60,"ac":44,"inst":94,"vibe":"Crisp organic focus"},{"id":"el16","genre":"Electronic / Dance","title":"One More Time","artist":"Daft Punk","year":2000,"bpm":123,"v":92,"a":88,"ac":4,"inst":20,"vibe":"Pure celebratory ignition"},{"id":"co1","genre":"Country / Roots","title":"Starting Over","artist":"Chris Stapleton","year":2020,"bpm":84,"v":74,"a":52,"ac":78,"inst":4,"vibe":"Warm grounded fresh start"},{"id":"co2","genre":"Country / Roots","title":"Fast Car","artist":"Luke Combs","year":2023,"bpm":98,"v":56,"a":58,"ac":70,"inst":4,"vibe":"Steady open-road exhale"},{"id":"co3","genre":"Country / Roots","title":"Something in the Orange","artist":"Zach Bryan","year":2022,"bpm":110,"v":26,"a":44,"ac":86,"inst":4,"vibe":"Raw aching honesty"},{"id":"co4","genre":"Country / Roots","title":"Wagon Wheel","artist":"Old Crow Medicine Show","year":2004,"bpm":148,"v":88,"a":76,"ac":80,"inst":4,"vibe":"Upbeat porch sing-along"},{"id":"co5","genre":"Country / Roots","title":"Jolene","artist":"Dolly Parton","year":1973,"bpm":111,"v":44,"a":68,"ac":74,"inst":4,"vibe":"Urgent classic storytelling"},{"id":"co6","genre":"Country / Roots","title":"Tennessee Whiskey","artist":"Chris Stapleton","year":2015,"bpm":49,"v":58,"a":40,"ac":72,"inst":6,"vibe":"Slow velvety soul roots"},{"id":"co7","genre":"Country / Roots","title":"Feathered Indians","artist":"Tyler Childers","year":2017,"bpm":128,"v":70,"a":74,"ac":68,"inst":4,"vibe":"Driving Appalachian stride"},{"id":"co8","genre":"Country / Roots","title":"Hurt","artist":"Johnny Cash","year":2002,"bpm":90,"v":14,"a":26,"ac":92,"inst":4,"vibe":"Stark solemn gravity"},{"id":"co9","genre":"Country / Roots","title":"Golden Hour","artist":"Kacey Musgraves","year":2018,"bpm":94,"v":78,"a":34,"ac":84,"inst":6,"vibe":"Soft luminous peace"},{"id":"co10","genre":"Country / Roots","title":"Kate McCannon","artist":"Colter Wall","year":2017,"bpm":96,"v":30,"a":66,"ac":84,"inst":4,"vibe":"Dark heavy forward grit"},{"id":"co11","genre":"Country / Roots","title":"Cover Me Up","artist":"Jason Isbell","year":2013,"bpm":72,"v":36,"a":38,"ac":88,"inst":4,"vibe":"Deep weathered honesty"},{"id":"co12","genre":"Country / Roots","title":"Take Me Home, Country Roads","artist":"John Denver","year":1971,"bpm":82,"v":84,"a":54,"ac":84,"inst":4,"vibe":"Warm nostalgic comfort"},{"id":"co13","genre":"Country / Roots","title":"Turtles All the Way Down","artist":"Sturgill Simpson","year":2014,"bpm":102,"v":64,"a":62,"ac":56,"inst":8,"vibe":"Expansive cosmic roots"},{"id":"co14","genre":"Country / Roots","title":"Hard Time","artist":"Charles Wesley Godwin","year":2019,"bpm":104,"v":48,"a":64,"ac":74,"inst":4,"vibe":"Resilient driving stride"},{"id":"co15","genre":"Country / Roots","title":"Good Lord Lorrie","artist":"Turnpike Troubadours","year":2012,"bpm":124,"v":62,"a":78,"ac":60,"inst":4,"vibe":"High-output fiddle pulse"},{"id":"co16","genre":"Country / Roots","title":"Wildfire","artist":"Watchhouse","year":2016,"bpm":88,"v":52,"a":30,"ac":92,"inst":12,"vibe":"Steady quiet picking"},{"id":"jl1","genre":"Jazz / Lo-Fi","title":"Blue in Green","artist":"Miles Davis","year":1959,"bpm":64,"v":32,"a":16,"ac":94,"inst":99,"vibe":"Midnight quiet contemplation"},{"id":"jl2","genre":"Jazz / Lo-Fi","title":"Take Five","artist":"The Dave Brubeck Quartet","year":1959,"bpm":174,"v":70,"a":64,"ac":88,"inst":99,"vibe":"Crisp smart swinging focus"},{"id":"jl3","genre":"Jazz / Lo-Fi","title":"Aruarian Dance","artist":"Nujabes","year":2004,"bpm":92,"v":64,"a":44,"ac":52,"inst":98,"vibe":"Flowing lo-fi concentration"},{"id":"jl4","genre":"Jazz / Lo-Fi","title":"Snowman","artist":"WYS","year":2018,"bpm":78,"v":46,"a":22,"ac":64,"inst":99,"vibe":"Warm rainy-window calm"},{"id":"jl5","genre":"Jazz / Lo-Fi","title":"Cantaloupe Island","artist":"Herbie Hancock","year":1964,"bpm":116,"v":76,"a":68,"ac":82,"inst":98,"vibe":"Bouncy sunlit groove"},{"id":"jl6","genre":"Jazz / Lo-Fi","title":"In a Sentimental Mood","artist":"Duke Ellington & John Coltrane","year":1963,"bpm":66,"v":48,"a":18,"ac":96,"inst":99,"vibe":"Velvet slow exhale"},{"id":"jl7","genre":"Jazz / Lo-Fi","title":"Hedron","artist":"BadBadNotGood","year":2014,"bpm":94,"v":50,"a":58,"ac":56,"inst":96,"vibe":"Sharp modern noir focus"},{"id":"jl8","genre":"Jazz / Lo-Fi","title":"Autumn Leaves","artist":"Chet Baker","year":1974,"bpm":112,"v":42,"a":36,"ac":92,"inst":96,"vibe":"Smooth melancholic drift"},{"id":"jl9","genre":"Jazz / Lo-Fi","title":"Moanin'","artist":"Art Blakey & The Jazz Messengers","year":1958,"bpm":126,"v":74,"a":76,"ac":84,"inst":98,"vibe":"High-agency blues swing"},{"id":"jl10","genre":"Jazz / Lo-Fi","title":"Losing Interest","artist":"Shiloh Dynasty & Itssvd","year":2017,"bpm":72,"v":24,"a":22,"ac":78,"inst":54,"vibe":"Hushed late-night weight"},{"id":"jl11","genre":"Jazz / Lo-Fi","title":"Naima","artist":"John Coltrane","year":1960,"bpm":62,"v":46,"a":16,"ac":96,"inst":99,"vibe":"Pure meditative peace"},{"id":"jl12","genre":"Jazz / Lo-Fi","title":"Tadow","artist":"Masego & FKJ","year":2017,"bpm":122,"v":82,"a":72,"ac":36,"inst":52,"vibe":"Playful jazzy uplift"},{"id":"jl13","genre":"Jazz / Lo-Fi","title":"Affection","artist":"Jinsang","year":2016,"bpm":80,"v":60,"a":30,"ac":68,"inst":98,"vibe":"Dusty chill study loop"},{"id":"jl14","genre":"Jazz / Lo-Fi","title":"So What","artist":"Miles Davis","year":1959,"bpm":136,"v":58,"a":48,"ac":90,"inst":99,"vibe":"Cool effortless clarity"},{"id":"jl15","genre":"Jazz / Lo-Fi","title":"Strasbourg / St. Denis","artist":"Roy Hargrove","year":2008,"bpm":118,"v":84,"a":74,"ac":76,"inst":98,"vibe":"Vibrant crisp lift"},{"id":"jl16","genre":"Jazz / Lo-Fi","title":"People Everywhere (Still Alive)","artist":"Khruangbin","year":2015,"bpm":118,"v":82,"a":70,"ac":38,"inst":88,"vibe":"Hypnotic sunlit groove"},{"id":"mp1","genre":"Metal / Punk","title":"Killing In The Name","artist":"Rage Against The Machine","year":1992,"bpm":89,"v":26,"a":96,"ac":2,"inst":6,"vibe":"Pure defiant pressure valve"},{"id":"mp2","genre":"Metal / Punk","title":"Master of Puppets","artist":"Metallica","year":1986,"bpm":212,"v":34,"a":95,"ac":2,"inst":24,"vibe":"Precision high-velocity drive"},{"id":"mp3","genre":"Metal / Punk","title":"Blitzkrieg Bop","artist":"Ramones","year":1976,"bpm":177,"v":82,"a":92,"ac":4,"inst":2,"vibe":"Raw joyous adrenaline"},{"id":"mp4","genre":"Metal / Punk","title":"Schism","artist":"TOOL","year":2001,"bpm":107,"v":36,"a":72,"ac":6,"inst":34,"vibe":"Complex hypnotic focus"},{"id":"mp5","genre":"Metal / Punk","title":"Basket Case","artist":"Green Day","year":1994,"bpm":170,"v":66,"a":88,"ac":4,"inst":2,"vibe":"Fast cathartic buzz"},{"id":"mp6","genre":"Metal / Punk","title":"Nothing Else Matters","artist":"Metallica","year":1991,"bpm":142,"v":36,"a":38,"ac":52,"inst":12,"vibe":"Heavy slow emotional breath"},{"id":"mp7","genre":"Metal / Punk","title":"Chop Suey!","artist":"System Of A Down","year":2001,"bpm":127,"v":28,"a":94,"ac":6,"inst":4,"vibe":"Chaotic cathartic release"},{"id":"mp8","genre":"Metal / Punk","title":"All The Small Things","artist":"blink-182","year":1999,"bpm":149,"v":84,"a":86,"ac":4,"inst":2,"vibe":"Bright carefree punch"},{"id":"mp9","genre":"Metal / Punk","title":"Change (In the House of Flies)","artist":"Deftones","year":2000,"bpm":138,"v":24,"a":66,"ac":10,"inst":12,"vibe":"Dark atmospheric release"},{"id":"mp10","genre":"Metal / Punk","title":"Orion","artist":"Metallica","year":1986,"bpm":124,"v":48,"a":74,"ac":6,"inst":98,"vibe":"Wordless heavy focus"},{"id":"mp11","genre":"Metal / Punk","title":"Sextape","artist":"Deftones","year":2010,"bpm":100,"v":46,"a":44,"ac":26,"inst":18,"vibe":"Dreamy heavy exhale"},{"id":"mp12","genre":"Metal / Punk","title":"Paranoid","artist":"Black Sabbath","year":1970,"bpm":163,"v":38,"a":90,"ac":4,"inst":6,"vibe":"Classic relentless grit"},{"id":"mp13","genre":"Metal / Punk","title":"Misery Business","artist":"Paramore","year":2007,"bpm":173,"v":72,"a":92,"ac":4,"inst":2,"vibe":"Electric punk spark"},{"id":"mp14","genre":"Metal / Punk","title":"Planet Caravan","artist":"Black Sabbath","year":1970,"bpm":92,"v":40,"a":22,"ac":64,"inst":30,"vibe":"Floating cosmic chill"},{"id":"mp15","genre":"Metal / Punk","title":"Pneuma","artist":"TOOL","year":2019,"bpm":112,"v":54,"a":70,"ac":8,"inst":44,"vibe":"Expansive rhythmic focus"},{"id":"mp16","genre":"Metal / Punk","title":"Ever Fallen in Love","artist":"Buzzcocks","year":1978,"bpm":160,"v":74,"a":88,"ac":6,"inst":2,"vibe":"Sharp vintage lift"},{"id":"ca1","genre":"Classical / Ambient","title":"Weightless Pt. 1","artist":"Marconi Union","year":2011,"bpm":60,"v":52,"a":10,"ac":42,"inst":99,"vibe":"Paced heart-rate drop"},{"id":"ca2","genre":"Classical / Ambient","title":"Clair de Lune","artist":"Claude Debussy","year":1905,"bpm":68,"v":54,"a":16,"ac":99,"inst":99,"vibe":"Moonlit weightless stillness"},{"id":"ca3","genre":"Classical / Ambient","title":"Experience","artist":"Ludovico Einaudi","year":2013,"bpm":92,"v":62,"a":56,"ac":92,"inst":99,"vibe":"Rising emotional clarity"},{"id":"ca4","genre":"Classical / Ambient","title":"Gymnopédie No. 1","artist":"Erik Satie","year":1888,"bpm":72,"v":40,"a":12,"ac":99,"inst":99,"vibe":"Gentle minimal space"},{"id":"ca5","genre":"Classical / Ambient","title":"Time","artist":"Hans Zimmer","year":2010,"bpm":120,"v":44,"a":52,"ac":68,"inst":99,"vibe":"Monumental deep focus"},{"id":"ca6","genre":"Classical / Ambient","title":"An Ending (Ascent)","artist":"Brian Eno","year":1983,"bpm":64,"v":58,"a":12,"ac":34,"inst":99,"vibe":"Zero-gravity horizon"},{"id":"ca7","genre":"Classical / Ambient","title":"Summer (Presto)","artist":"Antonio Vivaldi","year":1725,"bpm":154,"v":42,"a":86,"ac":96,"inst":99,"vibe":"Fierce classical urgency"},{"id":"ca8","genre":"Classical / Ambient","title":"On the Nature of Daylight","artist":"Max Richter","year":2004,"bpm":66,"v":20,"a":24,"ac":96,"inst":99,"vibe":"Deep tender catharsis"},{"id":"ca9","genre":"Classical / Ambient","title":"Says","artist":"Nils Frahm","year":2013,"bpm":112,"v":52,"a":60,"ac":68,"inst":98,"vibe":"Swelling focused momentum"},{"id":"ca10","genre":"Classical / Ambient","title":"Spring 1 (Recomposed)","artist":"Max Richter","year":2012,"bpm":116,"v":82,"a":66,"ac":94,"inst":99,"vibe":"Radiant crisp lift"},{"id":"ca11","genre":"Classical / Ambient","title":"Saman","artist":"Ólafur Arnalds","year":2018,"bpm":72,"v":54,"a":14,"ac":96,"inst":99,"vibe":"Slow breath felt piano"},{"id":"ca12","genre":"Classical / Ambient","title":"Nuvole Bianche","artist":"Ludovico Einaudi","year":2004,"bpm":76,"v":48,"a":26,"ac":98,"inst":99,"vibe":"Flowing calm clarity"},{"id":"ca13","genre":"Classical / Ambient","title":"Aisatsana [102]","artist":"Aphex Twin","year":2014,"bpm":68,"v":64,"a":18,"ac":96,"inst":99,"vibe":"Quiet dawn piano"},{"id":"ca14","genre":"Classical / Ambient","title":"Glass","artist":"Hania Rani","year":2019,"bpm":90,"v":58,"a":38,"ac":92,"inst":99,"vibe":"Crystalline thoughtful flow"},{"id":"ca15","genre":"Classical / Ambient","title":"Cornfield Chase","artist":"Hans Zimmer","year":2014,"bpm":120,"v":64,"a":64,"ac":74,"inst":99,"vibe":"Expansive upward wonder"},{"id":"ca16","genre":"Classical / Ambient","title":"Spiegel im Spiegel","artist":"Arvo Pärt","year":1978,"bpm":60,"v":44,"a":10,"ac":99,"inst":99,"vibe":"Pure spacious stillness"}];
 
+      const FALLBACK_ART = "data:image/svg+xml," + encodeURIComponent(
+        "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'>"
+        + "<rect width='120' height='120' rx='18' fill='#191414'/>"
+        + "<circle cx='60' cy='60' r='40' fill='none' stroke='#1DB954' stroke-width='4' opacity='0.85'/>"
+        + "<path d='M42 52 Q60 44 78 52 M45 63 Q60 56 75 63 M49 74 Q60 69 71 74' fill='none' stroke='#FFFFFF' stroke-width='4' stroke-linecap='round'/>"
+        + "</svg>"
+      );
+
       /* =====================================================================
        * 2. EXPANDED PSYCHOLINGUISTIC VAD LEXICON (160+ Terms + Contrast/Negation)
        * ===================================================================== */
       const LEXICON = {
-        // Calm / Peace / Stillness
         peace:{v:26,a:-22,d:10,goal:"calm"}, peaceful:{v:26,a:-22,d:10,goal:"calm"},
         calm:{v:24,a:-24,d:12,goal:"calm"}, quiet:{v:14,a:-22,d:6,goal:"calm"},
         still:{v:12,a:-20,d:6,goal:"calm"}, relaxed:{v:24,a:-24,d:12,goal:"calm"},
@@ -1139,7 +1342,6 @@
         soft:{v:14,a:-18,d:4,goal:"calm"}, ease:{v:20,a:-18,d:12,goal:"calm"},
         exhale:{v:18,a:-22,d:10,goal:"calm"}, serene:{v:26,a:-24,d:12,goal:"calm"},
 
-        // Spark / Joy / Lift
         happy:{v:30,a:18,d:14,goal:"lift"}, excited:{v:28,a:30,d:16,goal:"lift"},
         pumped:{v:26,a:34,d:18,goal:"lift"}, hyped:{v:24,a:34,d:16,goal:"lift"},
         good:{v:22,a:8,d:8}, great:{v:28,a:16,d:12}, awesome:{v:28,a:20,d:14},
@@ -1150,7 +1352,6 @@
         dance:{v:26,a:30,d:14,goal:"lift"}, vibe:{v:18,a:10,d:10}, smiling:{v:26,a:10,d:12},
         inspired:{v:28,a:22,d:20,goal:"focus"}, motivated:{v:24,a:24,d:22,goal:"focus"},
 
-        // Focus / Clarity / Build
         focus:{v:12,a:10,d:20,goal:"focus"}, focused:{v:16,a:12,d:22,goal:"focus"},
         clarity:{v:22,a:4,d:22,goal:"focus"}, clear:{v:18,a:2,d:16,goal:"focus"},
         intelligence:{v:16,a:10,d:20,goal:"focus"}, build:{v:18,a:16,d:20,goal:"focus"},
@@ -1161,7 +1362,6 @@
         ready:{v:18,a:18,d:20,goal:"focus"}, help:{v:16,a:8,d:14},
         flow:{v:22,a:8,d:18,goal:"focus"}, productive:{v:20,a:14,d:20,goal:"focus"},
 
-        // Tension / Stress / Anger / Friction
         force:{v:-18,a:22,d:-8,friction:true}, forcing:{v:-20,a:24,d:-10,friction:true},
         stressed:{v:-26,a:26,d:-16,friction:true}, stress:{v:-24,a:24,d:-14,friction:true},
         anxious:{v:-26,a:28,d:-18,friction:true}, anxiety:{v:-26,a:28,d:-18,friction:true},
@@ -1179,7 +1379,6 @@
         worried:{v:-24,a:22,d:-16,friction:true}, nervous:{v:-20,a:26,d:-16,friction:true},
         rushing:{v:-12,a:26,d:-8,friction:true}, overloaded:{v:-26,a:26,d:-20,friction:true},
 
-        // Low Mood / Fatigue / Heavy
         tired:{v:-18,a:-26,d:-14}, exhausted:{v:-24,a:-32,d:-20},
         drained:{v:-24,a:-28,d:-18}, heavy:{v:-22,a:-20,d:-14},
         sad:{v:-30,a:-18,d:-16}, lonely:{v:-28,a:-18,d:-16},
@@ -1201,7 +1400,7 @@
       const FIRST_PERSON = new Set(["i","me","my","mine","myself","i'm","i've","i'll","i'd"]);
 
       /* =====================================================================
-       * 3. STORAGE & STATE
+       * 3. STORAGE & STATE (Preserves existing saved user profiles & ratings)
        * ===================================================================== */
       const STORAGE_KEY = "mindpaper_v3_profile";
 
@@ -1222,22 +1421,22 @@
         draftGender: "neutral",
         draftHand: "right",
         promptIdx: 0,
-        inputMode: "type", // 'type' | 'write' | 'draw'
-        // Typing telemetry
+        inputMode: "type",
         keyTimes: [], ikts: [], totalKeys: 0, delKeys: 0, chunkBursts: [], lastInputTs: null,
-        // Calibration typing telemetry
         calKeyTimes: [], calIkts: [],
-        // Voice acoustic telemetry (current session & calibration)
-        voiceSession: null,
-        calVoiceSession: null,
-        activeMicContext: null, // 'cal' | 'paper' | null
-        // Stroke telemetry (shared cleanly between Write and Draw modes, reset on switch if desired)
+        voiceSession: null, calVoiceSession: null, activeMicContext: null,
         strokes: [], isDrawing: false, activePtr: null, currentStroke: null,
-        // Results
         lastAnalysis: null,
         intent: "current",
         swapOffsets: {},
         recentTrackIds: [],
+        aiPicksByGenre: {},
+        aiMoodLine: "",
+        aiStatus: "offline", // 'offline' | 'loading' | 'live'
+        aiReqSeq: 0,
+        mediaCache: {}, // key -> { artwork, previewUrl }
+        playingKey: null,
+        mixTracks: [],
         selectedFeedback: null,
         devTapCount: 0,
         devTapTimer: null
@@ -1264,21 +1463,34 @@
         nextPromptBtn: $("nextPromptBtn"), openProfileBtn: $("openProfileBtn"), promptText: $("promptText"),
         paperTextarea: $("paperTextarea"), drawWrap: $("drawWrap"), canvas: $("inkCanvas"),
         drawWatermark: $("drawWatermark"), paperMicBtn: $("paperMicBtn"), paperMicLabel: $("paperMicLabel"),
-        clearPaperBtn: $("clearPaperBtn"), analyzeBtn: $("analyzeBtn"),
+        undoPaperBtn: $("undoPaperBtn"), clearPaperBtn: $("clearPaperBtn"), analyzeBtn: $("analyzeBtn"),
 
         resultsScreen: $("resultsScreen"), backToPaperBtn: $("backToPaperBtn"), resProfileBtn: $("resProfileBtn"),
-        stateTag: $("stateTag"), inputBadge: $("inputBadge"), stateHeading: $("stateHeading"), stateDesc: $("stateDesc"),
-        intentRow: $("intentRow"), picksList: $("picksList"), copyPromptBtn: $("copyPromptBtn"), shareBtn: $("shareBtn"),
+        stateTag: $("stateTag"), enginePill: $("enginePill"), inputBadge: $("inputBadge"),
+        stateHeading: $("stateHeading"), stateDesc: $("stateDesc"),
+        intentRow: $("intentRow"), picksList: $("picksList"),
+        mixToggleBtn: $("mixToggleBtn"), mixArrow: $("mixArrow"), mixBody: $("mixBody"),
+        mixList: $("mixList"), copyMixBtn: $("copyMixBtn"),
+        copyPromptBtn: $("copyPromptBtn"), shareBtn: $("shareBtn"),
         fbChips: $("fbChips"), fbNoteInput: $("fbNoteInput"), fbSendBtn: $("fbSendBtn"),
         devDrawer: $("devDrawer"), toast: $("toast")
       };
 
-      const ctx = el.canvas.getContext("2d", { desynchronized: true });
+      // Standard transparent 2D context so Android Write/Draw stays crisp white lined paper
+      const ctx = el.canvas.getContext("2d");
       let cssW = 0, cssH = 0;
 
       const clamp = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
       const mean = arr => arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
       const std = (arr, m) => arr.length < 2 ? 0 : Math.sqrt(arr.reduce((a, x) => a + (x - m) ** 2, 0) / arr.length);
+
+      function escHtml(s) {
+        return String(s || "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[c]));
+      }
+
+      function trackKey(t) {
+        return `${(t.title || "").toLowerCase().trim()}|${(t.artist || "").toLowerCase().trim()}`;
+      }
 
       let toastTimer = null;
       function showToast(msg) {
@@ -1310,9 +1522,239 @@
       }
 
       /* =====================================================================
+       * 4B. 30-SECOND AUDIO PREVIEW PLAYER + PUBLIC ALBUM ART LOOKUP
+       * ===================================================================== */
+      const previewAudio = new Audio();
+      previewAudio.preload = "none";
+
+      function stopPreview() {
+        try { previewAudio.pause(); previewAudio.currentTime = 0; } catch {}
+        state.playingKey = null;
+        syncPreviewButtons();
+      }
+
+      previewAudio.addEventListener("ended", () => {
+        state.playingKey = null;
+        syncPreviewButtons();
+      });
+
+      function syncPreviewButtons() {
+        document.querySelectorAll("[data-preview-key]").forEach(btn => {
+          const key = btn.dataset.previewKey;
+          const isPlaying = state.playingKey === key;
+          btn.classList.toggle("playing", isPlaying);
+          if (btn.classList.contains("preview-btn")) {
+            btn.textContent = isPlaying ? "■ Stop" : (btn.disabled ? "No clip" : "▶ 30s");
+          } else {
+            btn.textContent = isPlaying ? "■" : "▶";
+          }
+        });
+      }
+
+      async function playPreviewByKey(key) {
+        if (state.playingKey === key) {
+          stopPreview();
+          return;
+        }
+        const cached = state.mediaCache[key];
+        if (!cached || !cached.previewUrl) {
+          showToast("30s preview unavailable — tap Spotify");
+          return;
+        }
+        try {
+          previewAudio.pause();
+          previewAudio.src = cached.previewUrl;
+          state.playingKey = key;
+          syncPreviewButtons();
+          await previewAudio.play();
+        } catch {
+          state.playingKey = null;
+          syncPreviewButtons();
+          showToast("Tap Spotify to listen");
+        }
+      }
+
+      async function fetchTrackMedia(track) {
+        const key = trackKey(track);
+        if (state.mediaCache[key]) return state.mediaCache[key];
+        if (!navigator.onLine) return null;
+
+        try {
+          const q = encodeURIComponent(`${track.title} ${track.artist}`);
+          const resp = await fetch(`https://itunes.apple.com/search?term=${q}&media=music&entity=song&limit=3`);
+          if (!resp.ok) return null;
+          const data = await resp.json();
+          const results = Array.isArray(data.results) ? data.results : [];
+          if (!results.length) {
+            state.mediaCache[key] = { artwork: FALLBACK_ART, previewUrl: "" };
+            return state.mediaCache[key];
+          }
+          const artLower = (track.artist || "").toLowerCase().split(/[&,]/)[0].trim();
+          const best = results.find(r => (r.artistName || "").toLowerCase().includes(artLower)) || results[0];
+          const art = best.artworkUrl100 ? best.artworkUrl100.replace("100x100bb", "240x240bb") : FALLBACK_ART;
+          const info = { artwork: art, previewUrl: best.previewUrl || "" };
+          state.mediaCache[key] = info;
+          return info;
+        } catch {
+          return null;
+        }
+      }
+
+      function hydrateMediaForTracks(tracks) {
+        tracks.forEach(t => {
+          const key = trackKey(t);
+          fetchTrackMedia(t).then(info => {
+            if (!info) return;
+            document.querySelectorAll(`img[data-art-key="${CSS.escape(key)}"]`).forEach(img => {
+              if (info.artwork) img.src = info.artwork;
+            });
+            document.querySelectorAll(`button[data-preview-key="${CSS.escape(key)}"]`).forEach(btn => {
+              if (info.previewUrl) {
+                btn.disabled = false;
+                if (btn.classList.contains("preview-btn") && state.playingKey !== key) {
+                  btn.textContent = "▶ 30s";
+                }
+              } else {
+                btn.disabled = true;
+                if (btn.classList.contains("preview-btn")) btn.textContent = "No clip";
+              }
+            });
+          });
+        });
+      }
+
+      /* =====================================================================
+       * 4C. SUPABASE CLOUD BRIDGE (Feedback Logging + Live AI Deep Cuts)
+       * ===================================================================== */
+      function getDeviceHint() {
+        const ua = navigator.userAgent || "";
+        if (/iPhone|iPad/i.test(ua)) return "iOS";
+        if (/Android/i.test(ua)) return "Android";
+        if (/Mac/i.test(ua)) return "Mac";
+        return "Web";
+      }
+
+      async function logToSupabase(row) {
+        if (!navigator.onLine) return false;
+        try {
+          const resp = await fetch(FEEDBACK_ENDPOINT, {
+            method: "POST",
+            headers: {
+              "apikey": SUPABASE_PUBLISHABLE_KEY,
+              "Content-Type": "application/json",
+              "Prefer": "return=minimal"
+            },
+            body: JSON.stringify({ ...row, device_hint: getDeviceHint() })
+          });
+          return resp.ok;
+        } catch {
+          return false;
+        }
+      }
+
+      async function fetchAiDeepCuts(analysis, target) {
+        if (!navigator.onLine) {
+          state.aiStatus = "offline";
+          updateEnginePill();
+          return;
+        }
+        const reqId = ++state.aiReqSeq;
+        state.aiStatus = "loading";
+        updateEnginePill();
+
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), 12000);
+
+        try {
+          const recentNames = state.recentTrackIds.map(id => {
+            const found = CATALOG.find(c => c.id === id);
+            return found ? `${found.title} - ${found.artist}` : id;
+          });
+
+          const resp = await fetch(CURATE_ENDPOINT, {
+            method: "POST",
+            signal: ctrl.signal,
+            headers: {
+              "apikey": SUPABASE_PUBLISHABLE_KEY,
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              genres: state.profile.genres,
+              stateTag: analysis.tag,
+              intent: state.intent,
+              inputMode: analysis.primarySource,
+              textSnippet: el.paperTextarea.value.trim().slice(0, 260),
+              target,
+              recentTracks: recentNames
+            })
+          });
+          clearTimeout(timer);
+
+          if (!resp.ok || reqId !== state.aiReqSeq) {
+            if (reqId === state.aiReqSeq) { state.aiStatus = "offline"; updateEnginePill(); }
+            return;
+          }
+
+          const data = await resp.json();
+          if (!data || !data.ok || !Array.isArray(data.picks) || !data.picks.length) {
+            if (reqId === state.aiReqSeq) { state.aiStatus = "offline"; updateEnginePill(); }
+            return;
+          }
+
+          const grouped = {};
+          for (const g of state.profile.genres) grouped[g] = [];
+          data.picks.forEach((p, idx) => {
+            const matchGenre = state.profile.genres.find(g => g.toLowerCase() === (p.genre || "").toLowerCase()) || p.genre;
+            if (!grouped[matchGenre]) return;
+            grouped[matchGenre].push({
+              id: `ai_${matchGenre.slice(0,3).toLowerCase()}_${reqId}_${idx}`,
+              genre: matchGenre,
+              title: p.title,
+              artist: p.artist,
+              year: Number(p.year) || target.tYear,
+              bpm: Number(p.bpm) || target.tBpm,
+              v: target.tV,
+              a: target.tA,
+              ac: target.tAc,
+              inst: target.tInst,
+              vibe: p.vibe || "AI-curated mood match",
+              isAi: true,
+              discovery: p.discovery || "gem",
+              fitPct: 97 - (idx % 3)
+            });
+          });
+
+          if (reqId !== state.aiReqSeq) return;
+          state.aiPicksByGenre = grouped;
+          state.aiMoodLine = data.moodLine || "";
+          state.aiStatus = "live";
+          state.swapOffsets = {};
+          renderResults(false);
+          showToast("✨ Fresh AI deep cuts loaded");
+        } catch {
+          clearTimeout(timer);
+          if (reqId === state.aiReqSeq) {
+            state.aiStatus = "offline";
+            updateEnginePill();
+          }
+        }
+      }
+
+      function updateEnginePill() {
+        if (state.aiStatus === "live") {
+          el.enginePill.textContent = "✨ AI Deep Cuts";
+          el.enginePill.className = "engine-pill ai-live";
+        } else if (state.aiStatus === "loading") {
+          el.enginePill.textContent = "✨ Finding deep cuts…";
+          el.enginePill.className = "engine-pill";
+        } else {
+          el.enginePill.textContent = "⚡ Instant";
+          el.enginePill.className = "engine-pill";
+        }
+      }
+
+      /* =====================================================================
        * 5. LIVE WEB AUDIO ACOUSTIC VOICE ENGINE + SPEECH RECOGNITION
-       *    Measures RMS Energy, Autocorrelation Pitch F0 & Variance, ZCR,
-       *    and Voiced-to-Pause Speech Ratio while transcribing words.
        * ===================================================================== */
       let audioStream = null, audioCtx = null, analyser = null, rafId = null, speechRec = null;
       let voiceAccumulator = null;
@@ -1329,8 +1771,8 @@
         }
         zcr /= buf.length;
 
-        const minLag = Math.floor(sampleRate / 340); // ~340 Hz max speech F0
-        const maxLag = Math.floor(sampleRate / 75);  // ~75 Hz min speech F0
+        const minLag = Math.floor(sampleRate / 340);
+        const maxLag = Math.floor(sampleRate / 75);
         let bestLag = -1, bestCorr = 0;
         for (let lag = minLag; lag < Math.min(maxLag, buf.length >> 1); lag++) {
           let corr = 0;
@@ -1404,7 +1846,6 @@
           el.paperMicLabel.textContent = "Stop";
         }
 
-        // 1. Start acoustic Web Audio analyzer (gracefully optional if device locks mic)
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
           try {
             audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -1432,12 +1873,9 @@
               rafId = requestAnimationFrame(sampleLoop);
             };
             rafId = requestAnimationFrame(sampleLoop);
-          } catch {
-            // Acoustic stream unavailable (e.g. file:// on iOS) — SpeechRecognition may still work
-          }
+          } catch {}
         }
 
-        // 2. Start Speech-to-Text
         const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (SR) {
           try {
@@ -1510,6 +1948,7 @@
 
       function openSetup(isEditing) {
         stopVoiceCapture();
+        stopPreview();
         const p = state.profile;
         state.draftGenres = p ? [...p.genres] : [];
         state.draftGender = p ? p.gender : "neutral";
@@ -1574,7 +2013,6 @@
         if (!prof) return;
         state.profile = prof;
         saveProfile(prof);
-        // Open Step 2 Calibration
         state.calKeyTimes = [];
         state.calIkts = [];
         state.calVoiceSession = null;
@@ -1652,10 +2090,11 @@
       });
 
       /* =====================================================================
-       * 7. LINED PAPER UI: TYPE + WRITE + DRAW
+       * 7. LINED PAPER UI: TYPE + WRITE + DRAW (Transparent White Paper Fix)
        * ===================================================================== */
       function showPaper() {
         stopVoiceCapture();
+        stopPreview();
         el.setupScreen.classList.add("hidden");
         el.calScreen.classList.add("hidden");
         el.resultsScreen.classList.add("hidden");
@@ -1680,6 +2119,7 @@
         el.paperTextarea.classList.toggle("hidden", mode !== "type");
         el.drawWrap.classList.toggle("hidden", mode === "type");
         el.paperMicBtn.classList.toggle("hidden", mode !== "type");
+        el.undoPaperBtn.classList.toggle("hidden", mode === "type");
 
         if (mode === "write") {
           el.drawWatermark.textContent = "Write words naturally on the lines…";
@@ -1696,7 +2136,6 @@
       el.tabWrite.addEventListener("click", () => setMode("write"));
       el.tabDraw.addEventListener("click", () => setMode("draw"));
 
-      // Keystroke + Voice-Keyboard Burst Capture
       el.paperTextarea.addEventListener("keydown", e => {
         const now = performance.now();
         state.totalKeys++;
@@ -1711,7 +2150,6 @@
       el.paperTextarea.addEventListener("input", e => {
         const now = performance.now();
         if (e.inputType && e.inputType.includes("delete")) state.delKeys++;
-        // Detect multi-char dictation / swipe inserts cleanly
         if (e.data && e.data.length >= 4) {
           state.chunkBursts.push({ chars: e.data.length, t: now });
         }
@@ -1722,7 +2160,6 @@
         state.lastInputTs = now;
       });
 
-      // Canvas (240Hz Coalesced Capture for Write & Draw)
       function resizeCanvas() {
         const rect = el.drawWrap.getBoundingClientRect();
         if (!rect.width || !rect.height) return;
@@ -1803,6 +2240,12 @@
       el.canvas.addEventListener("pointerup", endStroke);
       el.canvas.addEventListener("pointercancel", endStroke);
 
+      el.undoPaperBtn.addEventListener("click", () => {
+        if (!state.strokes.length) return;
+        state.strokes.pop();
+        redrawCanvas();
+      });
+
       el.clearPaperBtn.addEventListener("click", () => {
         stopVoiceCapture();
         el.paperTextarea.value = "";
@@ -1815,8 +2258,6 @@
 
       /* =====================================================================
        * 8. TWO-STAGE IN-HOUSE MATHEMATICAL ENGINE
-       *    STAGE 1: Precision-Weighted Bayesian Multi-Modal State Estimator
-       *    STAGE 2: Decaying Prior + Online Gradient Fine-Tuning & Ranker
        * ===================================================================== */
       function computeBiorhythms(dobStr) {
         const dob = new Date(dobStr + "T00:00:00");
@@ -1830,16 +2271,14 @@
         const E = Math.sin((2 * Math.PI * daysAlive) / 28);
         const I = Math.sin((2 * Math.PI * daysAlive) / 33);
 
-        // Circadian time-of-day cosine wave anchored to chronotype
         const hr = new Date().getHours() + new Date().getMinutes() / 60;
         const chrono = state.profile?.traits?.chrono || "balanced";
         const peakHr = chrono === "early" ? 11.5 : (chrono === "night" ? 19.5 : 15.0);
-        const circadian = Math.cos((2 * Math.PI * (hr - peakHr)) / 24); // [-1, +1]
+        const circadian = Math.cos((2 * Math.PI * (hr - peakHr)) / 24);
 
         return { daysAlive, ageYears, birthYear, P, E, I, circadian };
       }
 
-      // Channel A: Lexical & Psycholinguistic Algebra (Contrast clauses, negations, self-focus)
       function channelLexical(rawText) {
         const text = (rawText || "").trim();
         if (!text) return null;
@@ -1859,7 +2298,6 @@
           if (!entry) continue;
           hits++;
 
-          // Clauses after "but / yet / though" carry higher weight for current intention
           let mult = seenContrast ? 1.35 : 1.0;
           if (i > 0 && INTENSIFIERS.has(tokens[i - 1])) mult *= 1.3;
           if (i > 1 && INTENSIFIERS.has(tokens[i - 2])) mult *= 1.18;
@@ -1875,21 +2313,18 @@
           dSum += entry.d * mult;
         }
 
-        // Smooth saturation so long paragraphs don't clip abruptly
         const norm = Math.sqrt(Math.max(1, hits));
         let v = 52 + (vSum / norm) * 0.92;
         let a = 50 + (aSum / norm) * 0.92;
         let d = 54 + (dSum / norm) * 0.85;
 
-        // Punctuation & stylometry
         const exclam = (text.match(/!/g) || []).length;
         const capsRatio = text.length > 6 ? (text.replace(/[^A-Z]/g, "").length / text.length) : 0;
         a += Math.min(14, exclam * 5.5) + (capsRatio > 0.45 ? 10 : 0);
 
         const iRatio = firstPerson / tokens.length;
-        if (iRatio > 0.18 && v < 48) { v -= 5; d -= 5; } // high self-focus rumination marker
+        if (iRatio > 0.18 && v < 48) { v -= 5; d -= 5; }
 
-        // Explicit goal extraction
         let explicitGoal = null;
         if (goalVotes.calm > 0 && (frictionHits > 0 || a > 54)) {
           explicitGoal = "calm";
@@ -1909,7 +2344,6 @@
         };
       }
 
-      // Channel B1: Keystroke Dynamics (Normalized to B0 calibration, dictation-aware)
       function channelKeystrokes(rawText) {
         const isDictated = state.voiceSession !== null || (state.chunkBursts.length >= 2 && state.totalKeys < 5);
         if (isDictated || state.ikts.length < 3) return null;
@@ -1920,7 +2354,6 @@
 
         const mu = mean(state.ikts);
         const sd = std(state.ikts, mu);
-        // Within-person Z-score: faster than personal baseline => positive z
         const zSpeed = clamp((baseMu - mu) / Math.max(30, baseSd), -2.2, 2.2);
         const burst = (sd + mu) > 0 ? (sd - mu) / (sd + mu) : 0;
         const delRatio = clamp(state.delKeys / Math.max(state.totalKeys, rawText.length, 1), 0, 0.45);
@@ -1933,7 +2366,6 @@
         return { v, a, d, load, precision: b0 ? 0.55 : 0.36, mu, burst, delRatio, zSpeed };
       }
 
-      // Channel B2: Acoustic Voice Telemetry (Normalized to B0 voice calibration)
       function channelVoice(rawText) {
         const vs = state.voiceSession;
         if (!vs) return null;
@@ -1959,7 +2391,6 @@
         return { v, a, d, load, precision: b0v ? 0.62 : 0.42, wps, meanF0: vs.meanF0, rmsRatio };
       }
 
-      // Channel C: Handwriting (Write Mode) vs Expressive Drawing (Draw Mode) Kinematics
       function channelInk(strokes, mode) {
         if (!strokes.length) return null;
 
@@ -2027,7 +2458,6 @@
         const coverage = clamp(((maxX - minX) * (maxY - minY)) / Math.max(1, cssW * cssH) * 100, 1, 100);
         const vertRatio = dyEnergy / Math.max(1, dxEnergy + dyEnergy);
 
-        // Per-line OLS Baseline Slope (for Write mode)
         const lines = [];
         for (const c of centroids) {
           let ln = lines.find(l => Math.abs(l.my - c.y) < 42);
@@ -2042,7 +2472,6 @@
           for (const p of ln.pts) { num += (p.x - mx) * (p.y - my); den += (p.x - mx) ** 2; }
           if (den > 220) {
             let deg = -Math.atan(num / den) * (180 / Math.PI);
-            // Left-handers naturally slant slightly differently; apply mild neutral offset
             if (state.profile?.hand === "left") deg += 1.2;
             wSlope += clamp(deg, -16, 16) * ln.pts.length;
             wSum += ln.pts.length;
@@ -2051,14 +2480,12 @@
         const slopeDeg = wSum > 0 ? wSlope / wSum : 0;
 
         if (mode === "draw") {
-          // Expressive Drawing Algebra: angularity vs smooth flow + vertical spike energy + spread
           const a = clamp(44 + (avgVel / 0.48 - 1) * 22 + angularity * 58 + (vertRatio - 0.45) * 32, 10, 95);
           const v = clamp(56 - angularity * 52 + (coverage > 22 && angularity < 0.16 ? 12 : 0) - Math.max(0, avgJerk - 1.8) * 6, 12, 92);
           const d = clamp(48 + coverage * 0.42 + (avgVel / 0.48 - 1) * 14, 15, 92);
           const load = clamp(25 + angularity * 85 + sdVel * 24, 10, 95);
           return { v, a, d, load, precision: 0.65, avgVel, avgJerk, angularity, coverage, slopeDeg, inkAir };
         } else {
-          // Handwriting Kinematics Algebra
           const meanPause = mean(pauses) || 210;
           const esi = Math.pow(clamp(meanPause / 240, 0.35, 2.8), 1.618) * (1 + clamp(sdVel / Math.max(avgVel, 0.2) * 0.25, 0.05, 0.6));
           const a = clamp(48 + (avgVel / 0.42 - 1) * 26 + (avgJerk / 1.3 - 1) * 16 + sdVel * 14, 10, 95);
@@ -2069,16 +2496,13 @@
         }
       }
 
-      // STAGE 1 + STAGE 2 COMBINED PIPELINE
       function runTwoStageEngine() {
         const p = state.profile;
         const rawText = el.paperTextarea.value.trim();
         const hasText = rawText.length > 0;
         const hasInk = state.strokes.length > 0;
-
         const bio = computeBiorhythms(p.dob);
 
-        // --- STAGE 1: Collect Active Channels & Precision-Weighted Bayesian Fusion ---
         const channels = [];
         let primarySource = "Text";
 
@@ -2096,16 +2520,14 @@
         }
         if (!voice && lex && keys) primarySource = "Typing + Words";
 
-        // Temporal Biorhythm + Circadian prior channel (always active, gentle weight = 0.22)
-        const bioChannel = {
+        channels.push({
           name: "bio",
           v: 52 + 16 * bio.E + 6 * bio.circadian,
           a: 50 + 18 * bio.P + 10 * bio.circadian,
           d: 52 + 12 * bio.I,
           load: 38 - 10 * bio.E,
           precision: 0.22
-        };
-        channels.push(bioChannel);
+        });
 
         let wTotal = 0, v1 = 0, a1 = 0, d1 = 0, l1 = 0;
         for (const c of channels) {
@@ -2117,16 +2539,13 @@
         }
         v1 /= wTotal; a1 /= wTotal; d1 /= wTotal; l1 /= wTotal;
 
-        // --- STAGE 2: Decaying Warm-Up Demographic/Trait Modulator + Online Taste Beta ---
         const currentYear = new Date().getFullYear();
         const peakYear = clamp(bio.birthYear + 19, 1972, currentYear - 2);
         const decay = 1 / (1 + 0.30 * (p.ratingsCount || 0));
 
-        // Mild, respectful warm-up offsets (strictly bounded, fade away with ratings)
         let priorV = 0, priorA = 0, priorAc = 0, priorInst = 0;
         if (bio.ageYears < 26) { priorA += 5; priorAc -= 5; }
         else if (bio.ageYears > 44) { priorA -= 4; priorAc += 6; }
-
         if (p.gender === "female") { priorV += 2; priorAc += 3; }
         else if (p.gender === "male") { priorA += 3; priorAc -= 2; }
 
@@ -2136,14 +2555,12 @@
         if (tr.sibling === "only") priorInst += 4;
         else if (tr.sibling === "youngest") priorV += 2.5;
 
-        // Apply Stage-2 fine-tuning
         const beta = p.beta || { v: 0, a: 0, ac: 0, inst: 0, bpm: 0, year: 0 };
         const v2 = Math.round(clamp(v1 + priorV * decay + beta.v, 8, 95));
         const a2 = Math.round(clamp(a1 + priorA * decay + beta.a, 8, 95));
         const d2 = Math.round(clamp(d1, 10, 95));
         const load2 = Math.round(clamp(l1, 8, 95));
 
-        // Classify State & Default Intent
         const explicitGoal = lex?.explicitGoal || null;
         let tag, heading, desc, recIntent;
 
@@ -2239,7 +2656,7 @@
         const ratings = p.ratingsMap || {};
         const eraWeight = 13 * analysis.decay + 6;
 
-        return CATALOG
+        const offlineRanked = CATALOG
           .filter(t => t.genre === genre)
           .map(t => {
             const dV = (t.v - target.tV) * 1.25;
@@ -2248,11 +2665,9 @@
             const dInst = (t.inst - target.tInst) * (state.intent === "focus" ? 0.78 : 0.24);
             const dBpm = (t.bpm - target.tBpm) * 0.16;
 
-            // Gaussian reminiscence-bump era affinity
             const yDiff = t.year - target.tYear;
             const eraBonus = eraWeight * Math.exp(-(yDiff * yDiff) / (2 * 16 * 16));
 
-            // User rating memory + mild novelty penalty if shown very recently
             const prevR = ratings[t.id] || 0;
             let ratingAdj = 0;
             if (prevR === 1) ratingAdj = 65;
@@ -2264,9 +2679,18 @@
 
             const dist = Math.max(0, Math.sqrt(dV*dV + dA*dA + dAc*dAc + dInst*dInst + dBpm*dBpm) - eraBonus + ratingAdj + recentPen);
             const fitPct = Math.round(clamp(99 - dist * 0.45, 68, 99));
-            return { ...t, dist, fitPct, userRating: prevR };
+            return { ...t, dist, fitPct, userRating: prevR, isAi: false };
           })
           .sort((a, b) => a.dist - b.dist);
+
+        // Prepend live AI deep cuts (if loaded) while deduplicating against offline catalog
+        const aiList = (state.aiPicksByGenre[genre] || []).map(t => ({
+          ...t,
+          userRating: ratings[t.id] || 0
+        }));
+        const seenKeys = new Set(aiList.map(trackKey));
+        const merged = [...aiList, ...offlineRanked.filter(t => !seenKeys.has(trackKey(t)))];
+        return merged;
       }
 
       function applyTrackRating(track, stars, target) {
@@ -2275,23 +2699,35 @@
         p.ratingsMap[track.id] = stars;
         if (isNew) p.ratingsCount = (p.ratingsCount || 0) + 1;
 
-        // Online stochastic gradient step toward liked / away from disliked audio features
-        const s = (stars - 3) / 2; // -1 .. +1
+        const s = (stars - 3) / 2;
         const lr = 0.17;
-        p.beta.v = clamp((p.beta.v || 0) + lr * s * (track.v - target.tV), -22, 22);
-        p.beta.a = clamp((p.beta.a || 0) + lr * s * (track.a - target.tA), -22, 22);
-        p.beta.ac = clamp((p.beta.ac || 0) + lr * s * (track.ac - target.tAc), -26, 26);
-        p.beta.inst = clamp((p.beta.inst || 0) + lr * s * (track.inst - target.tInst), -24, 24);
-        p.beta.bpm = clamp((p.beta.bpm || 0) + 0.14 * s * (track.bpm - target.tBpm), -24, 24);
-        p.beta.year = clamp((p.beta.year || 0) + 0.22 * s * (track.year - target.tYear), -24, 24);
+        p.beta.v = clamp((p.beta.v || 0) + lr * s * ((track.v ?? target.tV) - target.tV), -22, 22);
+        p.beta.a = clamp((p.beta.a || 0) + lr * s * ((track.a ?? target.tA) - target.tA), -22, 22);
+        p.beta.ac = clamp((p.beta.ac || 0) + lr * s * ((track.ac ?? target.tAc) - target.tAc), -26, 26);
+        p.beta.inst = clamp((p.beta.inst || 0) + lr * s * ((track.inst ?? target.tInst) - target.tInst), -24, 24);
+        p.beta.bpm = clamp((p.beta.bpm || 0) + 0.14 * s * ((track.bpm ?? target.tBpm) - target.tBpm), -24, 24);
+        p.beta.year = clamp((p.beta.year || 0) + 0.22 * s * ((track.year ?? target.tYear) - target.tYear), -24, 24);
 
         saveProfile(p);
+
+        // Silent cloud log to Supabase
+        logToSupabase({
+          event_type: "track_rating",
+          mood_tag: state.lastAnalysis?.tag || "",
+          intent: state.intent,
+          input_mode: state.lastAnalysis?.primarySource || "",
+          stars,
+          track_title: track.title,
+          track_artist: track.artist,
+          genre: track.genre
+        });
+
         showToast(stars >= 4 ? `Rated ${stars}★ — tuned closer to this feel` : (stars <= 2 ? `Rated ${stars}★ — steering away from this style` : `Rated 3★`));
         renderResults(false);
       }
 
       /* =====================================================================
-       * 9. RENDER RESULTS (CLEAN, PHONE-FIRST, MATHS HIDDEN)
+       * 9. RENDER RESULTS + 12-TRACK MIX + LIVE MEDIA HYDRATION
        * ===================================================================== */
       function renderResults(recordRecent = true) {
         const analysis = state.lastAnalysis;
@@ -2301,56 +2737,116 @@
         el.stateTag.textContent = analysis.tag;
         el.inputBadge.textContent = analysis.primarySource;
         el.stateHeading.textContent = analysis.heading;
-        el.stateDesc.textContent = analysis.desc;
+        el.stateDesc.textContent = state.aiMoodLine || analysis.desc;
+        updateEnginePill();
 
         el.intentRow.querySelectorAll(".intent-btn").forEach(btn => {
           btn.classList.toggle("active", btn.dataset.intent === state.intent);
         });
 
+        const rankedByGenre = {};
         const chosen = [];
+        const pickLookup = {};
+
         el.picksList.innerHTML = state.profile.genres.map(genre => {
           const ranked = rankGenreTracks(genre, target, analysis);
+          rankedByGenre[genre] = ranked;
           const offset = (state.swapOffsets[genre] || 0) % ranked.length;
           const pick = ranked[offset];
           chosen.push(pick);
+          pickLookup[pick.id] = pick;
+
+          const key = trackKey(pick);
+          const media = state.mediaCache[key];
+          const artSrc = media?.artwork || FALLBACK_ART;
+          const hasClip = Boolean(media?.previewUrl);
+          const isPlaying = state.playingKey === key;
 
           const url = `https://open.spotify.com/search/${encodeURIComponent(pick.title + " " + pick.artist)}`;
+          const aiBadge = pick.isAi
+            ? `<span class="ai-gem-badge">${pick.discovery === "anchor" ? "✨ AI Pick" : "✨ AI Gem"}</span>`
+            : "";
+
           const starsHtml = [1, 2, 3, 4, 5].map(n =>
-            `<button type="button" class="star-btn ${pick.userRating >= n ? "lit" : ""}" data-track="${pick.id}" data-stars="${n}" aria-label="Rate ${n} stars">★</button>`
+            `<button type="button" class="star-btn ${pick.userRating >= n ? "lit" : ""}" data-track="${escHtml(pick.id)}" data-stars="${n}" aria-label="Rate ${n} stars">★</button>`
           ).join("");
 
           return `
             <article class="pick-card">
               <div class="pick-top">
-                <span class="genre-badge">${genre}</span>
+                <span class="genre-left">
+                  <span class="genre-badge">${escHtml(genre)}</span>
+                  ${aiBadge}
+                </span>
                 <span class="fit-meta">${pick.fitPct}% match • ${pick.bpm} BPM</span>
               </div>
               <div class="track-main-row">
+                <img class="cover-art" src="${artSrc}" data-art-key="${escHtml(key)}" alt="" loading="lazy" />
                 <div class="track-info">
-                  <h3 class="track-name">${pick.title}</h3>
-                  <p class="track-artist">${pick.artist} · ${pick.year}</p>
+                  <h3 class="track-name">${escHtml(pick.title)}</h3>
+                  <p class="track-artist">${escHtml(pick.artist)} · ${pick.year}</p>
+                  <p class="track-reason">${escHtml(pick.vibe)}</p>
                 </div>
-                <a href="${url}" target="_blank" rel="noopener noreferrer" class="spotify-open-btn">▶ Play</a>
               </div>
-              <p class="track-reason">${pick.vibe}</p>
+              <div class="play-actions">
+                <button type="button" class="preview-btn ${isPlaying ? "playing" : ""}" data-preview-key="${escHtml(key)}" ${media && !hasClip ? "disabled" : ""}>
+                  ${isPlaying ? "■ Stop" : (media && !hasClip ? "No clip" : "▶ 30s")}
+                </button>
+                <a href="${url}" target="_blank" rel="noopener noreferrer" class="spotify-open-btn">▶ Spotify</a>
+              </div>
               <div class="pick-footer">
                 <div class="star-bar">
                   <span class="star-label">Rate:</span>
                   ${starsHtml}
                 </div>
-                <button type="button" class="swap-btn" data-swap="${genre}">↻ Another</button>
+                <button type="button" class="swap-btn" data-swap="${escHtml(genre)}">↻ Another</button>
               </div>
             </article>
           `;
         }).join("");
 
+        // Build 12-Track Session Mix across chosen genres (interleaved round-robin, deduped)
+        const mix = [];
+        const mixKeys = new Set();
+        const genres = state.profile.genres;
+        for (let depth = 0; depth < 12 && mix.length < 12; depth++) {
+          for (const g of genres) {
+            const list = rankedByGenre[g] || [];
+            const item = list[depth];
+            if (item && !mixKeys.has(trackKey(item))) {
+              mixKeys.add(trackKey(item));
+              mix.push(item);
+              if (mix.length >= 12) break;
+            }
+          }
+        }
+        state.mixTracks = mix;
+
+        el.mixList.innerHTML = mix.map((t, idx) => {
+          const key = trackKey(t);
+          const isPlaying = state.playingKey === key;
+          const url = `https://open.spotify.com/search/${encodeURIComponent(t.title + " " + t.artist)}`;
+          return `
+            <div class="mix-row">
+              <span class="mix-num">${idx + 1}</span>
+              <div class="mix-info">
+                <div class="mix-title">${escHtml(t.title)}</div>
+                <div class="mix-sub">${escHtml(t.artist)} • ${escHtml(t.genre)} • ${t.bpm} BPM</div>
+              </div>
+              <button type="button" class="mix-mini-play ${isPlaying ? "playing" : ""}" data-preview-key="${escHtml(key)}" title="30s preview">${isPlaying ? "■" : "▶"}</button>
+              <a href="${url}" target="_blank" rel="noopener noreferrer" class="mix-mini-play sp" title="Open in Spotify">♫</a>
+            </div>
+          `;
+        }).join("");
+
         if (recordRecent) {
-          state.recentTrackIds = [...chosen.map(c => c.id), ...state.recentTrackIds].slice(0, 12);
+          state.recentTrackIds = [...chosen.map(c => c.id), ...state.recentTrackIds].slice(0, 14);
         }
 
+        // Wire card controls
         el.picksList.querySelectorAll(".star-btn").forEach(btn => {
           btn.addEventListener("click", () => {
-            const tr = CATALOG.find(t => t.id === btn.dataset.track);
+            const tr = pickLookup[btn.dataset.track] || CATALOG.find(t => t.id === btn.dataset.track);
             if (tr) applyTrackRating(tr, Number(btn.dataset.stars), target);
           });
         });
@@ -2363,27 +2859,35 @@
           });
         });
 
+        document.querySelectorAll("[data-preview-key]").forEach(btn => {
+          btn.addEventListener("click", () => playPreviewByKey(btn.dataset.previewKey));
+        });
+
+        // Fetch real album covers + 30s clips asynchronously for visible hero picks
+        hydrateMediaForTracks(chosen);
+        if (!el.mixBody.classList.contains("hidden")) hydrateMediaForTracks(mix);
+
         const intentNames = { current: "aligned with my current mood", calm: "calming & unwinding", focus: "deep focus", lift: "uplifting & energising" };
         const seedList = chosen.map(c => `"${c.title}" by ${c.artist}`).join(", ");
         state.spotifyPrompt = `Create a Spotify playlist ${intentNames[state.intent]} (${analysis.tag} — around ${target.tBpm} BPM) blending ${state.profile.genres.join(", ")}. Use tracks like ${seedList} as the sonic anchor, mixing mostly fresh discoveries with a couple of familiar gems.`;
         state.shareText = `My Spotify More mood right now: ${analysis.tag}\n` + chosen.map(c => `• ${c.genre}: ${c.title} — ${c.artist}`).join("\n");
 
-        // Populate hidden dev drawer (invisible unless Rob triple-taps the mood pill)
         const b = analysis.bio;
         el.devDrawer.innerHTML = `
           <div><strong>[DEV AUDIT — Hidden from users]</strong></div>
-          <div>Stage 1 (Bayesian): V=${analysis.v1}, A=${analysis.a1}, Load=${analysis.load}</div>
-          <div>Stage 2 (Fine-tuned): V=${analysis.v}, A=${analysis.a}, D=${analysis.d} → Target V:${target.tV} A:${target.tA} Ac:${target.tAc} Inst:${target.tInst} BPM:${target.tBpm} Era:${target.tYear}</div>
+          <div>Engine: ${state.aiStatus} • Stage 1: V=${analysis.v1}, A=${analysis.a1}, Load=${analysis.load}</div>
+          <div>Stage 2: V=${analysis.v}, A=${analysis.a}, D=${analysis.d} → Target V:${target.tV} A:${target.tA} Ac:${target.tAc} Inst:${target.tInst} BPM:${target.tBpm} Era:${target.tYear}</div>
           <div>Biorhythm (t=${b.daysAlive}d): P=${b.P.toFixed(2)} E=${b.E.toFixed(2)} I=${b.I.toFixed(2)} Circ=${b.circadian.toFixed(2)}</div>
           <div>Prior Decay: ${Math.round(analysis.decay * 100)}% (${state.profile.ratingsCount} ratings) • B₀: ${state.profile.b0 ? "Locked" : "None"}</div>
         `;
       }
 
       /* =====================================================================
-       * 10. ACTIONS, SHARE & FEEDBACK
+       * 10. ACTIONS, MIX EXPANDER, SHARE & CLOUD FEEDBACK
        * ===================================================================== */
       el.analyzeBtn.addEventListener("click", () => {
         stopVoiceCapture();
+        stopPreview();
         const hasText = el.paperTextarea.value.trim().length > 0;
         const hasInk = state.strokes.length > 0;
         if (!hasText && !hasInk) {
@@ -2393,25 +2897,53 @@
         state.lastAnalysis = runTwoStageEngine();
         state.intent = state.lastAnalysis.recIntent;
         state.swapOffsets = {};
+        state.aiPicksByGenre = {};
+        state.aiMoodLine = "";
         state.selectedFeedback = null;
         el.fbChips.querySelectorAll(".fb-chip").forEach(b => b.classList.remove("selected"));
         el.fbNoteInput.value = "";
         el.devDrawer.classList.add("hidden");
+        el.mixBody.classList.add("hidden");
+        el.mixArrow.textContent = "▾";
 
+        const target = computeAudioTarget(state.lastAnalysis, state.intent);
         renderResults(true);
         el.paperScreen.classList.add("hidden");
         el.resultsScreen.classList.remove("hidden");
         window.scrollTo({ top: 0, behavior: "smooth" });
+
+        // Fire cloud AI deep-cut upgrade asynchronously (fails silently to offline engine if not deployed/offline)
+        fetchAiDeepCuts(state.lastAnalysis, target);
       });
 
       el.backToPaperBtn.addEventListener("click", () => showPaper());
 
       el.intentRow.querySelectorAll(".intent-btn").forEach(btn => {
         btn.addEventListener("click", () => {
+          stopPreview();
           state.intent = btn.dataset.intent;
           state.swapOffsets = {};
+          state.aiPicksByGenre = {};
+          state.aiMoodLine = "";
+          const target = computeAudioTarget(state.lastAnalysis, state.intent);
           renderResults(false);
+          fetchAiDeepCuts(state.lastAnalysis, target);
         });
+      });
+
+      el.mixToggleBtn.addEventListener("click", () => {
+        const hidden = el.mixBody.classList.toggle("hidden");
+        el.mixArrow.textContent = hidden ? "▾" : "▴";
+        if (!hidden && state.mixTracks.length) hydrateMediaForTracks(state.mixTracks);
+      });
+
+      el.copyMixBtn.addEventListener("click", () => {
+        if (!state.mixTracks.length) return;
+        const lines = [
+          `Spotify More — 12-Track Session Mix (${state.lastAnalysis?.tag || ""})`,
+          ...state.mixTracks.map((t, i) => `${i + 1}. ${t.title} — ${t.artist} (${t.genre})`)
+        ];
+        copyText(lines.join("\n"), "12-track mix copied!");
       });
 
       el.copyPromptBtn.addEventListener("click", () => {
@@ -2431,7 +2963,6 @@
         copyText(state.shareText, "Picks copied to share!");
       });
 
-      // Feedback controls
       el.fbChips.querySelectorAll(".fb-chip").forEach(btn => {
         btn.addEventListener("click", () => {
           state.selectedFeedback = btn.dataset.fb;
@@ -2455,20 +2986,21 @@
         state.profile.feedbackLog = (state.profile.feedbackLog || []).concat(entry).slice(-30);
         saveProfile(state.profile);
 
-        const fbText = `Spotify More Feedback (${entry.rating}): Mood="${entry.mood}" • Intent="${entry.intent}"${note ? " • Note: " + note : ""}`;
-        if (navigator.share) {
-          try {
-            await navigator.share({ title: "Spotify More Feedback", text: fbText });
-            showToast("Thanks for the feedback!");
-            el.fbNoteInput.value = "";
-            return;
-          } catch {}
-        }
-        copyText(fbText, "Feedback saved & copied to send!");
+        el.fbSendBtn.disabled = true;
+        const sent = await logToSupabase({
+          event_type: "feedback",
+          mood_tag: entry.mood,
+          intent: entry.intent,
+          input_mode: state.lastAnalysis?.primarySource || "",
+          rating_label: entry.rating,
+          note
+        });
+        el.fbSendBtn.disabled = false;
         el.fbNoteInput.value = "";
+        showToast(sent ? "Feedback sent — thank you!" : "Saved on your phone — thank you!");
       });
 
-      // Secret triple-tap on mood badge to toggle hidden dev maths view
+      // Secret triple-tap on mood badge to toggle hidden dev audit drawer
       el.stateTag.addEventListener("click", () => {
         state.devTapCount++;
         clearTimeout(state.devTapTimer);
