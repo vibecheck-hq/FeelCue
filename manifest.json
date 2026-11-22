@@ -1,6 +1,6 @@
 {
-  "name": "Spotify More",
-  "short_name": "Spotify More",
+  "name": "SpotifyMore",
+  "short_name": "SpotifyMore",
   "description": "Write, speak, or draw how you feel and get instant Spotify picks matched to your favourite genres.",
   "start_url": "./index.html",
   "display": "standalone",
