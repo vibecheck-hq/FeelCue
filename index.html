@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta id="themeColorMeta" name="theme-color" content="#FFFFFF" />
+  <meta id="themeColorMeta" name="theme-color" content="#191414" />
   <link rel="preconnect" href="https://qnnnnvlissdqdwmkgrao.supabase.co" crossorigin />
   <link rel="preconnect" href="https://itunes.apple.com" crossorigin />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -485,16 +485,59 @@
 
     .paper-top {
       position: relative;
-      z-index: 5;
-      padding: calc(0.6rem + var(--safe-top)) 0.75rem 0.65rem 2rem;
-      background: rgba(255, 255, 255, 0.96);
-      border-bottom: 1px solid rgba(147, 197, 253, 0.55);
-      box-shadow: 0 4px 14px -10px rgba(15, 23, 42, 0.12);
+      z-index: 6;
+      padding: calc(0.65rem + var(--safe-top)) 0.85rem 0.72rem 0.9rem;
+      background: linear-gradient(180deg, #191414 0%, #1E2421 100%);
+      color: #FFFFFF;
+      border-bottom: 2px solid rgba(29, 185, 84, 0.55);
+      box-shadow: 0 10px 26px -12px rgba(0, 0, 0, 0.45);
       display: flex;
       flex-direction: column;
+      gap: 0.58rem;
+    }
+    @media (min-width: 640px) { .paper-top { padding: 0.85rem 1.5rem 0.85rem 3.5rem; } }
+
+    .paper-brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       gap: 0.5rem;
     }
-    @media (min-width: 640px) { .paper-top { padding: 0.85rem 1.5rem 0.75rem 4rem; } }
+    .brand-lockup {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.48rem;
+    }
+    .brand-dot {
+      width: 26px;
+      height: 26px;
+      border-radius: 9999px;
+      background: linear-gradient(145deg, #22C55E 0%, #1DB954 100%);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      color: #191414;
+      font-weight: 900;
+      box-shadow: 0 4px 12px -2px rgba(29, 185, 84, 0.65);
+    }
+    .brand-name {
+      font-size: 0.98rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #FFFFFF;
+    }
+    .brand-name span { color: #1DB954; }
+    .paper-top .mini-btn {
+      color: #CBD5E1;
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .paper-top .mini-btn:hover { background: rgba(255, 255, 255, 0.16); color: #FFFFFF; }
+    .paper-top .install-chip {
+      background: linear-gradient(180deg, #22C55E 0%, #1DB954 100%);
+      color: #052E16;
+      border-color: rgba(255, 255, 255, 0.2);
+    }
 
     .paper-top-controls {
       display: flex;
@@ -503,24 +546,203 @@
       gap: 0.35rem;
     }
     .mode-switch {
-      display: inline-flex;
-      background: #EEF2F6;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      width: 100%;
+      background: rgba(255, 255, 255, 0.09);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 9999px;
       padding: 3px;
-      box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.08);
     }
     .mode-tab {
-      min-height: 32px;
-      padding: 0.22rem 0.74rem;
+      min-height: 34px;
+      padding: 0.24rem 0.5rem;
       border-radius: 9999px;
-      font-size: 0.76rem;
+      font-size: 0.78rem;
       font-weight: 700;
-      color: var(--muted);
+      color: #CBD5E1;
+      text-align: center;
     }
     .mode-tab.active {
+      background: linear-gradient(180deg, #22C55E 0%, #1DB954 100%);
+      color: #052E16;
+      box-shadow: 0 4px 12px -4px rgba(29, 185, 84, 0.7);
+    }
+    .paper-top .prompt-text {
+      color: #F1F5F9;
+      font-size: 1.02rem;
+      padding-left: 0.15rem;
+    }
+    @media (min-width: 640px) { .paper-top .prompt-text { font-size: 1.18rem; } }
+
+    .cheeky-toggle {
+      min-height: 34px;
+      padding: 0.25rem 0.68rem;
+      border-radius: 9999px;
+      border: 1.5px solid var(--border);
       background: #FFFFFF;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--ink-soft);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      box-shadow: var(--shadow-pill);
+    }
+    .cheeky-toggle.active {
+      border-color: #F59E0B;
+      background: linear-gradient(180deg, #FEF3C7 0%, #FDE68A 100%);
+      color: #92400E;
+    }
+
+    /* ================= GAMES & VISUAL VIBE PICKER PANE ================= */
+    .paper-screen.games-mode { background-image: none; background-color: #EEF5F1; }
+    .paper-screen.games-mode .paper-bar { padding-left: 0.9rem; background: linear-gradient(to top, #EEF5F1 82%, rgba(238, 245, 241, 0)); }
+    .games-wrap {
+      position: relative;
+      z-index: 5;
+      flex: 1;
+      width: 100%;
+      max-width: 540px;
+      margin: 0 auto;
+      padding: 0.85rem 0.8rem 5.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      background: linear-gradient(180deg, #ECF6F1 0%, #F4F7F6 100%);
+    }
+    .game-card {
+      border-radius: 1.2rem;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      background: #FFFFFF;
+      padding: 0.95rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      box-shadow: var(--shadow-card);
+    }
+    .game-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+    .game-title {
+      margin: 0;
+      font-size: 0.95rem;
+      font-weight: 800;
       color: var(--ink);
-      box-shadow: 0 2px 5px rgba(15, 23, 42, 0.12);
+    }
+    .game-sub {
+      margin: -0.35rem 0 0;
+      font-size: 0.76rem;
+      color: var(--muted);
+    }
+    .game-stat-pill {
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 0.22rem 0.6rem;
+      border-radius: 9999px;
+      background: #F0FDF4;
+      color: #065F46;
+      border: 1px solid #BBF7D0;
+    }
+
+    /* Visual Vibe Scene Grid */
+    .vibe-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.55rem;
+    }
+    .vibe-tile {
+      position: relative;
+      min-height: 88px;
+      border-radius: 1rem;
+      padding: 0.72rem;
+      color: #FFFFFF;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      border: 2.5px solid transparent;
+      box-shadow: 0 8px 18px -10px rgba(15, 23, 42, 0.45);
+    }
+    .vibe-tile.selected {
+      border-color: #1DB954;
+      box-shadow: 0 0 0 3px rgba(29, 185, 84, 0.28), 0 10px 22px -10px rgba(29, 185, 84, 0.6);
+      transform: translateY(-1px);
+    }
+    .vibe-emoji {
+      font-size: 1.35rem;
+      line-height: 1;
+    }
+    .vibe-check {
+      position: absolute;
+      top: 0.48rem;
+      right: 0.52rem;
+      width: 22px;
+      height: 22px;
+      border-radius: 9999px;
+      background: #1DB954;
+      color: #052E16;
+      font-size: 0.75rem;
+      font-weight: 900;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .vibe-tile.selected .vibe-check { display: inline-flex; }
+    .vibe-name {
+      font-size: 0.84rem;
+      font-weight: 800;
+      line-height: 1.18;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+    }
+    .vibe-cap {
+      font-size: 0.69rem;
+      opacity: 0.9;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+    }
+
+    /* Match the Pairs Fatigue Grid */
+    .pairs-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.45rem;
+    }
+    .pair-card {
+      aspect-ratio: 1 / 1;
+      border-radius: 0.85rem;
+      border: 1.5px solid var(--border);
+      background: linear-gradient(160deg, #1E293B 0%, #0F172A 100%);
+      color: #1DB954;
+      font-size: 1.5rem;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 14px -8px rgba(15, 23, 42, 0.45);
+      user-select: none;
+    }
+    .pair-card.flipped {
+      background: #FFFFFF;
+      border-color: #94A3B8;
+      color: #0F172A;
+    }
+    .pair-card.matched {
+      background: linear-gradient(180deg, #ECFDF5 0%, #D1FAE5 100%);
+      border-color: #1DB954;
+      color: #065F46;
+    }
+    .pairs-result {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #065F46;
+      background: #ECFDF5;
+      border: 1px solid #A7F3D0;
+      border-radius: 0.75rem;
+      padding: 0.55rem 0.75rem;
     }
     .top-right-btns {
       display: flex;
@@ -1374,22 +1596,29 @@
     <button id="skipCalBtn" type="button" class="secondary-cta">Skip Calibration for Now</button>
   </section>
 
-  <!-- ================= 3. FULL-SCREEN WHITE LINED PAPER ================= -->
+  <!-- ================= 3. SPOTIFY-STYLED PAPER + DRAW + GAMES ================= -->
   <main id="paperScreen" class="paper-screen hidden">
-    <div class="margin-line"></div>
+    <div id="marginLine" class="margin-line"></div>
 
     <header class="paper-top">
+      <div class="paper-brand-row">
+        <div class="brand-lockup">
+          <span class="brand-dot" aria-hidden="true">♫</span>
+          <span class="brand-name">Spotify <span>More</span></span>
+        </div>
+        <div class="top-right-btns">
+          <button id="paperInstallBtn" type="button" class="install-chip hidden">📲 Install</button>
+          <button id="nextPromptBtn" type="button" class="mini-btn">↻ Prompt</button>
+          <button id="openProfileBtn" type="button" class="mini-btn" aria-label="Settings">⚙</button>
+        </div>
+      </div>
+
       <div class="paper-top-controls">
         <div class="mode-switch" role="tablist">
           <button id="tabType" type="button" class="mode-tab active">Type</button>
           <button id="tabWrite" type="button" class="mode-tab">Write</button>
           <button id="tabDraw" type="button" class="mode-tab">Draw</button>
-        </div>
-
-        <div class="top-right-btns">
-          <button id="paperInstallBtn" type="button" class="install-chip hidden">📲 Install</button>
-          <button id="nextPromptBtn" type="button" class="mini-btn">↻ Prompt</button>
-          <button id="openProfileBtn" type="button" class="mini-btn">⚙</button>
+          <button id="tabGames" type="button" class="mode-tab">Games</button>
         </div>
       </div>
 
@@ -1400,7 +1629,7 @@
       <textarea
         id="paperTextarea"
         class="paper-textarea"
-        placeholder="Type or tap Speak — just say whatever is on your mind…"
+        placeholder="Type or tap Speak — tell it how it is…"
         autocomplete="off"
         spellcheck="true"
       ></textarea>
@@ -1408,6 +1637,29 @@
       <div id="drawWrap" class="draw-wrap hidden">
         <canvas id="inkCanvas"></canvas>
         <div id="drawWatermark" class="draw-watermark">Write naturally on the lines…</div>
+      </div>
+
+      <div id="gamesWrap" class="games-wrap hidden">
+        <!-- Activity 1: Visual Vibe Scene Picker -->
+        <div class="game-card">
+          <div class="game-head">
+            <h3 class="game-title">🎨 Pick Your Vibe</h3>
+            <span id="vibeCountPill" class="game-stat-pill">0 / 2 picked</span>
+          </div>
+          <p class="game-sub">Tap 1 or 2 pictures that feel most appealing right now</p>
+          <div id="vibeGrid" class="vibe-grid"></div>
+        </div>
+
+        <!-- Activity 2: Match the Pairs (Speed & Fatigue Check) -->
+        <div class="game-card">
+          <div class="game-head">
+            <h3 class="game-title">⚡ Match the Pairs</h3>
+            <button id="resetPairsBtn" type="button" class="swap-btn">↻ New Grid</button>
+          </div>
+          <p class="game-sub">Quick 6-pair memory check — measures your reaction pace &amp; mental fatigue</p>
+          <div id="pairsGrid" class="pairs-grid"></div>
+          <div id="pairsResultBox" class="pairs-result hidden"></div>
+        </div>
       </div>
     </div>
 
@@ -1417,6 +1669,7 @@
           <span class="mic-dot"></span>
           <span id="paperMicLabel">Speak</span>
         </button>
+        <button id="cheekyToggleBtn" type="button" class="cheeky-toggle hidden" title="Funny & cheeky song mode">😜 Silly</button>
         <button id="undoPaperBtn" type="button" class="subtle-link hidden">↶ Undo</button>
         <button id="clearPaperBtn" type="button" class="subtle-link">Clear</button>
       </div>
@@ -1596,12 +1849,30 @@
        * 1. PROMPTS, GENRES & 160-TRACK OFFLINE MULTI-GENRE CATALOG
        * ===================================================================== */
       const PROMPTS = [
-        "“Right now, without tidying it up — what’s sitting loudest in your head?”",
-        "“What does the energy inside your body feel like right this second?”",
-        "“What are you trying to push through, shake off, or hold onto today?”",
-        "“If the next hour belonged completely to you, what headspace do you want?”",
-        "“Say the honest first line about how today is actually going.”"
+        "“How’s today actually treating you so far?”",
+        "“What’s the main thing on your mind right now?”",
+        "“What are you up to — driving, cooking, working, or switching off?”",
+        "“Sum up your day in one honest sentence.”",
+        "“Need a breather, a boost, or something to keep you company?”",
+        "“What kind of atmosphere do you want in the room right now?”",
+        "“Long day or good day? Tell it like it is.”",
+        "“If right now had a soundtrack, what should it feel like?”",
+        "“Are you winding down, gearing up, or stuck in the middle?”",
+        "“Say whatever’s in your head — no need to tidy it up.”",
+        "“What’s the weather like inside your head today?”",
+        "“Got something to celebrate, vent about, or just chill through?”"
       ];
+
+      const VIBE_SCENES = [
+        { id: "sunset", title: "Golden Sunset Drive", sub: "Warm open-road lift", v: 82, a: 66, d: 68, ac: 48, inst: 18, bg: "linear-gradient(135deg, #F59E0B 0%, #EA580C 52%, #7C2D12 100%)", emoji: "🌅" },
+        { id: "rain", title: "Rainy Midnight Window", sub: "Soft calm & exhale", v: 36, a: 22, d: 42, ac: 78, inst: 52, bg: "linear-gradient(135deg, #1E3A8A 0%, #312E81 55%, #0F172A 100%)", emoji: "🌧️" },
+        { id: "neon", title: "Neon City Rush", sub: "Electric forward pulse", v: 68, a: 88, d: 78, ac: 12, inst: 26, bg: "linear-gradient(135deg, #06B6D4 0%, #7C3AED 55%, #1E1B4B 100%)", emoji: "⚡" },
+        { id: "forest", title: "Quiet Forest Morning", sub: "Grounded fresh air", v: 70, a: 28, d: 62, ac: 88, inst: 46, bg: "linear-gradient(135deg, #10B981 0%, #047857 55%, #064E3B 100%)", emoji: "🌲" },
+        { id: "storm", title: "Stormy Ocean Cliffs", sub: "Raw heavy release", v: 26, a: 84, d: 52, ac: 22, inst: 24, bg: "linear-gradient(135deg, #475569 0%, #1E293B 55%, #090D16 100%)", emoji: "🌊" },
+        { id: "vinyl", title: "Warm Coffee & Vinyl", sub: "Smooth cosy focus", v: 66, a: 44, d: 66, ac: 64, inst: 62, bg: "linear-gradient(135deg, #B45309 0%, #78350F 55%, #29150A 100%)", emoji: "☕" }
+      ];
+
+      const PAIR_SYMBOLS = ["🎸", "🎧", "🎹", "🥁", "🎺", "🎷"];
 
       // Exact parity with spotifymore-curate ALLOWED_GENRES
       const GENRES = [
@@ -1609,7 +1880,7 @@
         "Electronic / Dance", "Country / Roots", "Jazz / Lo-Fi", "Metal / Punk", "Classical / Ambient"
       ];
 
-      const CATALOG = [{"id":"pop1","genre":"Pop","title":"Blinding Lights","artist":"The Weeknd","year":2019,"bpm":171,"v":64,"a":82,"ac":5,"inst":2,"vibe":"Neon synth rush"},{"id":"pop2","genre":"Pop","title":"Levitating","artist":"Dua Lipa","year":2020,"bpm":103,"v":88,"a":80,"ac":6,"inst":0,"vibe":"Weightless upbeat lift"},{"id":"pop3","genre":"Pop","title":"Liability","artist":"Lorde","year":2017,"bpm":78,"v":18,"a":24,"ac":88,"inst":0,"vibe":"Quiet piano honesty"},{"id":"pop4","genre":"Pop","title":"Dancing On My Own","artist":"Robyn","year":2010,"bpm":117,"v":32,"a":84,"ac":4,"inst":0,"vibe":"Cathartic high-energy ache"},{"id":"pop5","genre":"Pop","title":"Dreams","artist":"Fleetwood Mac","year":1977,"bpm":120,"v":62,"a":48,"ac":46,"inst":2,"vibe":"Smooth timeless glide"},{"id":"pop6","genre":"Pop","title":"As It Was","artist":"Harry Styles","year":2022,"bpm":174,"v":68,"a":72,"ac":28,"inst":2,"vibe":"Bright bittersweet motion"},{"id":"pop7","genre":"Pop","title":"When the Party's Over","artist":"Billie Eilish","year":2018,"bpm":83,"v":20,"a":16,"ac":92,"inst":4,"vibe":"Hushed weightless exhale"},{"id":"pop8","genre":"Pop","title":"Take On Me","artist":"a-ha","year":1985,"bpm":169,"v":86,"a":88,"ac":8,"inst":2,"vibe":"Pure 80s ignition"},{"id":"pop9","genre":"Pop","title":"Toxic","artist":"Britney Spears","year":2003,"bpm":143,"v":72,"a":86,"ac":4,"inst":4,"vibe":"Sharp restless drive"},{"id":"pop10","genre":"Pop","title":"Style","artist":"Taylor Swift","year":2014,"bpm":95,"v":66,"a":68,"ac":12,"inst":4,"vibe":"Crisp steady cruise"},{"id":"pop11","genre":"Pop","title":"Birds of a Feather","artist":"Billie Eilish","year":2024,"bpm":105,"v":76,"a":54,"ac":34,"inst":4,"vibe":"Warm sunlit devotion"},{"id":"pop12","genre":"Pop","title":"Espresso","artist":"Sabrina Carpenter","year":2024,"bpm":104,"v":90,"a":76,"ac":14,"inst":2,"vibe":"Playful sparkling bounce"},{"id":"pop13","genre":"Pop","title":"Running Up That Hill","artist":"Kate Bush","year":1985,"bpm":108,"v":42,"a":74,"ac":22,"inst":10,"vibe":"Driving atmospheric surge"},{"id":"pop14","genre":"Pop","title":"Someone Like You","artist":"Adele","year":2011,"bpm":68,"v":22,"a":32,"ac":89,"inst":0,"vibe":"Raw piano release"},{"id":"pop15","genre":"Pop","title":"Green Light","artist":"Lorde","year":2017,"bpm":129,"v":60,"a":80,"ac":10,"inst":2,"vibe":"Forward-moving release"},{"id":"pop16","genre":"Pop","title":"Put Your Records On","artist":"Corinne Bailey Rae","year":2006,"bpm":96,"v":82,"a":42,"ac":66,"inst":4,"vibe":"Easy breezy calm"},{"id":"hh1","genre":"Hip-Hop / Rap","title":"N.Y. State of Mind","artist":"Nas","year":1994,"bpm":84,"v":38,"a":70,"ac":18,"inst":4,"vibe":"Gritty focused cadence"},{"id":"hh2","genre":"Hip-Hop / Rap","title":"Electric Relaxation","artist":"A Tribe Called Quest","year":1993,"bpm":94,"v":72,"a":52,"ac":34,"inst":12,"vibe":"Laid-back jazz-hop flow"},{"id":"hh3","genre":"Hip-Hop / Rap","title":"Alright","artist":"Kendrick Lamar","year":2015,"bpm":110,"v":74,"a":82,"ac":12,"inst":2,"vibe":"Resilient upward fire"},{"id":"hh4","genre":"Hip-Hop / Rap","title":"Lose Yourself","artist":"Eminem","year":2002,"bpm":171,"v":36,"a":88,"ac":8,"inst":2,"vibe":"Locked-in high tension"},{"id":"hh5","genre":"Hip-Hop / Rap","title":"2009","artist":"Mac Miller","year":2018,"bpm":78,"v":36,"a":34,"ac":62,"inst":10,"vibe":"Reflective strings & calm"},{"id":"hh6","genre":"Hip-Hop / Rap","title":"Rapp Snitch Knishes","artist":"MF DOOM","year":2004,"bpm":93,"v":64,"a":62,"ac":28,"inst":16,"vibe":"Sharp cerebral groove"},{"id":"hh7","genre":"Hip-Hop / Rap","title":"93 'Til Infinity","artist":"Souls of Mischief","year":1993,"bpm":92,"v":76,"a":56,"ac":26,"inst":10,"vibe":"Effortless sunlit head-nod"},{"id":"hh8","genre":"Hip-Hop / Rap","title":"DNA.","artist":"Kendrick Lamar","year":2017,"bpm":140,"v":30,"a":94,"ac":4,"inst":2,"vibe":"Raw adrenaline release"},{"id":"hh9","genre":"Hip-Hop / Rap","title":"Ms. Jackson","artist":"Outkast","year":2000,"bpm":95,"v":66,"a":74,"ac":16,"inst":2,"vibe":"Bouncy clear momentum"},{"id":"hh10","genre":"Hip-Hop / Rap","title":"Luv(sic) Pt. 3","artist":"Nujabes feat. Shing02","year":2005,"bpm":90,"v":60,"a":44,"ac":44,"inst":35,"vibe":"Warm nostalgic focus"},{"id":"hh11","genre":"Hip-Hop / Rap","title":"Not Like Us","artist":"Kendrick Lamar","year":2024,"bpm":101,"v":72,"a":86,"ac":6,"inst":2,"vibe":"High-voltage swagger"},{"id":"hh12","genre":"Hip-Hop / Rap","title":"Good Days","artist":"SZA","year":2020,"bpm":121,"v":58,"a":46,"ac":42,"inst":6,"vibe":"Floating hopeful exhale"},{"id":"hh13","genre":"Hip-Hop / Rap","title":"See You Again","artist":"Tyler, The Creator","year":2017,"bpm":79,"v":64,"a":56,"ac":34,"inst":6,"vibe":"Warm dreamy bounce"},{"id":"hh14","genre":"Hip-Hop / Rap","title":"Self Care","artist":"Mac Miller","year":2018,"bpm":154,"v":34,"a":48,"ac":28,"inst":12,"vibe":"Late-night steady reset"},{"id":"hh15","genre":"Hip-Hop / Rap","title":"C.R.E.A.M.","artist":"Wu-Tang Clan","year":1993,"bpm":90,"v":30,"a":60,"ac":24,"inst":8,"vibe":"Raw streetwise grit"},{"id":"hh16","genre":"Hip-Hop / Rap","title":"It Was A Good Day","artist":"Ice Cube","year":1992,"bpm":82,"v":84,"a":54,"ac":28,"inst":6,"vibe":"Smooth coasting ease"},{"id":"rb1","genre":"R&B / Soul","title":"Redbone","artist":"Childish Gambino","year":2016,"bpm":80,"v":56,"a":42,"ac":26,"inst":14,"vibe":"Slow hypnotic midnight groove"},{"id":"rb2","genre":"R&B / Soul","title":"Lovely Day","artist":"Bill Withers","year":1977,"bpm":98,"v":88,"a":66,"ac":42,"inst":4,"vibe":"Warm golden mood lift"},{"id":"rb3","genre":"R&B / Soul","title":"Pink + White","artist":"Frank Ocean","year":2016,"bpm":80,"v":68,"a":40,"ac":64,"inst":8,"vibe":"Floating serene clarity"},{"id":"rb4","genre":"R&B / Soul","title":"Superstition","artist":"Stevie Wonder","year":1972,"bpm":101,"v":84,"a":80,"ac":18,"inst":8,"vibe":"Funky unstoppable momentum"},{"id":"rb5","genre":"R&B / Soul","title":"Snooze","artist":"SZA","year":2022,"bpm":143,"v":46,"a":44,"ac":36,"inst":4,"vibe":"Lush soft emotional haze"},{"id":"rb6","genre":"R&B / Soul","title":"Cranes in the Sky","artist":"Solange","year":2016,"bpm":76,"v":32,"a":28,"ac":68,"inst":6,"vibe":"Gentle weightless decompression"},{"id":"rb7","genre":"R&B / Soul","title":"Untitled (How Does It Feel)","artist":"D'Angelo","year":2000,"bpm":74,"v":42,"a":38,"ac":48,"inst":6,"vibe":"Slow simmering soul"},{"id":"rb8","genre":"R&B / Soul","title":"Cold Little Heart","artist":"Michael Kiwanuka","year":2016,"bpm":78,"v":34,"a":46,"ac":52,"inst":20,"vibe":"Deep honest catharsis"},{"id":"rb9","genre":"R&B / Soul","title":"Leave the Door Open","artist":"Silk Sonic","year":2021,"bpm":74,"v":74,"a":52,"ac":38,"inst":4,"vibe":"Silky confident ease"},{"id":"rb10","genre":"R&B / Soul","title":"Crazy","artist":"Gnarls Barkley","year":2006,"bpm":112,"v":50,"a":74,"ac":16,"inst":4,"vibe":"Restless kinetic soul"},{"id":"rb11","genre":"R&B / Soul","title":"Best Part","artist":"Daniel Caesar feat. H.E.R.","year":2017,"bpm":75,"v":72,"a":24,"ac":86,"inst":4,"vibe":"Soft acoustic warmth"},{"id":"rb12","genre":"R&B / Soul","title":"Get You","artist":"Daniel Caesar","year":2016,"bpm":74,"v":64,"a":30,"ac":58,"inst":6,"vibe":"Velvet unhurried sway"},{"id":"rb13","genre":"R&B / Soul","title":"Doo Wop (That Thing)","artist":"Lauryn Hill","year":1998,"bpm":100,"v":78,"a":78,"ac":18,"inst":2,"vibe":"Crisp classic bounce"},{"id":"rb14","genre":"R&B / Soul","title":"No Scrubs","artist":"TLC","year":1999,"bpm":93,"v":62,"a":68,"ac":12,"inst":2,"vibe":"Sharp confident pulse"},{"id":"rb15","genre":"R&B / Soul","title":"Kill Bill","artist":"SZA","year":2022,"bpm":89,"v":40,"a":72,"ac":10,"inst":2,"vibe":"Dark catchy tension release"},{"id":"rb16","genre":"R&B / Soul","title":"Ain't No Sunshine","artist":"Bill Withers","year":1971,"bpm":78,"v":26,"a":32,"ac":72,"inst":6,"vibe":"Stark timeless weight"},{"id":"rk1","genre":"Rock / Alt","title":"Everlong","artist":"Foo Fighters","year":1997,"bpm":158,"v":54,"a":90,"ac":6,"inst":6,"vibe":"Surging urgent release"},{"id":"rk2","genre":"Rock / Alt","title":"No Surprises","artist":"Radiohead","year":1997,"bpm":76,"v":20,"a":24,"ac":62,"inst":8,"vibe":"Fragile quiet exhale"},{"id":"rk3","genre":"Rock / Alt","title":"Mr. Brightside","artist":"The Killers","year":2003,"bpm":148,"v":52,"a":92,"ac":4,"inst":2,"vibe":"Full-throttle tension burn"},{"id":"rk4","genre":"Rock / Alt","title":"Wish You Were Here","artist":"Pink Floyd","year":1975,"bpm":60,"v":36,"a":30,"ac":84,"inst":18,"vibe":"Spacious reflective acoustic"},{"id":"rk5","genre":"Rock / Alt","title":"The Less I Know The Better","artist":"Tame Impala","year":2015,"bpm":117,"v":72,"a":74,"ac":10,"inst":14,"vibe":"Elastic driving bassline"},{"id":"rk6","genre":"Rock / Alt","title":"Do I Wanna Know?","artist":"Arctic Monkeys","year":2013,"bpm":85,"v":40,"a":62,"ac":16,"inst":6,"vibe":"Heavy swaggering focus"},{"id":"rk7","genre":"Rock / Alt","title":"Here Comes the Sun","artist":"The Beatles","year":1969,"bpm":129,"v":90,"a":54,"ac":78,"inst":8,"vibe":"Clear bright reset"},{"id":"rk8","genre":"Rock / Alt","title":"Black","artist":"Pearl Jam","year":1991,"bpm":77,"v":24,"a":56,"ac":32,"inst":4,"vibe":"Raw heavy emotional weight"},{"id":"rk9","genre":"Rock / Alt","title":"Weird Fishes / Arpeggi","artist":"Radiohead","year":2007,"bpm":153,"v":46,"a":64,"ac":28,"inst":28,"vibe":"Hypnotic layered focus"},{"id":"rk10","genre":"Rock / Alt","title":"Don't Stop Me Now","artist":"Queen","year":1978,"bpm":156,"v":94,"a":90,"ac":16,"inst":2,"vibe":"Explosive upbeat spark"},{"id":"rk11","genre":"Rock / Alt","title":"Scar Tissue","artist":"Red Hot Chili Peppers","year":1999,"bpm":89,"v":58,"a":58,"ac":22,"inst":10,"vibe":"Sun-bleached easy stride"},{"id":"rk12","genre":"Rock / Alt","title":"1979","artist":"The Smashing Pumpkins","year":1995,"bpm":127,"v":64,"a":68,"ac":14,"inst":12,"vibe":"Nostalgic twilight cruise"},{"id":"rk13","genre":"Rock / Alt","title":"Fade Into You","artist":"Mazzy Star","year":1993,"bpm":78,"v":34,"a":22,"ac":72,"inst":10,"vibe":"Hazy slow decompression"},{"id":"rk14","genre":"Rock / Alt","title":"Seven Nation Army","artist":"The White Stripes","year":2003,"bpm":124,"v":46,"a":82,"ac":6,"inst":14,"vibe":"Stomping focused grit"},{"id":"rk15","genre":"Rock / Alt","title":"Linger","artist":"The Cranberries","year":1993,"bpm":95,"v":44,"a":42,"ac":54,"inst":6,"vibe":"Tender nostalgic sway"},{"id":"rk16","genre":"Rock / Alt","title":"Float On","artist":"Modest Mouse","year":2004,"bpm":101,"v":82,"a":72,"ac":16,"inst":4,"vibe":"Buoyant shake-it-off groove"},{"id":"if1","genre":"Indie / Folk","title":"Holocene","artist":"Bon Iver","year":2011,"bpm":74,"v":42,"a":26,"ac":86,"inst":12,"vibe":"Wide-angle quiet calm"},{"id":"if2","genre":"Indie / Folk","title":"Anchor","artist":"Novo Amor","year":2015,"bpm":74,"v":40,"a":20,"ac":92,"inst":16,"vibe":"Soft nervous-system exhale"},{"id":"if3","genre":"Indie / Folk","title":"Home","artist":"Edward Sharpe & The Magnetic Zeros","year":2009,"bpm":112,"v":88,"a":70,"ac":72,"inst":4,"vibe":"Sunlit communal lift"},{"id":"if4","genre":"Indie / Folk","title":"Motion Sickness","artist":"Phoebe Bridgers","year":2017,"bpm":114,"v":36,"a":64,"ac":34,"inst":4,"vibe":"Sharp bittersweet drive"},{"id":"if5","genre":"Indie / Folk","title":"San Luis","artist":"Gregory Alan Isakov","year":2018,"bpm":80,"v":48,"a":32,"ac":88,"inst":14,"vibe":"Open-sky twilight stillness"},{"id":"if6","genre":"Indie / Folk","title":"Heartbeats (Acoustic)","artist":"José González","year":2003,"bpm":92,"v":56,"a":30,"ac":96,"inst":18,"vibe":"Steady nylon-string grounding"},{"id":"if7","genre":"Indie / Folk","title":"Pink Moon","artist":"Nick Drake","year":1972,"bpm":88,"v":34,"a":18,"ac":96,"inst":12,"vibe":"Intimate acoustic solitude"},{"id":"if8","genre":"Indie / Folk","title":"White Winter Hymnal","artist":"Fleet Foxes","year":2008,"bpm":120,"v":74,"a":56,"ac":82,"inst":6,"vibe":"Crisp harmonic clarity"},{"id":"if9","genre":"Indie / Folk","title":"El Dorado","artist":"Hermanos Gutiérrez","year":2022,"bpm":84,"v":64,"a":34,"ac":88,"inst":96,"vibe":"Wordless desert horizon"},{"id":"if10","genre":"Indie / Folk","title":"Jackie Down the Line","artist":"Fontaines D.C.","year":2022,"bpm":132,"v":34,"a":84,"ac":14,"inst":8,"vibe":"Edgy post-punk drive"},{"id":"if11","genre":"Indie / Folk","title":"Stick Season","artist":"Noah Kahan","year":2022,"bpm":118,"v":48,"a":68,"ac":74,"inst":4,"vibe":"Brisk cathartic stomp"},{"id":"if12","genre":"Indie / Folk","title":"Riptide","artist":"Vance Joy","year":2013,"bpm":102,"v":82,"a":66,"ac":62,"inst":2,"vibe":"Light carefree strum"},{"id":"if13","genre":"Indie / Folk","title":"Skinny Love","artist":"Bon Iver","year":2007,"bpm":76,"v":22,"a":42,"ac":92,"inst":4,"vibe":"Raw acoustic release"},{"id":"if14","genre":"Indie / Folk","title":"Your Hand in Mine","artist":"Explosions in the Sky","year":2003,"bpm":106,"v":68,"a":64,"ac":42,"inst":98,"vibe":"Soaring instrumental clarity"},{"id":"if15","genre":"Indie / Folk","title":"First Day of My Life","artist":"Bright Eyes","year":2005,"bpm":96,"v":74,"a":28,"ac":94,"inst":4,"vibe":"Warm tender acoustic"},{"id":"if16","genre":"Indie / Folk","title":"Tieduprightnow","artist":"Parcels","year":2018,"bpm":104,"v":86,"a":74,"ac":26,"inst":24,"vibe":"Crisp indie-funk spark"},{"id":"el1","genre":"Electronic / Dance","title":"Glue","artist":"Bicep","year":2017,"bpm":130,"v":66,"a":78,"ac":8,"inst":84,"vibe":"Euphoric kinetic release"},{"id":"el2","genre":"Electronic / Dance","title":"Around the World","artist":"Daft Punk","year":1997,"bpm":121,"v":82,"a":80,"ac":4,"inst":74,"vibe":"Playful robotic lift"},{"id":"el3","genre":"Electronic / Dance","title":"Awake","artist":"Tycho","year":2014,"bpm":118,"v":74,"a":62,"ac":28,"inst":96,"vibe":"Clear sunlit focus"},{"id":"el4","genre":"Electronic / Dance","title":"Teardrop","artist":"Massive Attack","year":1998,"bpm":77,"v":34,"a":36,"ac":34,"inst":22,"vibe":"Deep trip-hop calm"},{"id":"el5","genre":"Electronic / Dance","title":"Open Eye Signal","artist":"Jon Hopkins","year":2013,"bpm":122,"v":46,"a":86,"ac":6,"inst":96,"vibe":"Relentless deep-work drive"},{"id":"el6","genre":"Electronic / Dance","title":"Midnight City","artist":"M83","year":2011,"bpm":105,"v":70,"a":78,"ac":6,"inst":36,"vibe":"Widescreen soaring rush"},{"id":"el7","genre":"Electronic / Dance","title":"Porcelain","artist":"Moby","year":1999,"bpm":95,"v":44,"a":34,"ac":32,"inst":64,"vibe":"Floating bittersweet calm"},{"id":"el8","genre":"Electronic / Dance","title":"Looped","artist":"Kiasmos","year":2014,"bpm":120,"v":54,"a":66,"ac":20,"inst":94,"vibe":"Minimal rhythmic focus"},{"id":"el9","genre":"Electronic / Dance","title":"Strobe","artist":"deadmau5","year":2009,"bpm":128,"v":60,"a":72,"ac":6,"inst":96,"vibe":"Patient architectural build"},{"id":"el10","genre":"Electronic / Dance","title":"Breathe","artist":"The Prodigy","year":1996,"bpm":130,"v":32,"a":95,"ac":2,"inst":30,"vibe":"High-voltage pressure valve"},{"id":"el11","genre":"Electronic / Dance","title":"Delilah (pull me out of this)","artist":"Fred again..","year":2022,"bpm":134,"v":54,"a":84,"ac":10,"inst":26,"vibe":"Cathartic euphoric pulse"},{"id":"el12","genre":"Electronic / Dance","title":"Sunset Lover","artist":"Petit Biscuit","year":2015,"bpm":91,"v":76,"a":50,"ac":34,"inst":82,"vibe":"Light warm breeze"},{"id":"el13","genre":"Electronic / Dance","title":"Breathe","artist":"Télépopmusik","year":2001,"bpm":95,"v":62,"a":38,"ac":32,"inst":52,"vibe":"Gentle mental reset"},{"id":"el14","genre":"Electronic / Dance","title":"Innerbloom","artist":"RÜFÜS DU SOL","year":2016,"bpm":122,"v":48,"a":58,"ac":14,"inst":46,"vibe":"Deep expansive release"},{"id":"el15","genre":"Electronic / Dance","title":"Kiara","artist":"Bonobo","year":2010,"bpm":108,"v":66,"a":60,"ac":44,"inst":94,"vibe":"Crisp organic focus"},{"id":"el16","genre":"Electronic / Dance","title":"One More Time","artist":"Daft Punk","year":2000,"bpm":123,"v":92,"a":88,"ac":4,"inst":20,"vibe":"Pure celebratory ignition"},{"id":"co1","genre":"Country / Roots","title":"Starting Over","artist":"Chris Stapleton","year":2020,"bpm":84,"v":74,"a":52,"ac":78,"inst":4,"vibe":"Warm grounded fresh start"},{"id":"co2","genre":"Country / Roots","title":"Fast Car","artist":"Luke Combs","year":2023,"bpm":98,"v":56,"a":58,"ac":70,"inst":4,"vibe":"Steady open-road exhale"},{"id":"co3","genre":"Country / Roots","title":"Something in the Orange","artist":"Zach Bryan","year":2022,"bpm":110,"v":26,"a":44,"ac":86,"inst":4,"vibe":"Raw aching honesty"},{"id":"co4","genre":"Country / Roots","title":"Wagon Wheel","artist":"Old Crow Medicine Show","year":2004,"bpm":148,"v":88,"a":76,"ac":80,"inst":4,"vibe":"Upbeat porch sing-along"},{"id":"co5","genre":"Country / Roots","title":"Jolene","artist":"Dolly Parton","year":1973,"bpm":111,"v":44,"a":68,"ac":74,"inst":4,"vibe":"Urgent classic storytelling"},{"id":"co6","genre":"Country / Roots","title":"Tennessee Whiskey","artist":"Chris Stapleton","year":2015,"bpm":49,"v":58,"a":40,"ac":72,"inst":6,"vibe":"Slow velvety soul roots"},{"id":"co7","genre":"Country / Roots","title":"Feathered Indians","artist":"Tyler Childers","year":2017,"bpm":128,"v":70,"a":74,"ac":68,"inst":4,"vibe":"Driving Appalachian stride"},{"id":"co8","genre":"Country / Roots","title":"Hurt","artist":"Johnny Cash","year":2002,"bpm":90,"v":14,"a":26,"ac":92,"inst":4,"vibe":"Stark solemn gravity"},{"id":"co9","genre":"Country / Roots","title":"Golden Hour","artist":"Kacey Musgraves","year":2018,"bpm":94,"v":78,"a":34,"ac":84,"inst":6,"vibe":"Soft luminous peace"},{"id":"co10","genre":"Country / Roots","title":"Kate McCannon","artist":"Colter Wall","year":2017,"bpm":96,"v":30,"a":66,"ac":84,"inst":4,"vibe":"Dark heavy forward grit"},{"id":"co11","genre":"Country / Roots","title":"Cover Me Up","artist":"Jason Isbell","year":2013,"bpm":72,"v":36,"a":38,"ac":88,"inst":4,"vibe":"Deep weathered honesty"},{"id":"co12","genre":"Country / Roots","title":"Take Me Home, Country Roads","artist":"John Denver","year":1971,"bpm":82,"v":84,"a":54,"ac":84,"inst":4,"vibe":"Warm nostalgic comfort"},{"id":"co13","genre":"Country / Roots","title":"Turtles All the Way Down","artist":"Sturgill Simpson","year":2014,"bpm":102,"v":64,"a":62,"ac":56,"inst":8,"vibe":"Expansive cosmic roots"},{"id":"co14","genre":"Country / Roots","title":"Hard Time","artist":"Charles Wesley Godwin","year":2019,"bpm":104,"v":48,"a":64,"ac":74,"inst":4,"vibe":"Resilient driving stride"},{"id":"co15","genre":"Country / Roots","title":"Good Lord Lorrie","artist":"Turnpike Troubadours","year":2012,"bpm":124,"v":62,"a":78,"ac":60,"inst":4,"vibe":"High-output fiddle pulse"},{"id":"co16","genre":"Country / Roots","title":"Wildfire","artist":"Watchhouse","year":2016,"bpm":88,"v":52,"a":30,"ac":92,"inst":12,"vibe":"Steady quiet picking"},{"id":"jl1","genre":"Jazz / Lo-Fi","title":"Blue in Green","artist":"Miles Davis","year":1959,"bpm":64,"v":32,"a":16,"ac":94,"inst":99,"vibe":"Midnight quiet contemplation"},{"id":"jl2","genre":"Jazz / Lo-Fi","title":"Take Five","artist":"The Dave Brubeck Quartet","year":1959,"bpm":174,"v":70,"a":64,"ac":88,"inst":99,"vibe":"Crisp smart swinging focus"},{"id":"jl3","genre":"Jazz / Lo-Fi","title":"Aruarian Dance","artist":"Nujabes","year":2004,"bpm":92,"v":64,"a":44,"ac":52,"inst":98,"vibe":"Flowing lo-fi concentration"},{"id":"jl4","genre":"Jazz / Lo-Fi","title":"Snowman","artist":"WYS","year":2018,"bpm":78,"v":46,"a":22,"ac":64,"inst":99,"vibe":"Warm rainy-window calm"},{"id":"jl5","genre":"Jazz / Lo-Fi","title":"Cantaloupe Island","artist":"Herbie Hancock","year":1964,"bpm":116,"v":76,"a":68,"ac":82,"inst":98,"vibe":"Bouncy sunlit groove"},{"id":"jl6","genre":"Jazz / Lo-Fi","title":"In a Sentimental Mood","artist":"Duke Ellington & John Coltrane","year":1963,"bpm":66,"v":48,"a":18,"ac":96,"inst":99,"vibe":"Velvet slow exhale"},{"id":"jl7","genre":"Jazz / Lo-Fi","title":"Hedron","artist":"BadBadNotGood","year":2014,"bpm":94,"v":50,"a":58,"ac":56,"inst":96,"vibe":"Sharp modern noir focus"},{"id":"jl8","genre":"Jazz / Lo-Fi","title":"Autumn Leaves","artist":"Chet Baker","year":1974,"bpm":112,"v":42,"a":36,"ac":92,"inst":96,"vibe":"Smooth melancholic drift"},{"id":"jl9","genre":"Jazz / Lo-Fi","title":"Moanin'","artist":"Art Blakey & The Jazz Messengers","year":1958,"bpm":126,"v":74,"a":76,"ac":84,"inst":98,"vibe":"High-agency blues swing"},{"id":"jl10","genre":"Jazz / Lo-Fi","title":"Losing Interest","artist":"Shiloh Dynasty & Itssvd","year":2017,"bpm":72,"v":24,"a":22,"ac":78,"inst":54,"vibe":"Hushed late-night weight"},{"id":"jl11","genre":"Jazz / Lo-Fi","title":"Naima","artist":"John Coltrane","year":1960,"bpm":62,"v":46,"a":16,"ac":96,"inst":99,"vibe":"Pure meditative peace"},{"id":"jl12","genre":"Jazz / Lo-Fi","title":"Tadow","artist":"Masego & FKJ","year":2017,"bpm":122,"v":82,"a":72,"ac":36,"inst":52,"vibe":"Playful jazzy uplift"},{"id":"jl13","genre":"Jazz / Lo-Fi","title":"Affection","artist":"Jinsang","year":2016,"bpm":80,"v":60,"a":30,"ac":68,"inst":98,"vibe":"Dusty chill study loop"},{"id":"jl14","genre":"Jazz / Lo-Fi","title":"So What","artist":"Miles Davis","year":1959,"bpm":136,"v":58,"a":48,"ac":90,"inst":99,"vibe":"Cool effortless clarity"},{"id":"jl15","genre":"Jazz / Lo-Fi","title":"Strasbourg / St. Denis","artist":"Roy Hargrove","year":2008,"bpm":118,"v":84,"a":74,"ac":76,"inst":98,"vibe":"Vibrant crisp lift"},{"id":"jl16","genre":"Jazz / Lo-Fi","title":"People Everywhere (Still Alive)","artist":"Khruangbin","year":2015,"bpm":118,"v":82,"a":70,"ac":38,"inst":88,"vibe":"Hypnotic sunlit groove"},{"id":"mp1","genre":"Metal / Punk","title":"Killing In The Name","artist":"Rage Against The Machine","year":1992,"bpm":89,"v":26,"a":96,"ac":2,"inst":6,"vibe":"Pure defiant pressure valve"},{"id":"mp2","genre":"Metal / Punk","title":"Master of Puppets","artist":"Metallica","year":1986,"bpm":212,"v":34,"a":95,"ac":2,"inst":24,"vibe":"Precision high-velocity drive"},{"id":"mp3","genre":"Metal / Punk","title":"Blitzkrieg Bop","artist":"Ramones","year":1976,"bpm":177,"v":82,"a":92,"ac":4,"inst":2,"vibe":"Raw joyous adrenaline"},{"id":"mp4","genre":"Metal / Punk","title":"Schism","artist":"TOOL","year":2001,"bpm":107,"v":36,"a":72,"ac":6,"inst":34,"vibe":"Complex hypnotic focus"},{"id":"mp5","genre":"Metal / Punk","title":"Basket Case","artist":"Green Day","year":1994,"bpm":170,"v":66,"a":88,"ac":4,"inst":2,"vibe":"Fast cathartic buzz"},{"id":"mp6","genre":"Metal / Punk","title":"Nothing Else Matters","artist":"Metallica","year":1991,"bpm":142,"v":36,"a":38,"ac":52,"inst":12,"vibe":"Heavy slow emotional breath"},{"id":"mp7","genre":"Metal / Punk","title":"Chop Suey!","artist":"System Of A Down","year":2001,"bpm":127,"v":28,"a":94,"ac":6,"inst":4,"vibe":"Chaotic cathartic release"},{"id":"mp8","genre":"Metal / Punk","title":"All The Small Things","artist":"blink-182","year":1999,"bpm":149,"v":84,"a":86,"ac":4,"inst":2,"vibe":"Bright carefree punch"},{"id":"mp9","genre":"Metal / Punk","title":"Change (In the House of Flies)","artist":"Deftones","year":2000,"bpm":138,"v":24,"a":66,"ac":10,"inst":12,"vibe":"Dark atmospheric release"},{"id":"mp10","genre":"Metal / Punk","title":"Orion","artist":"Metallica","year":1986,"bpm":124,"v":48,"a":74,"ac":6,"inst":98,"vibe":"Wordless heavy focus"},{"id":"mp11","genre":"Metal / Punk","title":"Sextape","artist":"Deftones","year":2010,"bpm":100,"v":46,"a":44,"ac":26,"inst":18,"vibe":"Dreamy heavy exhale"},{"id":"mp12","genre":"Metal / Punk","title":"Paranoid","artist":"Black Sabbath","year":1970,"bpm":163,"v":38,"a":90,"ac":4,"inst":6,"vibe":"Classic relentless grit"},{"id":"mp13","genre":"Metal / Punk","title":"Misery Business","artist":"Paramore","year":2007,"bpm":173,"v":72,"a":92,"ac":4,"inst":2,"vibe":"Electric punk spark"},{"id":"mp14","genre":"Metal / Punk","title":"Planet Caravan","artist":"Black Sabbath","year":1970,"bpm":92,"v":40,"a":22,"ac":64,"inst":30,"vibe":"Floating cosmic chill"},{"id":"mp15","genre":"Metal / Punk","title":"Pneuma","artist":"TOOL","year":2019,"bpm":112,"v":54,"a":70,"ac":8,"inst":44,"vibe":"Expansive rhythmic focus"},{"id":"mp16","genre":"Metal / Punk","title":"Ever Fallen in Love","artist":"Buzzcocks","year":1978,"bpm":160,"v":74,"a":88,"ac":6,"inst":2,"vibe":"Sharp vintage lift"},{"id":"ca1","genre":"Classical / Ambient","title":"Weightless Pt. 1","artist":"Marconi Union","year":2011,"bpm":60,"v":52,"a":10,"ac":42,"inst":99,"vibe":"Paced heart-rate drop"},{"id":"ca2","genre":"Classical / Ambient","title":"Clair de Lune","artist":"Claude Debussy","year":1905,"bpm":68,"v":54,"a":16,"ac":99,"inst":99,"vibe":"Moonlit weightless stillness"},{"id":"ca3","genre":"Classical / Ambient","title":"Experience","artist":"Ludovico Einaudi","year":2013,"bpm":92,"v":62,"a":56,"ac":92,"inst":99,"vibe":"Rising emotional clarity"},{"id":"ca4","genre":"Classical / Ambient","title":"Gymnopédie No. 1","artist":"Erik Satie","year":1888,"bpm":72,"v":40,"a":12,"ac":99,"inst":99,"vibe":"Gentle minimal space"},{"id":"ca5","genre":"Classical / Ambient","title":"Time","artist":"Hans Zimmer","year":2010,"bpm":120,"v":44,"a":52,"ac":68,"inst":99,"vibe":"Monumental deep focus"},{"id":"ca6","genre":"Classical / Ambient","title":"An Ending (Ascent)","artist":"Brian Eno","year":1983,"bpm":64,"v":58,"a":12,"ac":34,"inst":99,"vibe":"Zero-gravity horizon"},{"id":"ca7","genre":"Classical / Ambient","title":"Summer (Presto)","artist":"Antonio Vivaldi","year":1725,"bpm":154,"v":42,"a":86,"ac":96,"inst":99,"vibe":"Fierce classical urgency"},{"id":"ca8","genre":"Classical / Ambient","title":"On the Nature of Daylight","artist":"Max Richter","year":2004,"bpm":66,"v":20,"a":24,"ac":96,"inst":99,"vibe":"Deep tender catharsis"},{"id":"ca9","genre":"Classical / Ambient","title":"Says","artist":"Nils Frahm","year":2013,"bpm":112,"v":52,"a":60,"ac":68,"inst":98,"vibe":"Swelling focused momentum"},{"id":"ca10","genre":"Classical / Ambient","title":"Spring 1 (Recomposed)","artist":"Max Richter","year":2012,"bpm":116,"v":82,"a":66,"ac":94,"inst":99,"vibe":"Radiant crisp lift"},{"id":"ca11","genre":"Classical / Ambient","title":"Saman","artist":"Ólafur Arnalds","year":2018,"bpm":72,"v":54,"a":14,"ac":96,"inst":99,"vibe":"Slow breath felt piano"},{"id":"ca12","genre":"Classical / Ambient","title":"Nuvole Bianche","artist":"Ludovico Einaudi","year":2004,"bpm":76,"v":48,"a":26,"ac":98,"inst":99,"vibe":"Flowing calm clarity"},{"id":"ca13","genre":"Classical / Ambient","title":"Aisatsana [102]","artist":"Aphex Twin","year":2014,"bpm":68,"v":64,"a":18,"ac":96,"inst":99,"vibe":"Quiet dawn piano"},{"id":"ca14","genre":"Classical / Ambient","title":"Glass","artist":"Hania Rani","year":2019,"bpm":90,"v":58,"a":38,"ac":92,"inst":99,"vibe":"Crystalline thoughtful flow"},{"id":"ca15","genre":"Classical / Ambient","title":"Cornfield Chase","artist":"Hans Zimmer","year":2014,"bpm":120,"v":64,"a":64,"ac":74,"inst":99,"vibe":"Expansive upward wonder"},{"id":"ca16","genre":"Classical / Ambient","title":"Spiegel im Spiegel","artist":"Arvo Pärt","year":1978,"bpm":60,"v":44,"a":10,"ac":99,"inst":99,"vibe":"Pure spacious stillness"}];
+      const CATALOG = [{"id":"pop1","genre":"Pop","title":"Blinding Lights","artist":"The Weeknd","year":2019,"bpm":171,"v":64,"a":82,"ac":5,"inst":2,"vibe":"Neon synth rush"},{"id":"pop2","genre":"Pop","title":"Levitating","artist":"Dua Lipa","year":2020,"bpm":103,"v":88,"a":80,"ac":6,"inst":0,"vibe":"Weightless upbeat lift"},{"id":"pop3","genre":"Pop","title":"Liability","artist":"Lorde","year":2017,"bpm":78,"v":18,"a":24,"ac":88,"inst":0,"vibe":"Quiet piano honesty"},{"id":"pop4","genre":"Pop","title":"Dancing On My Own","artist":"Robyn","year":2010,"bpm":117,"v":32,"a":84,"ac":4,"inst":0,"vibe":"Cathartic high-energy ache"},{"id":"pop5","genre":"Pop","title":"Dreams","artist":"Fleetwood Mac","year":1977,"bpm":120,"v":62,"a":48,"ac":46,"inst":2,"vibe":"Smooth timeless glide"},{"id":"pop6","genre":"Pop","title":"As It Was","artist":"Harry Styles","year":2022,"bpm":174,"v":68,"a":72,"ac":28,"inst":2,"vibe":"Bright bittersweet motion"},{"id":"pop7","genre":"Pop","title":"When the Party's Over","artist":"Billie Eilish","year":2018,"bpm":83,"v":20,"a":16,"ac":92,"inst":4,"vibe":"Hushed weightless exhale"},{"id":"pop8","genre":"Pop","title":"Take On Me","artist":"a-ha","year":1985,"bpm":169,"v":86,"a":88,"ac":8,"inst":2,"vibe":"Pure 80s ignition"},{"id":"pop9","genre":"Pop","title":"Toxic","artist":"Britney Spears","year":2003,"bpm":143,"v":72,"a":86,"ac":4,"inst":4,"vibe":"Sharp restless drive"},{"id":"pop10","genre":"Pop","title":"Style","artist":"Taylor Swift","year":2014,"bpm":95,"v":66,"a":68,"ac":12,"inst":4,"vibe":"Crisp steady cruise"},{"id":"pop11","genre":"Pop","title":"Birds of a Feather","artist":"Billie Eilish","year":2024,"bpm":105,"v":76,"a":54,"ac":34,"inst":4,"vibe":"Warm sunlit devotion"},{"id":"pop12","genre":"Pop","title":"Espresso","artist":"Sabrina Carpenter","year":2024,"bpm":104,"v":90,"a":76,"ac":14,"inst":2,"vibe":"Playful sparkling bounce"},{"id":"pop13","genre":"Pop","title":"Running Up That Hill","artist":"Kate Bush","year":1985,"bpm":108,"v":42,"a":74,"ac":22,"inst":10,"vibe":"Driving atmospheric surge"},{"id":"pop14","genre":"Pop","title":"Someone Like You","artist":"Adele","year":2011,"bpm":68,"v":22,"a":32,"ac":89,"inst":0,"vibe":"Raw piano release"},{"id":"pop15","genre":"Pop","title":"Green Light","artist":"Lorde","year":2017,"bpm":129,"v":60,"a":80,"ac":10,"inst":2,"vibe":"Forward-moving release"},{"id":"pop16","genre":"Pop","title":"Put Your Records On","artist":"Corinne Bailey Rae","year":2006,"bpm":96,"v":82,"a":42,"ac":66,"inst":4,"vibe":"Easy breezy calm"},{"id":"hh1","genre":"Hip-Hop / Rap","title":"N.Y. State of Mind","artist":"Nas","year":1994,"bpm":84,"v":38,"a":70,"ac":18,"inst":4,"vibe":"Gritty focused cadence"},{"id":"hh2","genre":"Hip-Hop / Rap","title":"Electric Relaxation","artist":"A Tribe Called Quest","year":1993,"bpm":94,"v":72,"a":52,"ac":34,"inst":12,"vibe":"Laid-back jazz-hop flow"},{"id":"hh3","genre":"Hip-Hop / Rap","title":"Alright","artist":"Kendrick Lamar","year":2015,"bpm":110,"v":74,"a":82,"ac":12,"inst":2,"vibe":"Resilient upward fire"},{"id":"hh4","genre":"Hip-Hop / Rap","title":"Lose Yourself","artist":"Eminem","year":2002,"bpm":171,"v":36,"a":88,"ac":8,"inst":2,"vibe":"Locked-in high tension"},{"id":"hh5","genre":"Hip-Hop / Rap","title":"2009","artist":"Mac Miller","year":2018,"bpm":78,"v":36,"a":34,"ac":62,"inst":10,"vibe":"Reflective strings & calm"},{"id":"hh6","genre":"Hip-Hop / Rap","title":"Rapp Snitch Knishes","artist":"MF DOOM","year":2004,"bpm":93,"v":64,"a":62,"ac":28,"inst":16,"vibe":"Sharp cerebral groove"},{"id":"hh7","genre":"Hip-Hop / Rap","title":"93 'Til Infinity","artist":"Souls of Mischief","year":1993,"bpm":92,"v":76,"a":56,"ac":26,"inst":10,"vibe":"Effortless sunlit head-nod"},{"id":"hh8","genre":"Hip-Hop / Rap","title":"DNA.","artist":"Kendrick Lamar","year":2017,"bpm":140,"v":30,"a":94,"ac":4,"inst":2,"vibe":"Raw adrenaline release"},{"id":"hh9","genre":"Hip-Hop / Rap","title":"Ms. Jackson","artist":"Outkast","year":2000,"bpm":95,"v":66,"a":74,"ac":16,"inst":2,"vibe":"Bouncy clear momentum"},{"id":"hh10","genre":"Hip-Hop / Rap","title":"Luv(sic) Pt. 3","artist":"Nujabes feat. Shing02","year":2005,"bpm":90,"v":60,"a":44,"ac":44,"inst":35,"vibe":"Warm nostalgic focus"},{"id":"hh11","genre":"Hip-Hop / Rap","title":"Not Like Us","artist":"Kendrick Lamar","year":2024,"bpm":101,"v":72,"a":86,"ac":6,"inst":2,"vibe":"High-voltage swagger"},{"id":"hh12","genre":"Hip-Hop / Rap","title":"Good Days","artist":"SZA","year":2020,"bpm":121,"v":58,"a":46,"ac":42,"inst":6,"vibe":"Floating hopeful exhale"},{"id":"hh13","genre":"Hip-Hop / Rap","title":"See You Again","artist":"Tyler, The Creator","year":2017,"bpm":79,"v":64,"a":56,"ac":34,"inst":6,"vibe":"Warm dreamy bounce"},{"id":"hh14","genre":"Hip-Hop / Rap","title":"Self Care","artist":"Mac Miller","year":2018,"bpm":154,"v":34,"a":48,"ac":28,"inst":12,"vibe":"Late-night steady reset"},{"id":"hh15","genre":"Hip-Hop / Rap","title":"C.R.E.A.M.","artist":"Wu-Tang Clan","year":1993,"bpm":90,"v":30,"a":60,"ac":24,"inst":8,"vibe":"Raw streetwise grit"},{"id":"hh16","genre":"Hip-Hop / Rap","title":"It Was A Good Day","artist":"Ice Cube","year":1992,"bpm":82,"v":84,"a":54,"ac":28,"inst":6,"vibe":"Smooth coasting ease"},{"id":"rb1","genre":"R&B / Soul","title":"Redbone","artist":"Childish Gambino","year":2016,"bpm":80,"v":56,"a":42,"ac":26,"inst":14,"vibe":"Slow hypnotic midnight groove"},{"id":"rb2","genre":"R&B / Soul","title":"Lovely Day","artist":"Bill Withers","year":1977,"bpm":98,"v":88,"a":66,"ac":42,"inst":4,"vibe":"Warm golden mood lift"},{"id":"rb3","genre":"R&B / Soul","title":"Pink + White","artist":"Frank Ocean","year":2016,"bpm":80,"v":68,"a":40,"ac":64,"inst":8,"vibe":"Floating serene clarity"},{"id":"rb4","genre":"R&B / Soul","title":"Superstition","artist":"Stevie Wonder","year":1972,"bpm":101,"v":84,"a":80,"ac":18,"inst":8,"vibe":"Funky unstoppable momentum"},{"id":"rb5","genre":"R&B / Soul","title":"Snooze","artist":"SZA","year":2022,"bpm":143,"v":46,"a":44,"ac":36,"inst":4,"vibe":"Lush soft emotional haze"},{"id":"rb6","genre":"R&B / Soul","title":"Cranes in the Sky","artist":"Solange","year":2016,"bpm":76,"v":32,"a":28,"ac":68,"inst":6,"vibe":"Gentle weightless decompression"},{"id":"rb7","genre":"R&B / Soul","title":"Untitled (How Does It Feel)","artist":"D'Angelo","year":2000,"bpm":74,"v":42,"a":38,"ac":48,"inst":6,"vibe":"Slow simmering soul"},{"id":"rb8","genre":"R&B / Soul","title":"Cold Little Heart","artist":"Michael Kiwanuka","year":2016,"bpm":78,"v":34,"a":46,"ac":52,"inst":20,"vibe":"Deep honest catharsis"},{"id":"rb9","genre":"R&B / Soul","title":"Leave the Door Open","artist":"Silk Sonic","year":2021,"bpm":74,"v":74,"a":52,"ac":38,"inst":4,"vibe":"Silky confident ease"},{"id":"rb10","genre":"R&B / Soul","title":"Crazy","artist":"Gnarls Barkley","year":2006,"bpm":112,"v":50,"a":74,"ac":16,"inst":4,"vibe":"Restless kinetic soul"},{"id":"rb11","genre":"R&B / Soul","title":"Best Part","artist":"Daniel Caesar feat. H.E.R.","year":2017,"bpm":75,"v":72,"a":24,"ac":86,"inst":4,"vibe":"Soft acoustic warmth"},{"id":"rb12","genre":"R&B / Soul","title":"Get You","artist":"Daniel Caesar","year":2016,"bpm":74,"v":64,"a":30,"ac":58,"inst":6,"vibe":"Velvet unhurried sway"},{"id":"rb13","genre":"R&B / Soul","title":"Doo Wop (That Thing)","artist":"Lauryn Hill","year":1998,"bpm":100,"v":78,"a":78,"ac":18,"inst":2,"vibe":"Crisp classic bounce"},{"id":"rb14","genre":"R&B / Soul","title":"No Scrubs","artist":"TLC","year":1999,"bpm":93,"v":62,"a":68,"ac":12,"inst":2,"vibe":"Sharp confident pulse"},{"id":"rb15","genre":"R&B / Soul","title":"Kill Bill","artist":"SZA","year":2022,"bpm":89,"v":40,"a":72,"ac":10,"inst":2,"vibe":"Dark catchy tension release"},{"id":"rb16","genre":"R&B / Soul","title":"Ain't No Sunshine","artist":"Bill Withers","year":1971,"bpm":78,"v":26,"a":32,"ac":72,"inst":6,"vibe":"Stark timeless weight"},{"id":"rk1","genre":"Rock / Alt","title":"Everlong","artist":"Foo Fighters","year":1997,"bpm":158,"v":54,"a":90,"ac":6,"inst":6,"vibe":"Surging urgent release"},{"id":"rk2","genre":"Rock / Alt","title":"No Surprises","artist":"Radiohead","year":1997,"bpm":76,"v":20,"a":24,"ac":62,"inst":8,"vibe":"Fragile quiet exhale"},{"id":"rk3","genre":"Rock / Alt","title":"Mr. Brightside","artist":"The Killers","year":2003,"bpm":148,"v":52,"a":92,"ac":4,"inst":2,"vibe":"Full-throttle tension burn"},{"id":"rk4","genre":"Rock / Alt","title":"Wish You Were Here","artist":"Pink Floyd","year":1975,"bpm":60,"v":36,"a":30,"ac":84,"inst":18,"vibe":"Spacious reflective acoustic"},{"id":"rk5","genre":"Rock / Alt","title":"The Less I Know The Better","artist":"Tame Impala","year":2015,"bpm":117,"v":72,"a":74,"ac":10,"inst":14,"vibe":"Elastic driving bassline"},{"id":"rk6","genre":"Rock / Alt","title":"Do I Wanna Know?","artist":"Arctic Monkeys","year":2013,"bpm":85,"v":40,"a":62,"ac":16,"inst":6,"vibe":"Heavy swaggering focus"},{"id":"rk7","genre":"Rock / Alt","title":"Here Comes the Sun","artist":"The Beatles","year":1969,"bpm":129,"v":90,"a":54,"ac":78,"inst":8,"vibe":"Clear bright reset"},{"id":"rk8","genre":"Rock / Alt","title":"Black","artist":"Pearl Jam","year":1991,"bpm":77,"v":24,"a":56,"ac":32,"inst":4,"vibe":"Raw heavy emotional weight"},{"id":"rk9","genre":"Rock / Alt","title":"Weird Fishes / Arpeggi","artist":"Radiohead","year":2007,"bpm":153,"v":46,"a":64,"ac":28,"inst":28,"vibe":"Hypnotic layered focus"},{"id":"rk10","genre":"Rock / Alt","title":"Don't Stop Me Now","artist":"Queen","year":1978,"bpm":156,"v":94,"a":90,"ac":16,"inst":2,"vibe":"Explosive upbeat spark"},{"id":"rk11","genre":"Rock / Alt","title":"Scar Tissue","artist":"Red Hot Chili Peppers","year":1999,"bpm":89,"v":58,"a":58,"ac":22,"inst":10,"vibe":"Sun-bleached easy stride"},{"id":"rk12","genre":"Rock / Alt","title":"1979","artist":"The Smashing Pumpkins","year":1995,"bpm":127,"v":64,"a":68,"ac":14,"inst":12,"vibe":"Nostalgic twilight cruise"},{"id":"rk13","genre":"Rock / Alt","title":"Fade Into You","artist":"Mazzy Star","year":1993,"bpm":78,"v":34,"a":22,"ac":72,"inst":10,"vibe":"Hazy slow decompression"},{"id":"rk14","genre":"Rock / Alt","title":"Seven Nation Army","artist":"The White Stripes","year":2003,"bpm":124,"v":46,"a":82,"ac":6,"inst":14,"vibe":"Stomping focused grit"},{"id":"rk15","genre":"Rock / Alt","title":"Linger","artist":"The Cranberries","year":1993,"bpm":95,"v":44,"a":42,"ac":54,"inst":6,"vibe":"Tender nostalgic sway"},{"id":"rk16","genre":"Rock / Alt","title":"Float On","artist":"Modest Mouse","year":2004,"bpm":101,"v":82,"a":72,"ac":16,"inst":4,"vibe":"Buoyant shake-it-off groove"},{"id":"if1","genre":"Indie / Folk","title":"Holocene","artist":"Bon Iver","year":2011,"bpm":74,"v":42,"a":26,"ac":86,"inst":12,"vibe":"Wide-angle quiet calm"},{"id":"if2","genre":"Indie / Folk","title":"Anchor","artist":"Novo Amor","year":2015,"bpm":74,"v":40,"a":20,"ac":92,"inst":16,"vibe":"Soft nervous-system exhale"},{"id":"if3","genre":"Indie / Folk","title":"Home","artist":"Edward Sharpe & The Magnetic Zeros","year":2009,"bpm":112,"v":88,"a":70,"ac":72,"inst":4,"vibe":"Sunlit communal lift"},{"id":"if4","genre":"Indie / Folk","title":"Motion Sickness","artist":"Phoebe Bridgers","year":2017,"bpm":114,"v":36,"a":64,"ac":34,"inst":4,"vibe":"Sharp bittersweet drive"},{"id":"if5","genre":"Indie / Folk","title":"San Luis","artist":"Gregory Alan Isakov","year":2018,"bpm":80,"v":48,"a":32,"ac":88,"inst":14,"vibe":"Open-sky twilight stillness"},{"id":"if6","genre":"Indie / Folk","title":"Heartbeats (Acoustic)","artist":"José González","year":2003,"bpm":92,"v":56,"a":30,"ac":96,"inst":18,"vibe":"Steady nylon-string grounding"},{"id":"if7","genre":"Indie / Folk","title":"Pink Moon","artist":"Nick Drake","year":1972,"bpm":88,"v":34,"a":18,"ac":96,"inst":12,"vibe":"Intimate acoustic solitude"},{"id":"if8","genre":"Indie / Folk","title":"White Winter Hymnal","artist":"Fleet Foxes","year":2008,"bpm":120,"v":74,"a":56,"ac":82,"inst":6,"vibe":"Crisp harmonic clarity"},{"id":"if9","genre":"Indie / Folk","title":"El Dorado","artist":"Hermanos Gutiérrez","year":2022,"bpm":84,"v":64,"a":34,"ac":88,"inst":96,"vibe":"Wordless desert horizon"},{"id":"if10","genre":"Indie / Folk","title":"Jackie Down the Line","artist":"Fontaines D.C.","year":2022,"bpm":132,"v":34,"a":84,"ac":14,"inst":8,"vibe":"Edgy post-punk drive"},{"id":"if11","genre":"Indie / Folk","title":"Stick Season","artist":"Noah Kahan","year":2022,"bpm":118,"v":48,"a":68,"ac":74,"inst":4,"vibe":"Brisk cathartic stomp"},{"id":"if12","genre":"Indie / Folk","title":"Riptide","artist":"Vance Joy","year":2013,"bpm":102,"v":82,"a":66,"ac":62,"inst":2,"vibe":"Light carefree strum"},{"id":"if13","genre":"Indie / Folk","title":"Skinny Love","artist":"Bon Iver","year":2007,"bpm":76,"v":22,"a":42,"ac":92,"inst":4,"vibe":"Raw acoustic release"},{"id":"if14","genre":"Indie / Folk","title":"Your Hand in Mine","artist":"Explosions in the Sky","year":2003,"bpm":106,"v":68,"a":64,"ac":42,"inst":98,"vibe":"Soaring instrumental clarity"},{"id":"if15","genre":"Indie / Folk","title":"First Day of My Life","artist":"Bright Eyes","year":2005,"bpm":96,"v":74,"a":28,"ac":94,"inst":4,"vibe":"Warm tender acoustic"},{"id":"if16","genre":"Indie / Folk","title":"Tieduprightnow","artist":"Parcels","year":2018,"bpm":104,"v":86,"a":74,"ac":26,"inst":24,"vibe":"Crisp indie-funk spark"},{"id":"el1","genre":"Electronic / Dance","title":"Glue","artist":"Bicep","year":2017,"bpm":130,"v":66,"a":78,"ac":8,"inst":84,"vibe":"Euphoric kinetic release"},{"id":"el2","genre":"Electronic / Dance","title":"Around the World","artist":"Daft Punk","year":1997,"bpm":121,"v":82,"a":80,"ac":4,"inst":74,"vibe":"Playful robotic lift"},{"id":"el3","genre":"Electronic / Dance","title":"Awake","artist":"Tycho","year":2014,"bpm":118,"v":74,"a":62,"ac":28,"inst":96,"vibe":"Clear sunlit focus"},{"id":"el4","genre":"Electronic / Dance","title":"Teardrop","artist":"Massive Attack","year":1998,"bpm":77,"v":34,"a":36,"ac":34,"inst":22,"vibe":"Deep trip-hop calm"},{"id":"el5","genre":"Electronic / Dance","title":"Open Eye Signal","artist":"Jon Hopkins","year":2013,"bpm":122,"v":46,"a":86,"ac":6,"inst":96,"vibe":"Relentless deep-work drive"},{"id":"el6","genre":"Electronic / Dance","title":"Midnight City","artist":"M83","year":2011,"bpm":105,"v":70,"a":78,"ac":6,"inst":36,"vibe":"Widescreen soaring rush"},{"id":"el7","genre":"Electronic / Dance","title":"Porcelain","artist":"Moby","year":1999,"bpm":95,"v":44,"a":34,"ac":32,"inst":64,"vibe":"Floating bittersweet calm"},{"id":"el8","genre":"Electronic / Dance","title":"Looped","artist":"Kiasmos","year":2014,"bpm":120,"v":54,"a":66,"ac":20,"inst":94,"vibe":"Minimal rhythmic focus"},{"id":"el9","genre":"Electronic / Dance","title":"Strobe","artist":"deadmau5","year":2009,"bpm":128,"v":60,"a":72,"ac":6,"inst":96,"vibe":"Patient architectural build"},{"id":"el10","genre":"Electronic / Dance","title":"Breathe","artist":"The Prodigy","year":1996,"bpm":130,"v":32,"a":95,"ac":2,"inst":30,"vibe":"High-voltage pressure valve"},{"id":"el11","genre":"Electronic / Dance","title":"Delilah (pull me out of this)","artist":"Fred again..","year":2022,"bpm":134,"v":54,"a":84,"ac":10,"inst":26,"vibe":"Cathartic euphoric pulse"},{"id":"el12","genre":"Electronic / Dance","title":"Sunset Lover","artist":"Petit Biscuit","year":2015,"bpm":91,"v":76,"a":50,"ac":34,"inst":82,"vibe":"Light warm breeze"},{"id":"el13","genre":"Electronic / Dance","title":"Breathe","artist":"Télépopmusik","year":2001,"bpm":95,"v":62,"a":38,"ac":32,"inst":52,"vibe":"Gentle mental reset"},{"id":"el14","genre":"Electronic / Dance","title":"Innerbloom","artist":"RÜFÜS DU SOL","year":2016,"bpm":122,"v":48,"a":58,"ac":14,"inst":46,"vibe":"Deep expansive release"},{"id":"el15","genre":"Electronic / Dance","title":"Kiara","artist":"Bonobo","year":2010,"bpm":108,"v":66,"a":60,"ac":44,"inst":94,"vibe":"Crisp organic focus"},{"id":"el16","genre":"Electronic / Dance","title":"One More Time","artist":"Daft Punk","year":2000,"bpm":123,"v":92,"a":88,"ac":4,"inst":20,"vibe":"Pure celebratory ignition"},{"id":"co1","genre":"Country / Roots","title":"Starting Over","artist":"Chris Stapleton","year":2020,"bpm":84,"v":74,"a":52,"ac":78,"inst":4,"vibe":"Warm grounded fresh start"},{"id":"co2","genre":"Country / Roots","title":"Fast Car","artist":"Luke Combs","year":2023,"bpm":98,"v":56,"a":58,"ac":70,"inst":4,"vibe":"Steady open-road exhale"},{"id":"co3","genre":"Country / Roots","title":"Something in the Orange","artist":"Zach Bryan","year":2022,"bpm":110,"v":26,"a":44,"ac":86,"inst":4,"vibe":"Raw aching honesty"},{"id":"co4","genre":"Country / Roots","title":"Wagon Wheel","artist":"Old Crow Medicine Show","year":2004,"bpm":148,"v":88,"a":76,"ac":80,"inst":4,"vibe":"Upbeat porch sing-along"},{"id":"co5","genre":"Country / Roots","title":"Jolene","artist":"Dolly Parton","year":1973,"bpm":111,"v":44,"a":68,"ac":74,"inst":4,"vibe":"Urgent classic storytelling"},{"id":"co6","genre":"Country / Roots","title":"Tennessee Whiskey","artist":"Chris Stapleton","year":2015,"bpm":49,"v":58,"a":40,"ac":72,"inst":6,"vibe":"Slow velvety soul roots"},{"id":"co7","genre":"Country / Roots","title":"Feathered Indians","artist":"Tyler Childers","year":2017,"bpm":128,"v":70,"a":74,"ac":68,"inst":4,"vibe":"Driving Appalachian stride"},{"id":"co8","genre":"Country / Roots","title":"Hurt","artist":"Johnny Cash","year":2002,"bpm":90,"v":14,"a":26,"ac":92,"inst":4,"vibe":"Stark solemn gravity"},{"id":"co9","genre":"Country / Roots","title":"Golden Hour","artist":"Kacey Musgraves","year":2018,"bpm":94,"v":78,"a":34,"ac":84,"inst":6,"vibe":"Soft luminous peace"},{"id":"co10","genre":"Country / Roots","title":"Kate McCannon","artist":"Colter Wall","year":2017,"bpm":96,"v":30,"a":66,"ac":84,"inst":4,"vibe":"Dark heavy forward grit"},{"id":"co11","genre":"Country / Roots","title":"Cover Me Up","artist":"Jason Isbell","year":2013,"bpm":72,"v":36,"a":38,"ac":88,"inst":4,"vibe":"Deep weathered honesty"},{"id":"co12","genre":"Country / Roots","title":"Take Me Home, Country Roads","artist":"John Denver","year":1971,"bpm":82,"v":84,"a":54,"ac":84,"inst":4,"vibe":"Warm nostalgic comfort"},{"id":"co13","genre":"Country / Roots","title":"Turtles All the Way Down","artist":"Sturgill Simpson","year":2014,"bpm":102,"v":64,"a":62,"ac":56,"inst":8,"vibe":"Expansive cosmic roots"},{"id":"co14","genre":"Country / Roots","title":"Hard Time","artist":"Charles Wesley Godwin","year":2019,"bpm":104,"v":48,"a":64,"ac":74,"inst":4,"vibe":"Resilient driving stride"},{"id":"co15","genre":"Country / Roots","title":"Good Lord Lorrie","artist":"Turnpike Troubadours","year":2012,"bpm":124,"v":62,"a":78,"ac":60,"inst":4,"vibe":"High-output fiddle pulse"},{"id":"co16","genre":"Country / Roots","title":"Wildfire","artist":"Watchhouse","year":2016,"bpm":88,"v":52,"a":30,"ac":92,"inst":12,"vibe":"Steady quiet picking"},{"id":"jl1","genre":"Jazz / Lo-Fi","title":"Blue in Green","artist":"Miles Davis","year":1959,"bpm":64,"v":32,"a":16,"ac":94,"inst":99,"vibe":"Midnight quiet contemplation"},{"id":"jl2","genre":"Jazz / Lo-Fi","title":"Take Five","artist":"The Dave Brubeck Quartet","year":1959,"bpm":174,"v":70,"a":64,"ac":88,"inst":99,"vibe":"Crisp smart swinging focus"},{"id":"jl3","genre":"Jazz / Lo-Fi","title":"Aruarian Dance","artist":"Nujabes","year":2004,"bpm":92,"v":64,"a":44,"ac":52,"inst":98,"vibe":"Flowing lo-fi concentration"},{"id":"jl4","genre":"Jazz / Lo-Fi","title":"Snowman","artist":"WYS","year":2018,"bpm":78,"v":46,"a":22,"ac":64,"inst":99,"vibe":"Warm rainy-window calm"},{"id":"jl5","genre":"Jazz / Lo-Fi","title":"Cantaloupe Island","artist":"Herbie Hancock","year":1964,"bpm":116,"v":76,"a":68,"ac":82,"inst":98,"vibe":"Bouncy sunlit groove"},{"id":"jl6","genre":"Jazz / Lo-Fi","title":"In a Sentimental Mood","artist":"Duke Ellington & John Coltrane","year":1963,"bpm":66,"v":48,"a":18,"ac":96,"inst":99,"vibe":"Velvet slow exhale"},{"id":"jl7","genre":"Jazz / Lo-Fi","title":"Hedron","artist":"BadBadNotGood","year":2014,"bpm":94,"v":50,"a":58,"ac":56,"inst":96,"vibe":"Sharp modern noir focus"},{"id":"jl8","genre":"Jazz / Lo-Fi","title":"Autumn Leaves","artist":"Chet Baker","year":1974,"bpm":112,"v":42,"a":36,"ac":92,"inst":96,"vibe":"Smooth melancholic drift"},{"id":"jl9","genre":"Jazz / Lo-Fi","title":"Moanin'","artist":"Art Blakey & The Jazz Messengers","year":1958,"bpm":126,"v":74,"a":76,"ac":84,"inst":98,"vibe":"High-agency blues swing"},{"id":"jl10","genre":"Jazz / Lo-Fi","title":"Losing Interest","artist":"Shiloh Dynasty & Itssvd","year":2017,"bpm":72,"v":24,"a":22,"ac":78,"inst":54,"vibe":"Hushed late-night weight"},{"id":"jl11","genre":"Jazz / Lo-Fi","title":"Naima","artist":"John Coltrane","year":1960,"bpm":62,"v":46,"a":16,"ac":96,"inst":99,"vibe":"Pure meditative peace"},{"id":"jl12","genre":"Jazz / Lo-Fi","title":"Tadow","artist":"Masego & FKJ","year":2017,"bpm":122,"v":82,"a":72,"ac":36,"inst":52,"vibe":"Playful jazzy uplift"},{"id":"jl13","genre":"Jazz / Lo-Fi","title":"Affection","artist":"Jinsang","year":2016,"bpm":80,"v":60,"a":30,"ac":68,"inst":98,"vibe":"Dusty chill study loop"},{"id":"jl14","genre":"Jazz / Lo-Fi","title":"So What","artist":"Miles Davis","year":1959,"bpm":136,"v":58,"a":48,"ac":90,"inst":99,"vibe":"Cool effortless clarity"},{"id":"jl15","genre":"Jazz / Lo-Fi","title":"Strasbourg / St. Denis","artist":"Roy Hargrove","year":2008,"bpm":118,"v":84,"a":74,"ac":76,"inst":98,"vibe":"Vibrant crisp lift"},{"id":"jl16","genre":"Jazz / Lo-Fi","title":"People Everywhere (Still Alive)","artist":"Khruangbin","year":2015,"bpm":118,"v":82,"a":70,"ac":38,"inst":88,"vibe":"Hypnotic sunlit groove"},{"id":"mp1","genre":"Metal / Punk","title":"Killing In The Name","artist":"Rage Against The Machine","year":1992,"bpm":89,"v":26,"a":96,"ac":2,"inst":6,"vibe":"Pure defiant pressure valve"},{"id":"mp2","genre":"Metal / Punk","title":"Master of Puppets","artist":"Metallica","year":1986,"bpm":212,"v":34,"a":95,"ac":2,"inst":24,"vibe":"Precision high-velocity drive"},{"id":"mp3","genre":"Metal / Punk","title":"Blitzkrieg Bop","artist":"Ramones","year":1976,"bpm":177,"v":82,"a":92,"ac":4,"inst":2,"vibe":"Raw joyous adrenaline"},{"id":"mp4","genre":"Metal / Punk","title":"Schism","artist":"TOOL","year":2001,"bpm":107,"v":36,"a":72,"ac":6,"inst":34,"vibe":"Complex hypnotic focus"},{"id":"mp5","genre":"Metal / Punk","title":"Basket Case","artist":"Green Day","year":1994,"bpm":170,"v":66,"a":88,"ac":4,"inst":2,"vibe":"Fast cathartic buzz"},{"id":"mp6","genre":"Metal / Punk","title":"Nothing Else Matters","artist":"Metallica","year":1991,"bpm":142,"v":36,"a":38,"ac":52,"inst":12,"vibe":"Heavy slow emotional breath"},{"id":"mp7","genre":"Metal / Punk","title":"Chop Suey!","artist":"System Of A Down","year":2001,"bpm":127,"v":28,"a":94,"ac":6,"inst":4,"vibe":"Chaotic cathartic release"},{"id":"mp8","genre":"Metal / Punk","title":"All The Small Things","artist":"blink-182","year":1999,"bpm":149,"v":84,"a":86,"ac":4,"inst":2,"vibe":"Bright carefree punch"},{"id":"mp9","genre":"Metal / Punk","title":"Change (In the House of Flies)","artist":"Deftones","year":2000,"bpm":138,"v":24,"a":66,"ac":10,"inst":12,"vibe":"Dark atmospheric release"},{"id":"mp10","genre":"Metal / Punk","title":"Orion","artist":"Metallica","year":1986,"bpm":124,"v":48,"a":74,"ac":6,"inst":98,"vibe":"Wordless heavy focus"},{"id":"mp11","genre":"Metal / Punk","title":"Sextape","artist":"Deftones","year":2010,"bpm":100,"v":46,"a":44,"ac":26,"inst":18,"vibe":"Dreamy heavy exhale"},{"id":"mp12","genre":"Metal / Punk","title":"Paranoid","artist":"Black Sabbath","year":1970,"bpm":163,"v":38,"a":90,"ac":4,"inst":6,"vibe":"Classic relentless grit"},{"id":"mp13","genre":"Metal / Punk","title":"Misery Business","artist":"Paramore","year":2007,"bpm":173,"v":72,"a":92,"ac":4,"inst":2,"vibe":"Electric punk spark"},{"id":"mp14","genre":"Metal / Punk","title":"Planet Caravan","artist":"Black Sabbath","year":1970,"bpm":92,"v":40,"a":22,"ac":64,"inst":30,"vibe":"Floating cosmic chill"},{"id":"mp15","genre":"Metal / Punk","title":"Pneuma","artist":"TOOL","year":2019,"bpm":112,"v":54,"a":70,"ac":8,"inst":44,"vibe":"Expansive rhythmic focus"},{"id":"mp16","genre":"Metal / Punk","title":"Ever Fallen in Love","artist":"Buzzcocks","year":1978,"bpm":160,"v":74,"a":88,"ac":6,"inst":2,"vibe":"Sharp vintage lift"},{"id":"ca1","genre":"Classical / Ambient","title":"Weightless Pt. 1","artist":"Marconi Union","year":2011,"bpm":60,"v":52,"a":10,"ac":42,"inst":99,"vibe":"Paced heart-rate drop"},{"id":"ca2","genre":"Classical / Ambient","title":"Clair de Lune","artist":"Claude Debussy","year":1905,"bpm":68,"v":54,"a":16,"ac":99,"inst":99,"vibe":"Moonlit weightless stillness"},{"id":"ca3","genre":"Classical / Ambient","title":"Experience","artist":"Ludovico Einaudi","year":2013,"bpm":92,"v":62,"a":56,"ac":92,"inst":99,"vibe":"Rising emotional clarity"},{"id":"ca4","genre":"Classical / Ambient","title":"Gymnopédie No. 1","artist":"Erik Satie","year":1888,"bpm":72,"v":40,"a":12,"ac":99,"inst":99,"vibe":"Gentle minimal space"},{"id":"ca5","genre":"Classical / Ambient","title":"Time","artist":"Hans Zimmer","year":2010,"bpm":120,"v":44,"a":52,"ac":68,"inst":99,"vibe":"Monumental deep focus"},{"id":"ca6","genre":"Classical / Ambient","title":"An Ending (Ascent)","artist":"Brian Eno","year":1983,"bpm":64,"v":58,"a":12,"ac":34,"inst":99,"vibe":"Zero-gravity horizon"},{"id":"ca7","genre":"Classical / Ambient","title":"Summer (Presto)","artist":"Antonio Vivaldi","year":1725,"bpm":154,"v":42,"a":86,"ac":96,"inst":99,"vibe":"Fierce classical urgency"},{"id":"ca8","genre":"Classical / Ambient","title":"On the Nature of Daylight","artist":"Max Richter","year":2004,"bpm":66,"v":20,"a":24,"ac":96,"inst":99,"vibe":"Deep tender catharsis"},{"id":"ca9","genre":"Classical / Ambient","title":"Says","artist":"Nils Frahm","year":2013,"bpm":112,"v":52,"a":60,"ac":68,"inst":98,"vibe":"Swelling focused momentum"},{"id":"ca10","genre":"Classical / Ambient","title":"Spring 1 (Recomposed)","artist":"Max Richter","year":2012,"bpm":116,"v":82,"a":66,"ac":94,"inst":99,"vibe":"Radiant crisp lift"},{"id":"ca11","genre":"Classical / Ambient","title":"Saman","artist":"Ólafur Arnalds","year":2018,"bpm":72,"v":54,"a":14,"ac":96,"inst":99,"vibe":"Slow breath felt piano"},{"id":"ca12","genre":"Classical / Ambient","title":"Nuvole Bianche","artist":"Ludovico Einaudi","year":2004,"bpm":76,"v":48,"a":26,"ac":98,"inst":99,"vibe":"Flowing calm clarity"},{"id":"ca13","genre":"Classical / Ambient","title":"Aisatsana [102]","artist":"Aphex Twin","year":2014,"bpm":68,"v":64,"a":18,"ac":96,"inst":99,"vibe":"Quiet dawn piano"},{"id":"ca14","genre":"Classical / Ambient","title":"Glass","artist":"Hania Rani","year":2019,"bpm":90,"v":58,"a":38,"ac":92,"inst":99,"vibe":"Crystalline thoughtful flow"},{"id":"ca15","genre":"Classical / Ambient","title":"Cornfield Chase","artist":"Hans Zimmer","year":2014,"bpm":120,"v":64,"a":64,"ac":74,"inst":99,"vibe":"Expansive upward wonder"},{"id":"ca16","genre":"Classical / Ambient","title":"Spiegel im Spiegel","artist":"Arvo Pärt","year":1978,"bpm":60,"v":44,"a":10,"ac":99,"inst":99,"vibe":"Pure spacious stillness"},{"id":"pop_fun1","genre":"Pop","title":"Never Gonna Give You Up","artist":"Rick Astley","year":1987,"bpm":113,"v":94,"a":82,"ac":6,"inst":0,"vibe":"Legendary cheeky Rickroll energy","silly":true},{"id":"hh_fun1","genre":"Hip-Hop / Rap","title":"Because I Got High","artist":"Afroman","year":2000,"bpm":166,"v":88,"a":64,"ac":22,"inst":2,"vibe":"Pure mischievous comedy groove","silly":true},{"id":"rb_fun1","genre":"R&B / Soul","title":"Forget You","artist":"CeeLo Green","year":2010,"bpm":128,"v":86,"a":82,"ac":16,"inst":0,"vibe":"Cheeky upbeat soul sass","silly":true},{"id":"rk_fun1","genre":"Rock / Alt","title":"Tribute","artist":"Tenacious D","year":2001,"bpm":112,"v":84,"a":78,"ac":44,"inst":2,"vibe":"Epic goofy comedy rock","silly":true},{"id":"if_fun1","genre":"Indie / Folk","title":"Ocean Man","artist":"Ween","year":1997,"bpm":123,"v":88,"a":74,"ac":34,"inst":6,"vibe":"Gloriously absurd indie anthem","silly":true},{"id":"el_fun1","genre":"Electronic / Dance","title":"Sandstorm","artist":"Darude","year":1999,"bpm":136,"v":84,"a":96,"ac":2,"inst":94,"vibe":"Maximum meme rave chaos","silly":true},{"id":"co_fun1","genre":"Country / Roots","title":"Cotton Eye Joe","artist":"Rednex","year":1994,"bpm":132,"v":92,"a":92,"ac":28,"inst":4,"vibe":"Unhinged barn-dance silliness","silly":true},{"id":"jl_fun1","genre":"Jazz / Lo-Fi","title":"Mii Channel Theme","artist":"Kazumi Totaka","year":2006,"bpm":114,"v":88,"a":54,"ac":45,"inst":98,"vibe":"Playful mischievous elevator groove","silly":true},{"id":"mp_fun1","genre":"Metal / Punk","title":"What's My Age Again?","artist":"blink-182","year":1999,"bpm":158,"v":88,"a":92,"ac":4,"inst":2,"vibe":"Immature pop-punk prank energy","silly":true},{"id":"ca_fun1","genre":"Classical / Ambient","title":"Entrance of the Gladiators","artist":"Julius Fučík","year":1897,"bpm":124,"v":90,"a":84,"ac":96,"inst":99,"vibe":"Classic circus mischief fanfare","silly":true}];
 
       const FALLBACK_ART = "data:image/svg+xml," + encodeURIComponent(
         "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'>"
@@ -1760,6 +2031,10 @@
         calKeyTimes: [], calIkts: [],
         voiceSession: null, calVoiceSession: null, activeMicContext: null,
         strokes: [], isDrawing: false, activePtr: null, currentStroke: null,
+        cheekyMode: false,
+        selectedVibes: [],
+        pairsDeck: [], pairsFlipped: [], pairsMatched: 0, pairsMoves: 0,
+        pairsStartMs: null, pairsTapTimes: [], pairsLocked: false, pairsResult: null,
         lastAnalysis: null,
         intent: "current",
         swapOffsets: {},
@@ -1798,11 +2073,15 @@
         calMeterFill: $("calMeterFill"), calTextarea: $("calTextarea"), calStatus: $("calStatus"),
         finishCalBtn: $("finishCalBtn"), skipCalBtn: $("skipCalBtn"),
 
-        paperScreen: $("paperScreen"), tabType: $("tabType"), tabWrite: $("tabWrite"), tabDraw: $("tabDraw"),
+        paperScreen: $("paperScreen"), marginLine: $("marginLine"),
+        tabType: $("tabType"), tabWrite: $("tabWrite"), tabDraw: $("tabDraw"), tabGames: $("tabGames"),
         paperInstallBtn: $("paperInstallBtn"), nextPromptBtn: $("nextPromptBtn"), openProfileBtn: $("openProfileBtn"),
         promptText: $("promptText"), paperTextarea: $("paperTextarea"), drawWrap: $("drawWrap"),
+        gamesWrap: $("gamesWrap"), vibeGrid: $("vibeGrid"), vibeCountPill: $("vibeCountPill"),
+        pairsGrid: $("pairsGrid"), resetPairsBtn: $("resetPairsBtn"), pairsResultBox: $("pairsResultBox"),
         canvas: $("inkCanvas"), drawWatermark: $("drawWatermark"), paperMicBtn: $("paperMicBtn"),
-        paperMicLabel: $("paperMicLabel"), undoPaperBtn: $("undoPaperBtn"), clearPaperBtn: $("clearPaperBtn"),
+        paperMicLabel: $("paperMicLabel"), cheekyToggleBtn: $("cheekyToggleBtn"),
+        undoPaperBtn: $("undoPaperBtn"), clearPaperBtn: $("clearPaperBtn"),
         analyzeBtn: $("analyzeBtn"),
 
         resultsScreen: $("resultsScreen"), backToPaperBtn: $("backToPaperBtn"), resProfileBtn: $("resProfileBtn"),
@@ -2169,7 +2448,7 @@
         const b = analysis.bio;
         const queued = loadOutbox().length;
         el.devDrawer.innerHTML = `
-          <div><strong>[DEV AUDIT — v9 • Hidden from users]</strong></div>
+          <div><strong>[DEV AUDIT — v10 • Hidden from users]</strong></div>
           <div>Engine: ${escHtml(state.aiStatus)} (${escHtml(state.aiDebug)})</div>
           <div>SW: ${escHtml(swActiveVersion)} • Launch: ${escHtml(launchSource)} • Outbox: ${queued}</div>
           <div>Stage 1 (Bayesian): V=${analysis.v1}, A=${analysis.a1}, Load=${analysis.load}</div>
@@ -2236,9 +2515,12 @@
             body: JSON.stringify({
               genres: state.profile.genres,
               stateTag: analysis.tag,
-              intent: state.intent,
+              intent: analysis.isCheeky ? "playful" : state.intent,
               inputMode: analysis.primarySource,
-              textSnippet: el.paperTextarea.value.trim().slice(0, 260),
+              textSnippet: state.inputMode === "type" ? el.paperTextarea.value.trim().slice(0, 260) : "",
+              gameContext: analysis.gameContext || "",
+              cheekyFlag: Boolean(analysis.isCheeky),
+              drawingBase64: analysis.drawingBase64 || null,
               target,
               recentTracks: state.recentTrackLabels.slice(0, 14)
             })
@@ -2317,11 +2599,15 @@
           if (reqId !== state.aiReqSeq) return;
           state.aiPicksByGenre = grouped;
           state.aiMoodLine = typeof data.moodLine === "string" ? data.moodLine : "";
+          if (data.isPlayfulDoodle && state.lastAnalysis) {
+            state.lastAnalysis.tag = "Cheeky Mode 😜";
+            state.lastAnalysis.heading = "Caught You Being Silly!";
+          }
           state.aiStatus = "live";
           state.aiDebug = `HTTP 200 • ${data.picks.length} picks in ${ms}ms`;
           state.swapOffsets = {};
           renderResults(true);
-          showToast("✨ Fresh AI deep cuts loaded");
+          showToast(data.isPlayfulDoodle ? "😜 Cheeky doodle spotted — silly picks loaded!" : "✨ Fresh AI deep cuts loaded");
         } catch (err) {
           clearTimeout(timer);
           const ms = Math.round(performance.now() - startedMs);
@@ -2352,9 +2638,13 @@
         }
       }
 
-      el.enginePill.addEventListener("click", () => {
+      el.enginePill.addEventListener("click", async () => {
         if (state.aiStatus === "offline" && state.lastAnalysis && navigator.onLine) {
-          fetchAiDeepCuts(state.lastAnalysis, computeAudioTarget(state.lastAnalysis, state.intent));
+          state.aiCooldownUntil = 0;
+          await fetchAiDeepCuts(state.lastAnalysis, computeAudioTarget(state.lastAnalysis, state.intent));
+          if (state.aiStatus === "offline") {
+            showToast(`AI offline: ${state.aiDebug}`);
+          }
         }
       });
 
@@ -2482,10 +2772,86 @@
         }
 
         const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-        const avoidDualMicLock = Boolean(SR && (isAndroidDevice() || isIosDevice()));
 
-        // 1. Desktop-only concurrent Web Audio analyser (skipped on mobile when SR is available so Android never mutes SR)
-        if (!avoidDualMicLock && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        // 1. Primary path: Exclusive SpeechRecognition (ZERO competing getUserMedia lock on Android/tablets/desktop!)
+        if (SR) {
+          try {
+            speechRec = new SR();
+            speechRec.lang = "en-GB";
+            speechRec.continuous = false;
+            speechRec.interimResults = true;
+            speechRec.maxAlternatives = 1;
+            let committedText = targetTa.value.trim();
+            let gotSpeechThisPass = false;
+            let restartCount = 0;
+
+            if (targetContext === "cal") {
+              pulseTimer = setInterval(() => {
+                if (state.activeMicContext !== "cal") return;
+                el.calMeterFill.style.width = `${18 + Math.round(Math.random() * 44)}%`;
+              }, 160);
+            }
+
+            speechRec.onresult = evt => {
+              let finalChunk = "", interimChunk = "";
+              for (let i = evt.resultIndex; i < evt.results.length; i++) {
+                const seg = evt.results[i][0].transcript;
+                if (evt.results[i].isFinal) finalChunk += seg + " ";
+                else interimChunk += seg;
+              }
+              gotSpeechThisPass = true;
+              if (voiceAccumulator) voiceAccumulator.wordEvents++;
+              if (finalChunk.trim()) {
+                committedText = (committedText ? committedText + " " : "") + finalChunk.trim();
+              }
+              targetTa.value = (committedText + (interimChunk ? (committedText ? " " : "") + interimChunk : "")).trim();
+              if (targetContext === "cal") {
+                el.calMeterFill.style.width = "88%";
+              }
+            };
+
+            speechRec.onerror = evt => {
+              const code = evt && evt.error ? evt.error : "";
+              if (code === "not-allowed" || code === "service-not-allowed") {
+                showToast("Mic blocked — open Chrome Site Settings → Microphone → Allow");
+                stopVoiceCapture();
+              } else if (code === "audio-capture") {
+                showToast("No mic found — check another app isn't using the mic");
+                stopVoiceCapture();
+              } else if (code === "network") {
+                showToast("Voice typing needs internet — or use your keyboard mic");
+                stopVoiceCapture();
+              } else if (code === "no-speech") {
+                showToast("Didn't catch any speech — tap Speak and try again");
+                stopVoiceCapture();
+              } else if (code && code !== "aborted") {
+                showToast(`Voice error (${code}) — tap keyboard mic or type`);
+                stopVoiceCapture();
+              }
+            };
+
+            speechRec.onend = () => {
+              if (state.activeMicContext !== targetContext) return;
+              // Allow smooth multi-sentence speaking up to 3 continuations if user actually spoke
+              if (gotSpeechThisPass && restartCount < 3 && speechRec) {
+                gotSpeechThisPass = false;
+                restartCount++;
+                try { speechRec.start(); return; } catch {}
+              }
+              stopVoiceCapture();
+            };
+
+            speechRec.start();
+            return;
+          } catch {
+            showToast("Voice typing unavailable — tap your keyboard mic or type");
+            stopVoiceCapture();
+            return;
+          }
+        }
+
+        // 2. Fallback acoustic meter ONLY if browser has no SpeechRecognition API at all
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
           try {
             audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
             const AC = window.AudioContext || window.webkitAudioContext;
@@ -2512,67 +2878,12 @@
               rafId = requestAnimationFrame(sampleLoop);
             };
             rafId = requestAnimationFrame(sampleLoop);
-          } catch {}
-        }
-
-        // 2. SpeechRecognition (Primary transcription + mobile cadence telemetry)
-        if (SR) {
-          try {
-            speechRec = new SR();
-            speechRec.lang = "en-GB";
-            speechRec.continuous = !isAndroidDevice(); // Android Chrome transcribes more reliably with continuous=false + auto-restart
-            speechRec.interimResults = true;
-            let committedText = targetTa.value.trim();
-
-            if (targetContext === "cal" && avoidDualMicLock) {
-              pulseTimer = setInterval(() => {
-                if (state.activeMicContext !== "cal") return;
-                el.calMeterFill.style.width = `${22 + Math.round(Math.random() * 48)}%`;
-              }, 160);
-            }
-
-            speechRec.onresult = evt => {
-              let finalChunk = "", interimChunk = "";
-              for (let i = evt.resultIndex; i < evt.results.length; i++) {
-                const seg = evt.results[i][0].transcript;
-                if (evt.results[i].isFinal) finalChunk += seg + " ";
-                else interimChunk += seg;
-              }
-              if (voiceAccumulator) voiceAccumulator.wordEvents++;
-              if (finalChunk.trim()) {
-                committedText = (committedText ? committedText + " " : "") + finalChunk.trim();
-              }
-              targetTa.value = (committedText + (interimChunk ? (committedText ? " " : "") + interimChunk : "")).trim();
-              if (targetContext === "cal" && avoidDualMicLock) {
-                el.calMeterFill.style.width = "82%";
-              }
-            };
-
-            speechRec.onerror = evt => {
-              const code = evt && evt.error ? evt.error : "";
-              if (code === "not-allowed" || code === "service-not-allowed") {
-                showToast("Allow microphone access in Chrome to use Speak");
-                stopVoiceCapture();
-              } else if (code === "no-speech" && state.activeMicContext === targetContext) {
-                // Keep quiet on brief pause
-              }
-            };
-
-            speechRec.onend = () => {
-              if (state.activeMicContext === targetContext) {
-                if (isAndroidDevice() && speechRec) {
-                  try { speechRec.start(); return; } catch {}
-                }
-                stopVoiceCapture();
-              }
-            };
-
-            speechRec.start();
+            showToast("Recording voice tone — type or use keyboard mic for words");
           } catch {
-            showToast("Voice typing unavailable — type or use keyboard mic");
+            showToast("Mic blocked — use your keyboard mic or type");
             stopVoiceCapture();
           }
-        } else if (!audioStream) {
+        } else {
           showToast("Mic not supported here — use your keyboard mic or type");
           stopVoiceCapture();
         }
@@ -2771,9 +3082,9 @@
         el.calScreen.classList.add("hidden");
         el.resultsScreen.classList.add("hidden");
         el.paperScreen.classList.remove("hidden");
-        setThemeColor("#FFFFFF");
+        setThemeColor("#191414");
         refreshInstallUi();
-        if (state.inputMode !== "type") requestAnimationFrame(resizeCanvas);
+        if (state.inputMode === "write" || state.inputMode === "draw") requestAnimationFrame(resizeCanvas);
       }
 
       function setPrompt() { el.promptText.textContent = PROMPTS[state.promptIdx]; }
@@ -2784,23 +3095,159 @@
       el.openProfileBtn.addEventListener("click", () => openSetup(true));
       el.resProfileBtn.addEventListener("click", () => openSetup(true));
 
+      function renderVibeGrid() {
+        el.vibeGrid.innerHTML = VIBE_SCENES.map(s => {
+          const sel = state.selectedVibes.includes(s.id) ? "selected" : "";
+          return `
+            <button type="button" class="vibe-tile ${sel}" data-vibe="${s.id}" style="background:${s.bg}">
+              <span class="vibe-check">✓</span>
+              <span class="vibe-emoji">${s.emoji}</span>
+              <div>
+                <div class="vibe-name">${s.title}</div>
+                <div class="vibe-cap">${s.sub}</div>
+              </div>
+            </button>
+          `;
+        }).join("");
+        el.vibeCountPill.textContent = `${state.selectedVibes.length} / 2 picked`;
+        el.vibeGrid.querySelectorAll(".vibe-tile").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const id = btn.dataset.vibe;
+            const idx = state.selectedVibes.indexOf(id);
+            if (idx >= 0) {
+              state.selectedVibes.splice(idx, 1);
+            } else {
+              if (state.selectedVibes.length >= 2) state.selectedVibes.shift();
+              state.selectedVibes.push(id);
+            }
+            renderVibeGrid();
+          });
+        });
+      }
+
+      function initPairsGame() {
+        const deck = [...PAIR_SYMBOLS, ...PAIR_SYMBOLS]
+          .map((sym, i) => ({ id: i, sym, flipped: false, matched: false }))
+          .sort(() => Math.random() - 0.5);
+        state.pairsDeck = deck;
+        state.pairsFlipped = [];
+        state.pairsMatched = 0;
+        state.pairsMoves = 0;
+        state.pairsStartMs = null;
+        state.pairsTapTimes = [];
+        state.pairsLocked = false;
+        state.pairsResult = null;
+        el.pairsResultBox.classList.add("hidden");
+        renderPairsGrid();
+      }
+
+      function renderPairsGrid() {
+        el.pairsGrid.innerHTML = state.pairsDeck.map((card, idx) => {
+          const cls = card.matched ? "matched" : (card.flipped ? "flipped" : "");
+          return `<button type="button" class="pair-card ${cls}" data-idx="${idx}" aria-label="Memory card">${(card.flipped || card.matched) ? card.sym : "?"}</button>`;
+        }).join("");
+
+        el.pairsGrid.querySelectorAll(".pair-card").forEach(btn => {
+          btn.addEventListener("click", () => {
+            if (state.pairsLocked) return;
+            const idx = Number(btn.dataset.idx);
+            const card = state.pairsDeck[idx];
+            if (!card || card.flipped || card.matched) return;
+
+            const now = performance.now();
+            if (state.pairsStartMs === null) state.pairsStartMs = now;
+            state.pairsTapTimes.push(now);
+
+            card.flipped = true;
+            state.pairsFlipped.push(idx);
+            renderPairsGrid();
+
+            if (state.pairsFlipped.length === 2) {
+              state.pairsMoves++;
+              const [i1, i2] = state.pairsFlipped;
+              const c1 = state.pairsDeck[i1], c2 = state.pairsDeck[i2];
+              if (c1.sym === c2.sym) {
+                c1.matched = true;
+                c2.matched = true;
+                state.pairsMatched++;
+                state.pairsFlipped = [];
+                renderPairsGrid();
+
+                if (state.pairsMatched === PAIR_SYMBOLS.length) {
+                  const elapsedSec = Math.max(2, (performance.now() - state.pairsStartMs) / 1000);
+                  const intervals = [];
+                  for (let k = 1; k < state.pairsTapTimes.length; k++) {
+                    intervals.push(state.pairsTapTimes[k] - state.pairsTapTimes[k - 1]);
+                  }
+                  const avgTapMs = mean(intervals) || 750;
+                  const extraMoves = Math.max(0, state.pairsMoves - PAIR_SYMBOLS.length);
+                  // Deterministic Fatigue Index (0 = razor sharp, 100 = high mental fatigue)
+                  const fatigue = Math.round(clamp(((elapsedSec - 10) * 2.4) + (extraMoves * 4.5) + ((avgTapMs - 550) * 0.03), 8, 95));
+                  const label = fatigue <= 32
+                    ? `Cleared in ${elapsedSec.toFixed(1)}s (${state.pairsMoves} tries) — Razor sharp & alert!`
+                    : fatigue <= 62
+                    ? `Cleared in ${elapsedSec.toFixed(1)}s (${state.pairsMoves} tries) — Steady, relaxed pace.`
+                    : `Cleared in ${elapsedSec.toFixed(1)}s (${state.pairsMoves} tries) — Brain's running warm; tuned to ease the load.`;
+                  state.pairsResult = { elapsedSec, moves: state.pairsMoves, avgTapMs, fatigue, label };
+                  el.pairsResultBox.textContent = label;
+                  el.pairsResultBox.classList.remove("hidden");
+                  showToast("Fatigue check locked! Tap Get My Music");
+                }
+              } else {
+                state.pairsLocked = true;
+                setTimeout(() => {
+                  c1.flipped = false;
+                  c2.flipped = false;
+                  state.pairsFlipped = [];
+                  state.pairsLocked = false;
+                  renderPairsGrid();
+                }, 580);
+              }
+            }
+          });
+        });
+      }
+
+      el.resetPairsBtn.addEventListener("click", () => {
+        initPairsGame();
+        showToast("Fresh grid ready");
+      });
+
+      el.cheekyToggleBtn.addEventListener("click", () => {
+        state.cheekyMode = !state.cheekyMode;
+        el.cheekyToggleBtn.classList.toggle("active", state.cheekyMode);
+        showToast(state.cheekyMode ? "Cheeky / silly song mode ON 😜" : "Normal mood matching");
+      });
+
       function setMode(mode) {
         if (mode !== "type") stopVoiceCapture();
         state.inputMode = mode;
+        const isInk = (mode === "write" || mode === "draw");
         el.tabType.classList.toggle("active", mode === "type");
         el.tabWrite.classList.toggle("active", mode === "write");
         el.tabDraw.classList.toggle("active", mode === "draw");
+        el.tabGames.classList.toggle("active", mode === "games");
+
         el.paperTextarea.classList.toggle("hidden", mode !== "type");
-        el.drawWrap.classList.toggle("hidden", mode === "type");
+        el.drawWrap.classList.toggle("hidden", !isInk);
+        el.gamesWrap.classList.toggle("hidden", mode !== "games");
+        el.marginLine.classList.toggle("hidden", mode === "games");
+        el.paperScreen.classList.toggle("games-mode", mode === "games");
+        el.promptText.classList.toggle("hidden", mode === "games");
+
         el.paperMicBtn.classList.toggle("hidden", mode !== "type");
-        el.undoPaperBtn.classList.toggle("hidden", mode === "type");
+        el.undoPaperBtn.classList.toggle("hidden", !isInk);
+        el.cheekyToggleBtn.classList.toggle("hidden", mode !== "draw");
 
         if (mode === "write") {
-          el.drawWatermark.textContent = "Write words naturally on the lines…";
+          el.drawWatermark.textContent = "Write naturally with your finger or pen…";
           requestAnimationFrame(resizeCanvas);
         } else if (mode === "draw") {
-          el.drawWatermark.textContent = "Draw, doodle, or scribble how you feel…";
+          el.drawWatermark.textContent = "Draw or doodle with your finger or pen — even silly ones 😜";
           requestAnimationFrame(resizeCanvas);
+        } else if (mode === "games") {
+          renderVibeGrid();
+          if (!state.pairsDeck.length) initPairsGame();
         } else {
           el.paperTextarea.focus();
         }
@@ -2809,6 +3256,7 @@
       el.tabType.addEventListener("click", () => setMode("type"));
       el.tabWrite.addEventListener("click", () => setMode("write"));
       el.tabDraw.addEventListener("click", () => setMode("draw"));
+      el.tabGames.addEventListener("click", () => setMode("games"));
 
       el.paperTextarea.addEventListener("keydown", e => {
         const now = performance.now();
@@ -2855,7 +3303,7 @@
           const pts = s.points;
           if (pts.length < 2) continue;
           ctx.beginPath();
-          ctx.lineWidth = s.mode === "draw" ? 3.0 : 2.3;
+          ctx.lineWidth = s.isFinger ? 3.4 : (s.mode === "draw" ? 3.0 : 2.3);
           ctx.moveTo(pts[0].x, pts[0].y);
           for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
           ctx.stroke();
@@ -2879,7 +3327,8 @@
         state.isDrawing = true;
         state.activePtr = e.pointerId;
         const pt = ptFromEvt(e);
-        state.currentStroke = { mode: state.inputMode, start: pt.t, end: pt.t, points: [pt] };
+        const isFinger = e.pointerType === "touch";
+        state.currentStroke = { mode: state.inputMode, isFinger, start: pt.t, end: pt.t, points: [pt] };
         state.strokes.push(state.currentStroke);
         el.drawWatermark.style.display = "none";
       });
@@ -2891,7 +3340,7 @@
         const pts = state.currentStroke.points;
         ctx.strokeStyle = "#0F172A";
         ctx.lineCap = "round";
-        ctx.lineWidth = state.currentStroke.mode === "draw" ? 3.0 : 2.3;
+        ctx.lineWidth = state.currentStroke.isFinger ? 3.4 : (state.currentStroke.mode === "draw" ? 3.0 : 2.3);
         for (const ev of evts) {
           const pt = ptFromEvt(ev);
           const prev = pts[pts.length - 1];
@@ -2920,12 +3369,65 @@
         redrawCanvas();
       });
 
+      function exportDrawingSnapshot() {
+        if (!state.strokes.length || !el.canvas.width || !el.canvas.height) return null;
+        try {
+          const out = document.createElement("canvas");
+          const size = 256;
+          out.width = size;
+          out.height = size;
+          const octx = out.getContext("2d");
+          octx.fillStyle = "#FFFFFF";
+          octx.fillRect(0, 0, size, size);
+          const scale = Math.min(size / el.canvas.width, size / el.canvas.height);
+          const dw = el.canvas.width * scale;
+          const dh = el.canvas.height * scale;
+          octx.drawImage(el.canvas, (size - dw) / 2, (size - dh) / 2, dw, dh);
+          return out.toDataURL("image/jpeg", 0.62);
+        } catch {
+          return null;
+        }
+      }
+
+      // Lightweight geometric detector for classic cheeky 3-lobe prank doodles in Draw mode
+      function detectCheekyDoodle(strokes) {
+        if (!strokes || strokes.length < 2 || strokes.length > 10) return false;
+        const boxes = strokes.map(s => {
+          const xs = s.points.map(p => p.x), ys = s.points.map(p => p.y);
+          const minX = Math.min(...xs), maxX = Math.max(...xs);
+          const minY = Math.min(...ys), maxY = Math.max(...ys);
+          return { minX, maxX, minY, maxY, w: maxX - minX, h: maxY - minY, cx: (minX + maxX) / 2, cy: (minY + maxY) / 2 };
+        }).filter(b => b.w > 12 || b.h > 12);
+        if (boxes.length < 3) return false;
+
+        // Look for one tall vertical arch flanked near its lower half by two smaller loops/arches
+        for (let i = 0; i < boxes.length; i++) {
+          const shaft = boxes[i];
+          if (shaft.h < 95 || shaft.h < shaft.w * 1.15) continue;
+          const leftLobe = boxes.find((b, idx) => idx !== i && b.cx < shaft.cx - shaft.w * 0.25 && b.cy > shaft.minY + shaft.h * 0.42 && b.h < shaft.h * 0.85);
+          const rightLobe = boxes.find((b, idx) => idx !== i && b.cx > shaft.cx + shaft.w * 0.25 && b.cy > shaft.minY + shaft.h * 0.42 && b.h < shaft.h * 0.85);
+          if (leftLobe && rightLobe && Math.abs(leftLobe.cy - rightLobe.cy) < shaft.h * 0.45) {
+            return true;
+          }
+        }
+        return false;
+      }
+
       el.clearPaperBtn.addEventListener("click", () => {
         stopVoiceCapture();
+        if (state.inputMode === "games") {
+          state.selectedVibes = [];
+          renderVibeGrid();
+          initPairsGame();
+          showToast("Games reset");
+          return;
+        }
         el.paperTextarea.value = "";
         state.keyTimes = []; state.ikts = []; state.totalKeys = 0; state.delKeys = 0;
         state.chunkBursts = []; state.lastInputTs = null; state.voiceSession = null;
         state.strokes = [];
+        state.cheekyMode = false;
+        el.cheekyToggleBtn.classList.remove("active");
         redrawCanvas();
         showToast("Page cleared");
       });
@@ -3181,10 +3683,40 @@
         const channels = [];
         let primarySource = "Text";
 
-        const lex = hasText ? channelLexical(rawText) : null;
-        const keys = hasText ? channelKeystrokes(rawText) : null;
-        const voice = state.voiceSession ? channelVoice(rawText) : null;
-        const ink = hasInk && (state.inputMode !== "type" || !hasText) ? channelInk(state.strokes, state.inputMode === "draw" ? "draw" : "write") : null;
+        const lex = hasText && state.inputMode === "type" ? channelLexical(rawText) : (hasText && !hasInk && !state.selectedVibes.length && !state.pairsResult ? channelLexical(rawText) : null);
+        const keys = lex ? channelKeystrokes(rawText) : null;
+        const voice = lex && state.voiceSession ? channelVoice(rawText) : null;
+        const ink = hasInk && (state.inputMode === "write" || state.inputMode === "draw") ? channelInk(state.strokes, state.inputMode) : null;
+
+        let vibeCh = null;
+        if (state.selectedVibes.length > 0 && (state.inputMode === "games" || (!lex && !ink))) {
+          const picked = state.selectedVibes.map(id => VIBE_SCENES.find(s => s.id === id)).filter(Boolean);
+          if (picked.length) {
+            vibeCh = {
+              name: "vibes",
+              v: mean(picked.map(s => s.v)),
+              a: mean(picked.map(s => s.a)),
+              d: mean(picked.map(s => s.d)),
+              load: 35,
+              precision: 0.78,
+              names: picked.map(s => s.title)
+            };
+          }
+        }
+
+        let pairsCh = null;
+        if (state.pairsResult && (state.inputMode === "games" || (!lex && !ink))) {
+          const fat = state.pairsResult.fatigue;
+          pairsCh = {
+            name: "pairs",
+            v: clamp(66 - fat * 0.34, 24, 82),
+            a: clamp(78 - fat * 0.56, 18, 86),
+            d: clamp(74 - fat * 0.42, 22, 86),
+            load: fat,
+            precision: 0.64,
+            fatigue: fat
+          };
+        }
 
         if (lex) channels.push({ name: "lex", ...lex });
         if (keys) channels.push({ name: "keys", ...keys });
@@ -3193,7 +3725,14 @@
           channels.push({ name: state.inputMode, ...ink });
           primarySource = state.inputMode === "draw" ? "Drawing" : "Handwriting";
         }
+        if (vibeCh) channels.push(vibeCh);
+        if (pairsCh) channels.push(pairsCh);
+        if (vibeCh && pairsCh) primarySource = "Games + Vibe";
+        else if (vibeCh) primarySource = "Visual Vibe";
+        else if (pairsCh) primarySource = "Memory Check";
         if (!voice && lex && keys) primarySource = "Typing + Words";
+
+        const isCheekyDoodle = state.inputMode === "draw" && (state.cheekyMode || detectCheekyDoodle(state.strokes));
 
         channels.push({
           name: "bio",
@@ -3239,7 +3778,22 @@
         const explicitGoal = lex?.explicitGoal || null;
         let tag, heading, desc, recIntent;
 
-        if (explicitGoal === "calm") {
+        const gameCtxParts = [];
+        if (vibeCh) gameCtxParts.push("Visual scenes chosen: " + vibeCh.names.join(" + "));
+        if (pairsCh) gameCtxParts.push(`Match-the-Pairs completed in ${state.pairsResult.elapsedSec.toFixed(1)}s (${state.pairsResult.moves} moves, fatigue=${pairsCh.fatigue}/100)`);
+        const gameContext = gameCtxParts.join(" | ");
+
+        if (isCheekyDoodle) {
+          tag = "Cheeky Mode 😜";
+          heading = "Caught You Being Silly!";
+          desc = "Cheeky doodle spotted — queuing up gloriously funny, playful bangers across your genres.";
+          recIntent = "lift";
+        } else if (pairsCh && pairsCh.fatigue >= 65 && !vibeCh) {
+          tag = "Brain Running Warm";
+          heading = "Slower Reaction Pace — Time to Recharge";
+          desc = "Your memory run showed a bit of mental fatigue. Smooth, easy-listening picks to take the edge off.";
+          recIntent = "calm";
+        } else if (explicitGoal === "calm") {
           tag = "Ready to Unwind";
           heading = "Holding Tension — Time to Exhale";
           desc = "You're pushing against noise or friction and looking for stillness. Tuned to gently ease the pace down.";
@@ -3282,7 +3836,10 @@
           v1: Math.round(v1), a1: Math.round(a1),
           v: v2, a: a2, d: d2, load: load2,
           tag, heading, desc, recIntent,
-          channels: { lex, keys, voice, ink }
+          isCheeky: isCheekyDoodle,
+          gameContext,
+          drawingBase64: (state.inputMode === "draw" && hasInk) ? exportDrawingSnapshot() : null,
+          channels: { lex, keys, voice, ink, vibeCh, pairsCh }
         };
       }
 
@@ -3332,7 +3889,7 @@
         const eraWeight = 13 * analysis.decay + 6;
 
         const offlineRanked = CATALOG
-          .filter(t => t.genre === genre)
+          .filter(t => t.genre === genre && (analysis.isCheeky ? true : !t.silly))
           .map(t => {
             const dV = (t.v - target.tV) * 1.25;
             const dA = (t.a - target.tA) * 1.30;
@@ -3352,7 +3909,8 @@
 
             const recentPen = state.recentTrackIds.includes(t.id) ? 9 : 0;
 
-            const dist = Math.max(0, Math.sqrt(dV*dV + dA*dA + dAc*dAc + dInst*dInst + dBpm*dBpm) - eraBonus + ratingAdj + recentPen);
+            const sillyBoost = (analysis.isCheeky && t.silly) ? -90 : 0;
+            const dist = Math.max(0, Math.sqrt(dV*dV + dA*dA + dAc*dAc + dInst*dInst + dBpm*dBpm) - eraBonus + ratingAdj + recentPen + sillyBoost);
             const fitPct = Math.round(clamp(99 - dist * 0.45, 68, 99));
             return { ...t, dist, fitPct, userRating: prevR, isAi: false };
           })
@@ -3568,8 +4126,9 @@
         stopPreview();
         const hasText = el.paperTextarea.value.trim().length > 0;
         const hasInk = state.strokes.length > 0;
-        if (!hasText && !hasInk) {
-          showToast("Type, speak, write, or draw something first");
+        const hasGame = state.selectedVibes.length > 0 || Boolean(state.pairsResult);
+        if (!hasText && !hasInk && !hasGame) {
+          showToast("Type, speak, write, draw, or try a quick game first");
           return;
         }
         state.lastAnalysis = runTwoStageEngine();
@@ -3692,7 +4251,7 @@
       });
 
       window.addEventListener("resize", () => {
-        if (state.inputMode !== "type") resizeCanvas();
+        if (state.inputMode === "write" || state.inputMode === "draw") resizeCanvas();
       });
 
       // Boot

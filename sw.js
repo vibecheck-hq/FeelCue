@@ -1,5 +1,5 @@
-const SW_VERSION = 'v9';
-const CACHE_NAME = 'spotifymore-v9-cache';
+const SW_VERSION = 'v10';
+const CACHE_NAME = 'spotifymore-v10-cache';
 const CACHE_PREFIX = 'spotifymore-';
 const LEGACY_PREFIX = 'mindpaper-';
 const NAV_TIMEOUT_MS = 4000;
