@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta name="theme-color" content="#FFFFFF" />
+  <meta id="themeColorMeta" name="theme-color" content="#FFFFFF" />
+  <link rel="preconnect" href="https://qnnnnvlissdqdwmkgrao.supabase.co" crossorigin />
+  <link rel="preconnect" href="https://itunes.apple.com" crossorigin />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="mobile-web-app-capable" content="yes" />
@@ -19,18 +21,25 @@
       --font-serif: Georgia, "Times New Roman", serif;
       --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       --paper-bg: #FFFFFF;
-      --line-blue: rgba(147, 197, 253, 0.48);
-      --margin-red: rgba(239, 68, 68, 0.34);
+      --canvas-tint: #F2F6F4;
+      --line-blue: rgba(147, 197, 253, 0.46);
+      --margin-red: rgba(239, 68, 68, 0.32);
       --ink: #0F172A;
       --ink-soft: #334155;
       --muted: #64748B;
       --border: #E2E8F0;
+      --border-soft: rgba(15, 23, 42, 0.08);
       --surface: #F8FAFC;
       --spotify: #1DB954;
-      --spotify-dark: #15803D;
+      --spotify-deep: #15803D;
+      --sage-border: rgba(29, 185, 84, 0.24);
       --line-h: 36px;
       --safe-top: env(safe-area-inset-top, 0px);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.05), 0 10px 26px -12px rgba(15, 23, 42, 0.14);
+      --shadow-hero: 0 2px 4px rgba(6, 95, 70, 0.06), 0 14px 32px -12px rgba(6, 95, 70, 0.18);
+      --shadow-pill: 0 2px 6px -2px rgba(15, 23, 42, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+      --shadow-cta: 0 10px 22px -8px rgba(29, 185, 84, 0.62), inset 0 1px 0 rgba(255, 255, 255, 0.35);
     }
 
     *, *::before, *::after { box-sizing: border-box; }
@@ -49,8 +58,15 @@
     }
 
     .hidden { display: none !important; }
-    button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
-    button:active { opacity: 0.85; }
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: inherit;
+      transition: transform 0.1s ease, box-shadow 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+    }
+    button:active:not(:disabled) { transform: translateY(1px) scale(0.985); }
 
     /* ================= SETUP & CALIBRATION ================= */
     .setup-screen {
@@ -58,11 +74,11 @@
       width: 100%;
       max-width: 520px;
       margin: 0 auto;
-      padding: calc(1rem + var(--safe-top)) 0.9rem calc(2rem + var(--safe-bottom));
+      padding: calc(1rem + var(--safe-top)) 0.95rem calc(2.2rem + var(--safe-bottom));
       display: flex;
       flex-direction: column;
       gap: 1.05rem;
-      background: #FFFFFF;
+      background: linear-gradient(180deg, #F4FBF7 0%, #FFFFFF 220px);
     }
     .setup-brand {
       display: flex;
@@ -72,15 +88,15 @@
     }
     .setup-title {
       margin: 0;
-      font-size: 1.35rem;
+      font-size: 1.4rem;
       font-weight: 800;
       letter-spacing: -0.025em;
     }
     .setup-sub {
       margin: 0.25rem 0 0;
-      font-size: 0.84rem;
+      font-size: 0.85rem;
       color: var(--muted);
-      line-height: 1.42;
+      line-height: 1.44;
     }
     .step-pill {
       display: inline-block;
@@ -88,9 +104,10 @@
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.06em;
-      color: var(--spotify-dark);
-      background: rgba(29, 185, 84, 0.12);
-      padding: 0.2rem 0.55rem;
+      color: var(--spotify-deep);
+      background: rgba(29, 185, 84, 0.13);
+      border: 1px solid rgba(29, 185, 84, 0.22);
+      padding: 0.22rem 0.6rem;
       border-radius: 9999px;
       margin-bottom: 0.35rem;
     }
@@ -109,7 +126,7 @@
       gap: 0.5rem;
     }
     .field-hint {
-      font-size: 0.72rem;
+      font-size: 0.73rem;
       font-weight: 500;
       color: var(--muted);
     }
@@ -120,64 +137,68 @@
     }
     .genre-chip {
       min-height: 40px;
-      padding: 0.4rem 0.82rem;
+      padding: 0.4rem 0.85rem;
       border-radius: 9999px;
       font-size: 0.82rem;
       font-weight: 600;
       border: 1.5px solid var(--border);
-      background: var(--surface);
+      background: #FFFFFF;
       color: var(--ink-soft);
-      transition: all 0.12s ease;
+      box-shadow: var(--shadow-pill);
     }
     .genre-chip.selected {
       border-color: var(--spotify);
-      background: rgba(29, 185, 84, 0.13);
+      background: linear-gradient(180deg, #ECFDF5 0%, #D1FAE5 100%);
       color: #065F46;
+      box-shadow: 0 4px 10px -4px rgba(29, 185, 84, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.85);
     }
     .clean-input, .clean-select {
       width: 100%;
       min-height: 44px;
-      padding: 0.55rem 0.75rem;
-      border-radius: 0.75rem;
+      padding: 0.55rem 0.78rem;
+      border-radius: 0.8rem;
       border: 1.5px solid var(--border);
-      background: var(--surface);
+      background: #FFFFFF;
       font-family: inherit;
       font-size: 0.92rem;
       color: var(--ink);
       outline: none;
       -webkit-appearance: none;
+      box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04);
     }
     .clean-input:focus, .clean-select:focus {
       border-color: var(--spotify);
-      background: #FFFFFF;
+      box-shadow: 0 0 0 3px rgba(29, 185, 84, 0.14);
     }
     .seg-row {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 0.4rem;
+      gap: 0.45rem;
     }
     .seg-btn {
       min-height: 42px;
-      border-radius: 0.7rem;
+      border-radius: 0.75rem;
       border: 1.5px solid var(--border);
-      background: var(--surface);
+      background: #FFFFFF;
       font-size: 0.82rem;
       font-weight: 600;
       color: var(--ink-soft);
+      box-shadow: var(--shadow-pill);
     }
     .seg-btn.selected {
       border-color: var(--spotify);
-      background: rgba(29, 185, 84, 0.13);
+      background: linear-gradient(180deg, #ECFDF5 0%, #D1FAE5 100%);
       color: #065F46;
     }
     .optional-card {
       border: 1.5px solid var(--border);
-      border-radius: 0.95rem;
-      background: #FAFBFD;
-      padding: 0.75rem 0.85rem;
+      border-radius: 1rem;
+      background: #F9FBFA;
+      padding: 0.8rem 0.9rem;
       display: flex;
       flex-direction: column;
       gap: 0.75rem;
+      box-shadow: 0 4px 14px -10px rgba(15, 23, 42, 0.12);
     }
     .optional-toggle {
       display: flex;
@@ -193,15 +214,15 @@
       display: flex;
       flex-direction: column;
       gap: 0.75rem;
-      padding-top: 0.45rem;
+      padding-top: 0.5rem;
       border-top: 1px solid var(--border);
     }
     .primary-cta {
       width: 100%;
       min-height: 48px;
       padding: 0.75rem 1.2rem;
-      border-radius: 0.9rem;
-      background: var(--spotify);
+      border-radius: 0.95rem;
+      background: linear-gradient(180deg, #22C55E 0%, #1DB954 55%, #16A34A 100%);
       color: #FFFFFF;
       font-size: 0.96rem;
       font-weight: 700;
@@ -209,15 +230,15 @@
       align-items: center;
       justify-content: center;
       gap: 0.45rem;
-      box-shadow: 0 8px 20px -6px rgba(29, 185, 84, 0.5);
+      box-shadow: var(--shadow-cta);
     }
     .secondary-cta {
       width: 100%;
       min-height: 44px;
       padding: 0.6rem 1rem;
-      border-radius: 0.85rem;
+      border-radius: 0.9rem;
       border: 1.5px solid var(--border);
-      background: var(--surface);
+      background: #FFFFFF;
       color: var(--ink-soft);
       font-size: 0.86rem;
       font-weight: 600;
@@ -225,25 +246,27 @@
       align-items: center;
       justify-content: center;
       gap: 0.4rem;
+      box-shadow: var(--shadow-pill);
     }
     .subtle-link {
       font-size: 0.8rem;
       font-weight: 600;
       color: var(--muted);
-      padding: 0.4rem 0.6rem;
-      border-radius: 0.55rem;
+      padding: 0.4rem 0.65rem;
+      border-radius: 0.6rem;
     }
     .subtle-link:hover { color: var(--ink); background: #F1F5F9; }
 
     /* Calibration Mic Card */
     .cal-box {
       border: 1.5px solid var(--border);
-      border-radius: 1rem;
-      background: var(--surface);
-      padding: 0.95rem;
+      border-radius: 1.1rem;
+      background: #FFFFFF;
+      padding: 1rem;
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: 0.8rem;
+      box-shadow: var(--shadow-card);
     }
     .cal-quote {
       margin: 0;
@@ -252,28 +275,28 @@
       font-size: 0.98rem;
       color: var(--ink);
       line-height: 1.45;
-      background: #FFFFFF;
-      border: 1px solid var(--border);
-      border-radius: 0.75rem;
-      padding: 0.75rem;
+      background: #F6FBF8;
+      border: 1px solid var(--sage-border);
+      border-radius: 0.8rem;
+      padding: 0.78rem;
     }
     .cal-textarea {
       width: 100%;
       min-height: 76px;
-      border-radius: 0.75rem;
+      border-radius: 0.8rem;
       border: 1.5px solid var(--border);
-      background: #FFFFFF;
-      padding: 0.65rem 0.75rem;
+      background: #FAFBFD;
+      padding: 0.65rem 0.78rem;
       font-family: inherit;
       font-size: 0.92rem;
       color: var(--ink);
       resize: none;
       outline: none;
     }
-    .cal-textarea:focus { border-color: var(--spotify); }
+    .cal-textarea:focus { border-color: var(--spotify); background: #FFFFFF; }
     .mic-btn {
       min-height: 44px;
-      padding: 0.55rem 0.95rem;
+      padding: 0.55rem 1rem;
       border-radius: 9999px;
       border: 1.5px solid var(--border);
       background: #FFFFFF;
@@ -284,10 +307,11 @@
       align-items: center;
       justify-content: center;
       gap: 0.45rem;
+      box-shadow: var(--shadow-pill);
     }
     .mic-btn.live {
       border-color: #EF4444;
-      background: #FEF2F2;
+      background: linear-gradient(180deg, #FFF5F5 0%, #FEE2E2 100%);
       color: #B91C1C;
     }
     .mic-dot {
@@ -297,7 +321,7 @@
       background: var(--spotify);
       display: inline-block;
     }
-    .mic-btn.live .mic-dot {
+    .mic-btn.live .mic-dot, .paper-mic-btn.live .mic-dot {
       background: #EF4444;
       animation: pulse 1s infinite;
     }
@@ -306,7 +330,7 @@
       50% { transform: scale(1.45); opacity: 0.5; }
     }
     .cal-meter {
-      height: 6px;
+      height: 7px;
       width: 100%;
       border-radius: 9999px;
       background: #E2E8F0;
@@ -315,8 +339,124 @@
     .cal-meter-fill {
       height: 100%;
       width: 0%;
-      background: var(--spotify);
-      transition: width 0.08s linear;
+      background: linear-gradient(90deg, #34D399, #1DB954);
+      transition: width 0.1s linear;
+    }
+
+    /* ================= INSTALL APP PILL & BANNER ================= */
+    .install-chip {
+      min-height: 32px;
+      padding: 0.22rem 0.65rem;
+      border-radius: 9999px;
+      border: 1px solid rgba(29, 185, 84, 0.35);
+      background: linear-gradient(180deg, #ECFDF5 0%, #D1FAE5 100%);
+      color: #065F46;
+      font-size: 0.72rem;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.28rem;
+      box-shadow: 0 2px 8px -3px rgba(29, 185, 84, 0.35);
+    }
+    .install-banner {
+      width: 100%;
+      border-radius: 1.05rem;
+      border: 1.5px solid rgba(29, 185, 84, 0.28);
+      background: linear-gradient(135deg, #ECFDF5 0%, #FFFFFF 65%, #F0FDF4 100%);
+      padding: 0.75rem 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.65rem;
+      box-shadow: 0 6px 18px -10px rgba(6, 95, 70, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+    .install-banner-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.12rem;
+      min-width: 0;
+    }
+    .install-banner-title {
+      font-size: 0.84rem;
+      font-weight: 800;
+      color: #064E3B;
+    }
+    .install-banner-sub {
+      font-size: 0.72rem;
+      color: #475569;
+    }
+    .install-banner-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      flex-shrink: 0;
+    }
+    .install-go-btn {
+      min-height: 36px;
+      padding: 0.35rem 0.85rem;
+      border-radius: 9999px;
+      background: linear-gradient(180deg, #22C55E 0%, #1DB954 100%);
+      color: #FFFFFF;
+      font-size: 0.76rem;
+      font-weight: 800;
+      box-shadow: 0 4px 12px -4px rgba(29, 185, 84, 0.55);
+    }
+    .install-dismiss-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 9999px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Install Modal Sheet (iOS / Manual fallback) */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 95;
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 0.75rem;
+    }
+    .modal-sheet {
+      width: 100%;
+      max-width: 440px;
+      border-radius: 1.35rem;
+      background: #FFFFFF;
+      padding: 1.15rem 1.15rem calc(1.15rem + var(--safe-bottom));
+      box-shadow: 0 24px 48px -12px rgba(15, 23, 42, 0.32);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+    .modal-title {
+      margin: 0;
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--ink);
+    }
+    .modal-steps {
+      margin: 0;
+      padding-left: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      font-size: 0.86rem;
+      color: var(--ink-soft);
+      line-height: 1.45;
     }
 
     /* ================= FULL-SCREEN WHITE LINED PAPER ================= */
@@ -346,9 +486,10 @@
     .paper-top {
       position: relative;
       z-index: 5;
-      padding: calc(0.6rem + var(--safe-top)) 0.75rem 0.6rem 2rem;
+      padding: calc(0.6rem + var(--safe-top)) 0.75rem 0.65rem 2rem;
       background: rgba(255, 255, 255, 0.96);
       border-bottom: 1px solid rgba(147, 197, 253, 0.55);
+      box-shadow: 0 4px 14px -10px rgba(15, 23, 42, 0.12);
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
@@ -363,13 +504,14 @@
     }
     .mode-switch {
       display: inline-flex;
-      background: #F1F5F9;
+      background: #EEF2F6;
       border-radius: 9999px;
       padding: 3px;
+      box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.08);
     }
     .mode-tab {
       min-height: 32px;
-      padding: 0.22rem 0.72rem;
+      padding: 0.22rem 0.74rem;
       border-radius: 9999px;
       font-size: 0.76rem;
       font-weight: 700;
@@ -378,17 +520,17 @@
     .mode-tab.active {
       background: #FFFFFF;
       color: var(--ink);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 5px rgba(15, 23, 42, 0.12);
     }
     .top-right-btns {
       display: flex;
       align-items: center;
-      gap: 0.15rem;
+      gap: 0.2rem;
     }
     .mini-btn {
       min-height: 34px;
-      padding: 0.25rem 0.52rem;
-      border-radius: 0.55rem;
+      padding: 0.25rem 0.55rem;
+      border-radius: 0.6rem;
       font-size: 0.74rem;
       font-weight: 600;
       color: var(--muted);
@@ -476,8 +618,8 @@
       position: sticky;
       bottom: 0;
       z-index: 10;
-      padding: 0.65rem 0.75rem calc(0.8rem + var(--safe-bottom)) 2rem;
-      background: linear-gradient(to top, #FFFFFF 80%, rgba(255, 255, 255, 0));
+      padding: 0.65rem 0.75rem calc(0.85rem + var(--safe-bottom)) 2rem;
+      background: linear-gradient(to top, #FFFFFF 82%, rgba(255, 255, 255, 0));
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -492,20 +634,21 @@
     }
     .paper-mic-btn {
       min-height: 44px;
-      padding: 0 0.8rem;
+      padding: 0 0.88rem;
       border-radius: 9999px;
       border: 1.5px solid var(--border);
       background: #FFFFFF;
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       font-weight: 700;
       color: var(--ink-soft);
       display: inline-flex;
       align-items: center;
-      gap: 0.35rem;
+      gap: 0.38rem;
+      box-shadow: var(--shadow-pill);
     }
     .paper-mic-btn.live {
       border-color: #EF4444;
-      background: #FEF2F2;
+      background: linear-gradient(180deg, #FFF5F5 0%, #FEE2E2 100%);
       color: #B91C1C;
     }
     .paper-bar .primary-cta {
@@ -518,21 +661,21 @@
       font-size: 0.92rem;
     }
 
-    /* ================= RESULTS SCREEN ================= */
+    /* ================= RESULTS SCREEN (PASTEL TACTILE DEPTH) ================= */
     .results-screen {
       min-height: 100dvh;
       width: 100%;
       margin: 0 auto;
-      padding: calc(0.65rem + var(--safe-top)) 0.6rem calc(2.2rem + var(--safe-bottom));
+      padding: calc(0.7rem + var(--safe-top)) 0.7rem calc(2.4rem + var(--safe-bottom));
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
-      background: #F8FAFC;
+      gap: 0.85rem;
+      background: linear-gradient(180deg, #E8F4EE 0%, var(--canvas-tint) 190px, #F4F7F6 100%);
     }
     @media (min-width: 580px) {
       .results-screen {
         max-width: 540px;
-        padding: 1.15rem 1rem 2.5rem;
+        padding: 1.2rem 1rem 2.6rem;
       }
     }
 
@@ -545,28 +688,30 @@
     }
     .back-btn {
       min-height: 40px;
-      padding: 0.35rem 0.8rem;
-      border-radius: 0.7rem;
-      border: 1px solid var(--border);
-      background: #FFFFFF;
+      padding: 0.35rem 0.88rem;
+      border-radius: 9999px;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      background: rgba(255, 255, 255, 0.92);
       font-size: 0.82rem;
       font-weight: 700;
       color: var(--ink);
       display: inline-flex;
       align-items: center;
       gap: 0.35rem;
+      box-shadow: var(--shadow-pill);
     }
 
+    /* Distinct Elevated Pastel Hero Banner (Separates Mood Controls from Song Cards) */
     .state-banner {
       width: 100%;
-      border-radius: 1.1rem;
-      border: 1px solid var(--border);
-      background: #FFFFFF;
-      padding: 0.9rem 0.95rem;
+      border-radius: 1.35rem;
+      border: 1.5px solid var(--sage-border);
+      background: linear-gradient(155deg, #E8FBF1 0%, #FFFFFF 56%, #F1FDF7 100%);
+      padding: 1.05rem 1.05rem 0.95rem;
       display: flex;
       flex-direction: column;
-      gap: 0.55rem;
-      box-shadow: 0 2px 10px -4px rgba(15, 23, 42, 0.06);
+      gap: 0.62rem;
+      box-shadow: var(--shadow-hero), inset 0 1px 0 rgba(255, 255, 255, 0.95);
     }
     .state-row {
       display: flex;
@@ -579,11 +724,13 @@
       font-size: 0.72rem;
       font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.04em;
-      padding: 0.24rem 0.65rem;
+      letter-spacing: 0.05em;
+      padding: 0.28rem 0.72rem;
       border-radius: 9999px;
-      background: rgba(29, 185, 84, 0.14);
-      color: var(--spotify-dark);
+      background: linear-gradient(180deg, #DCFCE7 0%, #BBF7D0 100%);
+      color: #065F46;
+      border: 1px solid rgba(22, 163, 74, 0.22);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
       user-select: none;
     }
     .badge-cluster {
@@ -592,17 +739,41 @@
       gap: 0.4rem;
     }
     .engine-pill {
-      font-size: 0.68rem;
+      font-size: 0.69rem;
       font-weight: 700;
-      padding: 0.18rem 0.52rem;
+      padding: 0.2rem 0.56rem;
       border-radius: 9999px;
-      background: #F1F5F9;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(15, 23, 42, 0.08);
       color: #475569;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .engine-pill.retryable {
+      cursor: pointer;
+    }
+    .dev-actions {
+      display: flex;
+      gap: 0.45rem;
+      margin-top: 0.25rem;
+      flex-wrap: wrap;
+    }
+    .dev-btn {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.3rem 0.65rem;
+      border-radius: 0.55rem;
+      border: 1px solid #CBD5E1;
+      background: #F8FAFC;
+      color: #0F172A;
     }
     .engine-pill.ai-live {
-      background: #ECFDF5;
+      background: linear-gradient(180deg, #ECFDF5 0%, #D1FAE5 100%);
       color: #047857;
-      border: 1px solid #A7F3D0;
+      border: 1px solid #6EE7B7;
+      box-shadow: 0 2px 8px -3px rgba(16, 185, 129, 0.45);
     }
     .input-badge {
       font-size: 0.7rem;
@@ -611,59 +782,75 @@
     }
     .state-heading {
       margin: 0;
-      font-size: 1.16rem;
+      font-size: 1.22rem;
       font-weight: 800;
-      letter-spacing: -0.02em;
-      color: var(--ink);
-      line-height: 1.24;
+      letter-spacing: -0.025em;
+      color: #064E3B;
+      line-height: 1.22;
     }
     .state-desc {
       margin: 0;
-      font-size: 0.84rem;
-      color: #475569;
-      line-height: 1.42;
+      font-size: 0.85rem;
+      color: #334155;
+      line-height: 1.44;
     }
 
     .intent-row {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 0.4rem;
-      margin-top: 0.15rem;
+      gap: 0.48rem;
+      margin-top: 0.2rem;
+      padding-top: 0.55rem;
+      border-top: 1px solid rgba(6, 95, 70, 0.1);
     }
     .intent-btn {
-      min-height: 40px;
-      padding: 0.4rem 0.6rem;
-      border-radius: 0.75rem;
-      border: 1.5px solid var(--border);
-      background: var(--surface);
+      min-height: 42px;
+      padding: 0.42rem 0.65rem;
+      border-radius: 0.82rem;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      background: rgba(255, 255, 255, 0.86);
       font-size: 0.8rem;
       font-weight: 700;
       color: var(--ink-soft);
       text-align: center;
+      box-shadow: var(--shadow-pill);
     }
     .intent-btn.active {
       border-color: var(--spotify);
-      background: rgba(29, 185, 84, 0.13);
-      color: #065F46;
+      background: linear-gradient(180deg, #22C55E 0%, #1DB954 100%);
+      color: #FFFFFF;
+      box-shadow: 0 6px 14px -5px rgba(29, 185, 84, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.35);
     }
 
-    /* Full-Width Genre Pick Cards with Album Art + 30s Preview */
+    .section-eyebrow {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #475569;
+      padding: 0.15rem 0.25rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Elevated Song Pick Cards */
     .picks-list {
       width: 100%;
       display: flex;
       flex-direction: column;
-      gap: 0.7rem;
+      gap: 0.8rem;
     }
     .pick-card {
       width: 100%;
-      border-radius: 1.1rem;
-      border: 1.5px solid var(--border);
-      background: #FFFFFF;
-      padding: 0.95rem 0.95rem 0.82rem;
+      border-radius: 1.25rem;
+      border: 1px solid rgba(15, 23, 42, 0.07);
+      background: linear-gradient(180deg, #FFFFFF 0%, #FCFDFD 100%);
+      padding: 1rem 1rem 0.85rem;
       display: flex;
       flex-direction: column;
-      gap: 0.65rem;
-      box-shadow: 0 4px 14px -6px rgba(15, 23, 42, 0.08);
+      gap: 0.7rem;
+      box-shadow: var(--shadow-card), inset 0 1px 0 rgba(255, 255, 255, 0.95);
     }
     .pick-top {
       display: flex;
@@ -683,114 +870,123 @@
       text-transform: uppercase;
       letter-spacing: 0.04em;
       color: #0F766E;
-      background: #F0FDFA;
-      border: 1px solid #CCFBF1;
-      padding: 0.2rem 0.58rem;
+      background: linear-gradient(180deg, #F0FDFA 0%, #CCFBF1 100%);
+      border: 1px solid #99F6E4;
+      padding: 0.22rem 0.62rem;
       border-radius: 9999px;
     }
     .ai-gem-badge {
       font-size: 0.66rem;
       font-weight: 800;
       color: #6D28D9;
-      background: #F5F3FF;
+      background: linear-gradient(180deg, #F5F3FF 0%, #EDE9FE 100%);
       border: 1px solid #DDD6FE;
-      padding: 0.18rem 0.5rem;
+      padding: 0.2rem 0.54rem;
       border-radius: 9999px;
     }
     .fit-meta {
       font-size: 0.72rem;
-      font-weight: 600;
+      font-weight: 700;
       color: var(--muted);
     }
 
     .track-main-row {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 0.85rem;
+    }
+    .cover-wrap {
+      position: relative;
+      width: 68px;
+      height: 68px;
+      flex-shrink: 0;
     }
     .cover-art {
-      width: 62px;
-      height: 62px;
-      border-radius: 0.75rem;
-      flex-shrink: 0;
+      width: 68px;
+      height: 68px;
+      border-radius: 0.9rem;
       object-fit: cover;
       background: #191414;
       border: 1px solid rgba(15, 23, 42, 0.08);
+      box-shadow: 0 10px 20px -8px rgba(15, 23, 42, 0.36);
     }
     .track-info { min-width: 0; flex: 1; }
     .track-name {
       margin: 0;
-      font-size: 1.12rem;
+      font-size: 1.14rem;
       font-weight: 800;
-      letter-spacing: -0.015em;
+      letter-spacing: -0.02em;
       color: var(--ink);
-      line-height: 1.22;
+      line-height: 1.2;
     }
     .track-artist {
-      margin: 0.18rem 0 0;
-      font-size: 0.88rem;
+      margin: 0.2rem 0 0;
+      font-size: 0.89rem;
       font-weight: 600;
       color: #475569;
     }
     .track-reason {
-      margin: 0.15rem 0 0;
-      font-size: 0.76rem;
+      margin: 0.18rem 0 0;
+      font-size: 0.77rem;
       color: var(--muted);
-      line-height: 1.35;
+      line-height: 1.36;
     }
 
     .play-actions {
       display: flex;
       align-items: center;
-      gap: 0.45rem;
+      gap: 0.5rem;
     }
     .preview-btn {
       flex: 1;
-      min-height: 40px;
-      padding: 0.42rem 0.75rem;
+      min-height: 42px;
+      padding: 0.44rem 0.8rem;
       border-radius: 9999px;
-      border: 1.5px solid var(--border);
-      background: var(--surface);
+      border: 1px solid rgba(15, 23, 42, 0.1);
+      background: linear-gradient(180deg, #FFFFFF 0%, #F1F5F9 100%);
       color: var(--ink);
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       font-weight: 700;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 0.35rem;
+      box-shadow: var(--shadow-pill);
     }
     .preview-btn.playing {
       border-color: var(--spotify);
-      background: rgba(29, 185, 84, 0.13);
+      background: linear-gradient(180deg, #ECFDF5 0%, #D1FAE5 100%);
       color: #065F46;
     }
     .preview-btn:disabled {
       opacity: 0.45;
       cursor: default;
+      box-shadow: none;
     }
     .spotify-open-btn {
       flex: 1.15;
-      min-height: 40px;
-      padding: 0.45rem 0.9rem;
+      min-height: 42px;
+      padding: 0.45rem 0.95rem;
       border-radius: 9999px;
-      background: var(--spotify);
+      background: linear-gradient(180deg, #22C55E 0%, #1DB954 60%, #16A34A 100%);
       color: #FFFFFF;
       text-decoration: none;
-      font-size: 0.82rem;
+      font-size: 0.83rem;
       font-weight: 800;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 0.35rem;
-      box-shadow: 0 4px 12px -4px rgba(29, 185, 84, 0.55);
+      box-shadow: var(--shadow-cta);
     }
+    .spotify-open-btn:active { transform: translateY(1px) scale(0.985); }
 
     .pick-footer {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 0.5rem;
-      padding-top: 0.52rem;
+      padding-top: 0.56rem;
       border-top: 1px solid #F1F5F9;
     }
     .star-bar {
@@ -805,46 +1001,51 @@
       margin-right: 0.2rem;
     }
     .star-btn {
-      font-size: 1.38rem;
+      font-size: 1.42rem;
       line-height: 1;
       padding: 0.12rem 0.16rem;
       color: #CBD5E1;
     }
-    .star-btn.lit { color: #F59E0B; }
+    .star-btn.lit {
+      color: #F59E0B;
+      text-shadow: 0 2px 6px rgba(245, 158, 11, 0.32);
+    }
     .swap-btn {
       min-height: 36px;
-      padding: 0.3rem 0.75rem;
-      border-radius: 0.6rem;
-      border: 1px solid var(--border);
-      background: var(--surface);
+      padding: 0.32rem 0.8rem;
+      border-radius: 0.7rem;
+      border: 1px solid rgba(15, 23, 42, 0.09);
+      background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
       font-size: 0.78rem;
       font-weight: 700;
       color: var(--ink-soft);
+      box-shadow: var(--shadow-pill);
     }
 
     /* 12-Track Session Mix Expander */
     .mix-card {
       width: 100%;
-      border-radius: 1.1rem;
-      border: 1.5px solid var(--border);
+      border-radius: 1.2rem;
+      border: 1px solid rgba(15, 23, 42, 0.07);
       background: #FFFFFF;
       overflow: hidden;
+      box-shadow: var(--shadow-card);
     }
     .mix-toggle {
       width: 100%;
-      min-height: 50px;
-      padding: 0.75rem 1rem;
+      min-height: 52px;
+      padding: 0.8rem 1.05rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-size: 0.88rem;
+      font-size: 0.9rem;
       font-weight: 800;
       color: var(--ink);
       text-align: left;
     }
     .mix-body {
       border-top: 1px solid #F1F5F9;
-      padding: 0.5rem 0.85rem 0.85rem;
+      padding: 0.55rem 0.9rem 0.9rem;
       display: flex;
       flex-direction: column;
       gap: 0.45rem;
@@ -859,11 +1060,11 @@
       display: flex;
       align-items: center;
       gap: 0.55rem;
-      padding: 0.48rem 0.2rem;
+      padding: 0.5rem 0.2rem;
       border-top: 1px solid #F1F5F9;
     }
     .mix-num {
-      width: 1.25rem;
+      width: 1.3rem;
       font-family: var(--font-mono);
       font-size: 0.74rem;
       font-weight: 700;
@@ -871,12 +1072,9 @@
       text-align: center;
       flex-shrink: 0;
     }
-    .mix-info {
-      flex: 1;
-      min-width: 0;
-    }
+    .mix-info { flex: 1; min-width: 0; }
     .mix-title {
-      font-size: 0.86rem;
+      font-size: 0.87rem;
       font-weight: 700;
       color: var(--ink);
       white-space: nowrap;
@@ -891,11 +1089,11 @@
       text-overflow: ellipsis;
     }
     .mix-mini-play {
-      width: 34px;
-      height: 34px;
+      width: 35px;
+      height: 35px;
       border-radius: 9999px;
       border: 1px solid var(--border);
-      background: var(--surface);
+      background: #FFFFFF;
       color: var(--ink);
       font-size: 0.74rem;
       font-weight: 700;
@@ -904,6 +1102,7 @@
       justify-content: center;
       flex-shrink: 0;
       text-decoration: none;
+      box-shadow: var(--shadow-pill);
     }
     .mix-mini-play.sp {
       border-color: var(--spotify);
@@ -912,22 +1111,22 @@
     }
     .mix-mini-play.playing {
       border-color: var(--spotify);
-      background: rgba(29, 185, 84, 0.15);
+      background: rgba(29, 185, 84, 0.16);
       color: #065F46;
     }
 
-    /* Action Row: Copy Spotify Prompt + Share */
+    /* Action Row */
     .utility-row {
       width: 100%;
       display: grid;
       grid-template-columns: 1.35fr 1fr;
-      gap: 0.55rem;
+      gap: 0.58rem;
     }
     .util-btn {
       min-height: 46px;
-      padding: 0.55rem 0.8rem;
-      border-radius: 0.85rem;
-      border: 1.5px solid var(--border);
+      padding: 0.55rem 0.85rem;
+      border-radius: 0.95rem;
+      border: 1px solid rgba(15, 23, 42, 0.08);
       background: #FFFFFF;
       font-size: 0.82rem;
       font-weight: 700;
@@ -936,47 +1135,55 @@
       align-items: center;
       justify-content: center;
       gap: 0.35rem;
+      box-shadow: var(--shadow-pill);
     }
     .util-btn.accent {
-      border-color: rgba(29, 185, 84, 0.45);
-      background: rgba(29, 185, 84, 0.08);
+      border-color: rgba(29, 185, 84, 0.35);
+      background: linear-gradient(180deg, #ECFDF5 0%, #DCFCE7 100%);
       color: #065F46;
     }
 
-    /* Quick Feedback Card */
+    /* Clarified Feedback Card */
     .feedback-card {
       width: 100%;
-      border-radius: 1.1rem;
-      border: 1px solid var(--border);
+      border-radius: 1.2rem;
+      border: 1px solid rgba(15, 23, 42, 0.07);
       background: #FFFFFF;
-      padding: 0.9rem 0.95rem;
+      padding: 0.95rem 1rem;
       display: flex;
       flex-direction: column;
       gap: 0.6rem;
+      box-shadow: var(--shadow-card);
     }
     .fb-title {
       margin: 0;
-      font-size: 0.86rem;
-      font-weight: 700;
+      font-size: 0.88rem;
+      font-weight: 800;
       color: var(--ink);
+    }
+    .fb-sub {
+      margin: -0.35rem 0 0;
+      font-size: 0.73rem;
+      color: var(--muted);
     }
     .fb-chips {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 0.4rem;
+      gap: 0.42rem;
     }
     .fb-chip {
-      min-height: 38px;
-      border-radius: 0.65rem;
-      border: 1.5px solid var(--border);
+      min-height: 39px;
+      border-radius: 0.72rem;
+      border: 1px solid rgba(15, 23, 42, 0.09);
       background: var(--surface);
       font-size: 0.78rem;
       font-weight: 700;
       color: var(--ink-soft);
+      box-shadow: var(--shadow-pill);
     }
     .fb-chip.selected {
       border-color: var(--spotify);
-      background: rgba(29, 185, 84, 0.13);
+      background: linear-gradient(180deg, #ECFDF5 0%, #D1FAE5 100%);
       color: #065F46;
     }
     .fb-input-row {
@@ -985,11 +1192,11 @@
     }
     .fb-input {
       flex: 1;
-      min-height: 40px;
-      border-radius: 0.65rem;
+      min-height: 42px;
+      border-radius: 0.75rem;
       border: 1.5px solid var(--border);
       background: var(--surface);
-      padding: 0.45rem 0.7rem;
+      padding: 0.45rem 0.75rem;
       font-family: inherit;
       font-size: 0.84rem;
       color: var(--ink);
@@ -997,43 +1204,44 @@
     }
     .fb-input:focus { border-color: var(--spotify); background: #FFFFFF; }
     .fb-send {
-      min-height: 40px;
-      padding: 0 0.85rem;
-      border-radius: 0.65rem;
-      background: var(--ink);
+      min-height: 42px;
+      padding: 0 0.95rem;
+      border-radius: 0.75rem;
+      background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
       color: #FFFFFF;
       font-size: 0.78rem;
       font-weight: 700;
+      box-shadow: 0 4px 10px -4px rgba(15, 23, 42, 0.45);
     }
 
-    /* Hidden Dev Audit Drawer (only opens via secret triple-tap on mood badge) */
+    /* Hidden Dev Audit Drawer (Triple-tap green mood pill) */
     .dev-drawer {
-      border-radius: 0.9rem;
+      border-radius: 0.95rem;
       border: 1px dashed #94A3B8;
       background: #FFFFFF;
       padding: 0.85rem;
       font-family: var(--font-mono);
       font-size: 0.7rem;
       color: #334155;
-      line-height: 1.5;
+      line-height: 1.55;
       display: flex;
       flex-direction: column;
-      gap: 0.4rem;
+      gap: 0.35rem;
     }
 
     .toast {
       position: fixed;
-      bottom: calc(1.1rem + var(--safe-bottom));
+      bottom: calc(1.15rem + var(--safe-bottom));
       left: 50%;
       transform: translateX(-50%);
-      z-index: 80;
+      z-index: 98;
       background: #0F172A;
       color: #FFFFFF;
-      padding: 0.6rem 1.05rem;
+      padding: 0.62rem 1.1rem;
       border-radius: 9999px;
       font-size: 0.8rem;
       font-weight: 600;
-      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
       max-width: 92vw;
       text-align: center;
     }
@@ -1138,7 +1346,7 @@
     <button id="resetRatingsBtn" type="button" class="subtle-link hidden">Reset learned ratings</button>
   </section>
 
-  <!-- ================= STEP 2: OPTIONAL 10s VOICE / TYPING CALIBRATION ================= -->
+  <!-- ================= STEP 2: OPTIONAL VOICE / TYPING CALIBRATION ================= -->
   <section id="calScreen" class="setup-screen hidden">
     <div class="setup-brand">
       <div>
@@ -1159,7 +1367,7 @@
       <div class="cal-meter"><div id="calMeterFill" class="cal-meter-fill"></div></div>
 
       <textarea id="calTextarea" class="cal-textarea" placeholder="Or type a quick normal sentence here…"></textarea>
-      <div id="calStatus" class="field-hint">Tip: Speaking captures your natural voice tone + words alongside today's rhythm.</div>
+      <div id="calStatus" class="field-hint">Tip: Speaking captures your natural voice pace + words alongside today's rhythm.</div>
     </div>
 
     <button id="finishCalBtn" type="button" class="primary-cta">Lock Baseline &amp; Open Paper</button>
@@ -1179,6 +1387,7 @@
         </div>
 
         <div class="top-right-btns">
+          <button id="paperInstallBtn" type="button" class="install-chip hidden">📲 Install</button>
           <button id="nextPromptBtn" type="button" class="mini-btn">↻ Prompt</button>
           <button id="openProfileBtn" type="button" class="mini-btn">⚙</button>
         </div>
@@ -1215,18 +1424,19 @@
     </footer>
   </main>
 
-  <!-- ================= 4. FULL-WIDTH PHONE RESULTS SCREEN ================= -->
+  <!-- ================= 4. RESULTS SCREEN (PASTEL TACTILE DEPTH) ================= -->
   <section id="resultsScreen" class="results-screen hidden">
     <div class="res-topbar">
       <button id="backToPaperBtn" type="button" class="back-btn">← Write Again</button>
       <button id="resProfileBtn" type="button" class="mini-btn">⚙ Genres &amp; Profile</button>
     </div>
 
+    <!-- Elevated Pastel Mood Hero Surface -->
     <div class="state-banner">
       <div class="state-row">
         <span id="stateTag" class="state-tag">—</span>
         <span class="badge-cluster">
-          <span id="enginePill" class="engine-pill">⚡ Instant</span>
+          <button id="enginePill" type="button" class="engine-pill" title="Engine status">⚡ Instant</button>
           <span id="inputBadge" class="input-badge">—</span>
         </span>
       </div>
@@ -1241,7 +1451,24 @@
       </div>
     </div>
 
-    <!-- Full-width Per-Genre Pick Cards -->
+    <!-- Optional One-Tap Install App Banner (Auto-hides once installed) -->
+    <div id="installBanner" class="install-banner hidden">
+      <div class="install-banner-text">
+        <span class="install-banner-title">📲 Get the Spotify More App</span>
+        <span class="install-banner-sub">One tap on your home screen — instant &amp; fullscreen</span>
+      </div>
+      <div class="install-banner-actions">
+        <button id="bannerInstallBtn" type="button" class="install-go-btn">Install</button>
+        <button id="dismissInstallBtn" type="button" class="install-dismiss-btn" aria-label="Dismiss install banner">✕</button>
+      </div>
+    </div>
+
+    <div class="section-eyebrow">
+      <span>Your Picks</span>
+      <span id="picksSubLabel">Matched to your genres</span>
+    </div>
+
+    <!-- Elevated Per-Genre Pick Cards -->
     <div id="picksList" class="picks-list"></div>
 
     <!-- 1-Tap 12-Track Session Mix Expander -->
@@ -1265,42 +1492,105 @@
       <button id="shareBtn" type="button" class="util-btn">↗ Share Picks</button>
     </div>
 
-    <!-- Lightweight Feedback Ask (Logs directly to Supabase + Local) -->
+    <!-- Clarified Feedback Card -->
     <div class="feedback-card">
-      <p class="fb-title">How close did these picks feel?</p>
+      <p class="fb-title">Help tune Spotify More</p>
+      <p class="fb-sub">Saves privately to improve your recommendations</p>
       <div id="fbChips" class="fb-chips">
         <button type="button" data-fb="spot_on" class="fb-chip">Spot on</button>
         <button type="button" data-fb="close" class="fb-chip">Pretty close</button>
         <button type="button" data-fb="off" class="fb-chip">Way off</button>
       </div>
       <div class="fb-input-row">
-        <input id="fbNoteInput" type="text" class="fb-input" placeholder="Quick note (optional) — helps improve Spotify More…" />
-        <button id="fbSendBtn" type="button" class="fb-send">Send</button>
+        <input id="fbNoteInput" type="text" class="fb-input" placeholder="Optional note (e.g. wanted calmer tracks)…" />
+        <button id="fbSendBtn" type="button" class="fb-send">Send Note</button>
       </div>
     </div>
 
-    <!-- Hidden Dev Audit Drawer (Opens via triple-tap on green mood pill) -->
+    <!-- Hidden Dev Audit Drawer (Triple-tap green mood pill) -->
     <div id="devDrawer" class="dev-drawer hidden"></div>
   </section>
+
+  <!-- Install Guide Bottom Sheet (iOS Safari / Manual Fallback) -->
+  <div id="installModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="installModalTitle">
+    <div class="modal-sheet">
+      <div class="modal-head">
+        <h3 id="installModalTitle" class="modal-title">Install Spotify More</h3>
+        <button id="closeInstallModalBtn" type="button" class="subtle-link">Done</button>
+      </div>
+      <ol id="installModalSteps" class="modal-steps"></ol>
+    </div>
+  </div>
 
   <div id="toast" class="toast hidden"></div>
 
   <script>
     (function () {
       'use strict';
+
+      /* =====================================================================
+       * 0. SERVICE WORKER REGISTRATION (GitHub Pages max-age=600 Bypass)
+       * ===================================================================== */
+      let swActiveVersion = "none";
+      let swRefreshing = false;
+
+      function querySwVersion(worker) {
+        if (!worker || typeof MessageChannel === "undefined") return;
+        try {
+          const ch = new MessageChannel();
+          ch.port1.onmessage = e => {
+            if (e.data && e.data.version) {
+              swActiveVersion = `${e.data.version} (${e.data.cache})`;
+              if (typeof updateDevDrawer === "function") updateDevDrawer();
+            }
+          };
+          worker.postMessage({ type: "GET_VERSION" }, [ch.port2]);
+        } catch {}
+      }
+
       if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+        const hadController = Boolean(navigator.serviceWorker.controller);
+        if (navigator.serviceWorker.controller) {
+          querySwVersion(navigator.serviceWorker.controller);
+        }
+
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (navigator.serviceWorker.controller) {
+            querySwVersion(navigator.serviceWorker.controller);
+          }
+          // Only auto-reload when upgrading from an existing SW and user is not mid-draft
+          if (!hadController || swRefreshing) return;
+          const draftTyped = document.getElementById("paperTextarea")?.value?.trim().length > 0;
+          if (draftTyped) return;
+          swRefreshing = true;
+          window.location.reload();
+        });
+
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('./sw.js').catch(() => {});
+          navigator.serviceWorker
+            .register('./sw.js', { scope: './', updateViaCache: 'none' })
+            .then(reg => {
+              if (reg.active) querySwVersion(reg.active);
+              reg.update().catch(() => {});
+              reg.addEventListener('updatefound', () => {
+                const nw = reg.installing;
+                if (!nw) return;
+                nw.addEventListener('statechange', () => {
+                  if (nw.state === 'installed' && navigator.serviceWorker.controller) {
+                    nw.postMessage({ type: 'SKIP_WAITING' });
+                  }
+                });
+              });
+            })
+            .catch(() => {});
         });
       }
 
-      /* =====================================================================
-       * 0. SUPABASE CLOUD CONFIG (Publishable Key — Safe for Public Browser)
-       * ===================================================================== */
       const SUPABASE_URL = "https://qnnnnvlissdqdwmkgrao.supabase.co";
       const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_SJObgU1fCCpVANkZIaETxw_ZbPua7Ky";
       const CURATE_ENDPOINT = SUPABASE_URL + "/functions/v1/spotifymore-curate";
       const FEEDBACK_ENDPOINT = SUPABASE_URL + "/rest/v1/spotifymore_feedback";
+      const CLIENT_CURATE_TIMEOUT_MS = 11500;
 
       /* =====================================================================
        * 1. PROMPTS, GENRES & 160-TRACK OFFLINE MULTI-GENRE CATALOG
@@ -1313,6 +1603,7 @@
         "“Say the honest first line about how today is actually going.”"
       ];
 
+      // Exact parity with spotifymore-curate ALLOWED_GENRES
       const GENRES = [
         "Pop", "Hip-Hop / Rap", "R&B / Soul", "Rock / Alt", "Indie / Folk",
         "Electronic / Dance", "Country / Roots", "Jazz / Lo-Fi", "Metal / Punk", "Classical / Ambient"
@@ -1329,7 +1620,7 @@
       );
 
       /* =====================================================================
-       * 2. EXPANDED PSYCHOLINGUISTIC VAD LEXICON (160+ Terms + Contrast/Negation)
+       * 2. PSYCHOLINGUISTIC VAD LEXICON (160+ Terms + Contrast/Negation)
        * ===================================================================== */
       const LEXICON = {
         peace:{v:26,a:-22,d:10,goal:"calm"}, peaceful:{v:26,a:-22,d:10,goal:"calm"},
@@ -1400,9 +1691,22 @@
       const FIRST_PERSON = new Set(["i","me","my","mine","myself","i'm","i've","i'll","i'd"]);
 
       /* =====================================================================
-       * 3. STORAGE & STATE (Preserves existing saved user profiles & ratings)
+       * 3. STORAGE & STATE (Preserves saved profiles & ratings cleanly)
        * ===================================================================== */
       const STORAGE_KEY = "mindpaper_v3_profile";
+      const OUTBOX_KEY = "spotifymore_v9_outbox";
+      const MEDIA_SESSION_KEY = "spotifymore_v9_media";
+
+      const launchSource = (() => {
+        try {
+          const params = new URLSearchParams(window.location.search);
+          const src = params.get("source") || (window.matchMedia("(display-mode: standalone)").matches ? "standalone" : "browser");
+          if (params.has("source") && window.history && window.history.replaceState) {
+            window.history.replaceState({}, document.title, window.location.pathname);
+          }
+          return src;
+        } catch { return "browser"; }
+      })();
 
       function loadProfile() {
         try {
@@ -1413,6 +1717,36 @@
 
       function saveProfile(p) {
         try { localStorage.setItem(STORAGE_KEY, JSON.stringify(p)); } catch {}
+      }
+
+      function loadMediaSession() {
+        try {
+          const raw = sessionStorage.getItem(MEDIA_SESSION_KEY);
+          const parsed = raw ? JSON.parse(raw) : {};
+          return parsed && typeof parsed === "object" ? parsed : {};
+        } catch { return {}; }
+      }
+
+      function saveMediaSession(cacheObj) {
+        try {
+          const keys = Object.keys(cacheObj);
+          if (keys.length > 80) {
+            for (const k of keys.slice(0, keys.length - 80)) delete cacheObj[k];
+          }
+          sessionStorage.setItem(MEDIA_SESSION_KEY, JSON.stringify(cacheObj));
+        } catch {}
+      }
+
+      function loadOutbox() {
+        try {
+          const raw = localStorage.getItem(OUTBOX_KEY);
+          const arr = raw ? JSON.parse(raw) : [];
+          return Array.isArray(arr) ? arr : [];
+        } catch { return []; }
+      }
+
+      function saveOutbox(arr) {
+        try { localStorage.setItem(OUTBOX_KEY, JSON.stringify(arr.slice(-30))); } catch {}
       }
 
       const state = {
@@ -1430,16 +1764,21 @@
         intent: "current",
         swapOffsets: {},
         recentTrackIds: [],
+        recentTrackLabels: [],
         aiPicksByGenre: {},
         aiMoodLine: "",
         aiStatus: "offline", // 'offline' | 'loading' | 'live'
+        aiDebug: "Idle",
         aiReqSeq: 0,
-        mediaCache: {}, // key -> { artwork, previewUrl }
+        aiCooldownUntil: 0,
+        mediaCache: loadMediaSession(),
         playingKey: null,
         mixTracks: [],
         selectedFeedback: null,
         devTapCount: 0,
-        devTapTimer: null
+        devTapTimer: null,
+        deferredInstallPrompt: null,
+        installDismissed: false
       };
 
       /* =====================================================================
@@ -1460,20 +1799,23 @@
         finishCalBtn: $("finishCalBtn"), skipCalBtn: $("skipCalBtn"),
 
         paperScreen: $("paperScreen"), tabType: $("tabType"), tabWrite: $("tabWrite"), tabDraw: $("tabDraw"),
-        nextPromptBtn: $("nextPromptBtn"), openProfileBtn: $("openProfileBtn"), promptText: $("promptText"),
-        paperTextarea: $("paperTextarea"), drawWrap: $("drawWrap"), canvas: $("inkCanvas"),
-        drawWatermark: $("drawWatermark"), paperMicBtn: $("paperMicBtn"), paperMicLabel: $("paperMicLabel"),
-        undoPaperBtn: $("undoPaperBtn"), clearPaperBtn: $("clearPaperBtn"), analyzeBtn: $("analyzeBtn"),
+        paperInstallBtn: $("paperInstallBtn"), nextPromptBtn: $("nextPromptBtn"), openProfileBtn: $("openProfileBtn"),
+        promptText: $("promptText"), paperTextarea: $("paperTextarea"), drawWrap: $("drawWrap"),
+        canvas: $("inkCanvas"), drawWatermark: $("drawWatermark"), paperMicBtn: $("paperMicBtn"),
+        paperMicLabel: $("paperMicLabel"), undoPaperBtn: $("undoPaperBtn"), clearPaperBtn: $("clearPaperBtn"),
+        analyzeBtn: $("analyzeBtn"),
 
         resultsScreen: $("resultsScreen"), backToPaperBtn: $("backToPaperBtn"), resProfileBtn: $("resProfileBtn"),
         stateTag: $("stateTag"), enginePill: $("enginePill"), inputBadge: $("inputBadge"),
         stateHeading: $("stateHeading"), stateDesc: $("stateDesc"),
-        intentRow: $("intentRow"), picksList: $("picksList"),
+        intentRow: $("intentRow"), installBanner: $("installBanner"), bannerInstallBtn: $("bannerInstallBtn"),
+        dismissInstallBtn: $("dismissInstallBtn"), picksSubLabel: $("picksSubLabel"), picksList: $("picksList"),
         mixToggleBtn: $("mixToggleBtn"), mixArrow: $("mixArrow"), mixBody: $("mixBody"),
         mixList: $("mixList"), copyMixBtn: $("copyMixBtn"),
         copyPromptBtn: $("copyPromptBtn"), shareBtn: $("shareBtn"),
         fbChips: $("fbChips"), fbNoteInput: $("fbNoteInput"), fbSendBtn: $("fbSendBtn"),
-        devDrawer: $("devDrawer"), toast: $("toast")
+        devDrawer: $("devDrawer"), installModal: $("installModal"), installModalSteps: $("installModalSteps"),
+        closeInstallModalBtn: $("closeInstallModalBtn"), toast: $("toast")
       };
 
       // Standard transparent 2D context so Android Write/Draw stays crisp white lined paper
@@ -1488,8 +1830,26 @@
         return String(s || "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[c]));
       }
 
+      function setThemeColor(hex) {
+        const meta = document.getElementById("themeColorMeta");
+        if (meta) meta.setAttribute("content", hex);
+      }
+
       function trackKey(t) {
         return `${(t.title || "").toLowerCase().trim()}|${(t.artist || "").toLowerCase().trim()}`;
+      }
+
+      function isStandalonePwa() {
+        return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+      }
+
+      function isIosDevice() {
+        return /iPhone|iPad|iPod/i.test(navigator.userAgent || "") ||
+          (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+      }
+
+      function isAndroidDevice() {
+        return /Android/i.test(navigator.userAgent || "");
       }
 
       let toastTimer = null;
@@ -1520,6 +1880,71 @@
           showToast(msg);
         } catch { showToast("Copy blocked by browser"); }
       }
+
+      /* =====================================================================
+       * 4A. ONE-TAP PWA INSTALL FLOW (Android Native + iOS Guide Sheet)
+       * ===================================================================== */
+      function refreshInstallUi() {
+        const installed = isStandalonePwa();
+        const canOffer = !installed && (Boolean(state.deferredInstallPrompt) || isIosDevice() || isAndroidDevice());
+        el.paperInstallBtn.classList.toggle("hidden", !canOffer);
+        el.installBanner.classList.toggle("hidden", !canOffer || state.installDismissed);
+      }
+
+      window.addEventListener("beforeinstallprompt", e => {
+        e.preventDefault();
+        state.deferredInstallPrompt = e;
+        refreshInstallUi();
+      });
+
+      window.addEventListener("appinstalled", () => {
+        state.deferredInstallPrompt = null;
+        state.installDismissed = true;
+        refreshInstallUi();
+        showToast("Spotify More installed on your home screen!");
+      });
+
+      function openManualInstallSheet() {
+        if (isIosDevice()) {
+          el.installModalSteps.innerHTML =
+            "<li>Tap the <strong>Share</strong> icon (square with arrow) at the bottom of Safari.</li>" +
+            "<li>Scroll down and tap <strong>Add to Home Screen</strong>.</li>" +
+            "<li>Tap <strong>Add</strong> — Spotify More opens fullscreen like a native app.</li>";
+        } else {
+          el.installModalSteps.innerHTML =
+            "<li>Tap your browser menu (<strong>⋮</strong> or <strong>≡</strong> in the corner).</li>" +
+            "<li>Tap <strong>Install app</strong> or <strong>Add to Home screen</strong>.</li>" +
+            "<li>Tap <strong>Install</strong> to place the Spotify More icon on your home screen.</li>";
+        }
+        el.installModal.classList.remove("hidden");
+      }
+
+      async function triggerInstall() {
+        if (state.deferredInstallPrompt) {
+          try {
+            state.deferredInstallPrompt.prompt();
+            const choice = await state.deferredInstallPrompt.userChoice;
+            state.deferredInstallPrompt = null;
+            if (choice && choice.outcome === "accepted") {
+              state.installDismissed = true;
+            }
+            refreshInstallUi();
+            return;
+          } catch {}
+        }
+        openManualInstallSheet();
+      }
+
+      el.paperInstallBtn.addEventListener("click", triggerInstall);
+      el.bannerInstallBtn.addEventListener("click", triggerInstall);
+      el.dismissInstallBtn.addEventListener("click", () => {
+        state.installDismissed = true;
+        refreshInstallUi();
+      });
+      el.closeInstallModalBtn.addEventListener("click", () => el.installModal.classList.add("hidden"));
+      el.installModal.addEventListener("click", e => {
+        if (e.target === el.installModal) el.installModal.classList.add("hidden");
+      });
 
       /* =====================================================================
        * 4B. 30-SECOND AUDIO PREVIEW PLAYER + PUBLIC ALBUM ART LOOKUP
@@ -1574,19 +1999,48 @@
         }
       }
 
-      async function fetchTrackMedia(track) {
+      const mediaInFlight = new Map();
+      const mediaQueue = [];
+      let mediaActiveCount = 0;
+      const MAX_MEDIA_CONCURRENCY = 3;
+
+      function applyMediaToDom(key, info) {
+        if (!info) return;
+        document.querySelectorAll(`img[data-art-key="${CSS.escape(key)}"]`).forEach(img => {
+          if (info.artwork) img.src = info.artwork;
+        });
+        document.querySelectorAll(`button[data-preview-key="${CSS.escape(key)}"]`).forEach(btn => {
+          if (info.previewUrl) {
+            btn.disabled = false;
+            if (btn.classList.contains("preview-btn") && state.playingKey !== key) {
+              btn.textContent = "▶ 30s";
+            }
+          } else {
+            btn.disabled = true;
+            if (btn.classList.contains("preview-btn")) btn.textContent = "No clip";
+          }
+        });
+      }
+
+      async function fetchTrackMediaNow(track) {
         const key = trackKey(track);
         if (state.mediaCache[key]) return state.mediaCache[key];
         if (!navigator.onLine) return null;
 
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), 5000);
         try {
           const q = encodeURIComponent(`${track.title} ${track.artist}`);
-          const resp = await fetch(`https://itunes.apple.com/search?term=${q}&media=music&entity=song&limit=3`);
+          const resp = await fetch(`https://itunes.apple.com/search?term=${q}&media=music&entity=song&limit=3`, {
+            signal: ctrl.signal
+          });
+          clearTimeout(timer);
           if (!resp.ok) return null;
           const data = await resp.json();
           const results = Array.isArray(data.results) ? data.results : [];
           if (!results.length) {
             state.mediaCache[key] = { artwork: FALLBACK_ART, previewUrl: "" };
+            saveMediaSession(state.mediaCache);
             return state.mediaCache[key];
           }
           const artLower = (track.artist || "").toLowerCase().split(/[&,]/)[0].trim();
@@ -1594,37 +2048,47 @@
           const art = best.artworkUrl100 ? best.artworkUrl100.replace("100x100bb", "240x240bb") : FALLBACK_ART;
           const info = { artwork: art, previewUrl: best.previewUrl || "" };
           state.mediaCache[key] = info;
+          saveMediaSession(state.mediaCache);
           return info;
         } catch {
+          clearTimeout(timer);
           return null;
+        }
+      }
+
+      function pumpMediaQueue() {
+        while (mediaActiveCount < MAX_MEDIA_CONCURRENCY && mediaQueue.length > 0) {
+          const job = mediaQueue.shift();
+          if (!job) break;
+          mediaActiveCount++;
+          fetchTrackMediaNow(job.track)
+            .then(info => {
+              mediaInFlight.delete(job.key);
+              if (info) applyMediaToDom(job.key, info);
+            })
+            .finally(() => {
+              mediaActiveCount--;
+              pumpMediaQueue();
+            });
         }
       }
 
       function hydrateMediaForTracks(tracks) {
         tracks.forEach(t => {
           const key = trackKey(t);
-          fetchTrackMedia(t).then(info => {
-            if (!info) return;
-            document.querySelectorAll(`img[data-art-key="${CSS.escape(key)}"]`).forEach(img => {
-              if (info.artwork) img.src = info.artwork;
-            });
-            document.querySelectorAll(`button[data-preview-key="${CSS.escape(key)}"]`).forEach(btn => {
-              if (info.previewUrl) {
-                btn.disabled = false;
-                if (btn.classList.contains("preview-btn") && state.playingKey !== key) {
-                  btn.textContent = "▶ 30s";
-                }
-              } else {
-                btn.disabled = true;
-                if (btn.classList.contains("preview-btn")) btn.textContent = "No clip";
-              }
-            });
-          });
+          if (state.mediaCache[key]) {
+            applyMediaToDom(key, state.mediaCache[key]);
+            return;
+          }
+          if (mediaInFlight.has(key) || !navigator.onLine) return;
+          mediaInFlight.set(key, true);
+          mediaQueue.push({ key, track: t });
         });
+        pumpMediaQueue();
       }
 
       /* =====================================================================
-       * 4C. SUPABASE CLOUD BRIDGE (Feedback Logging + Live AI Deep Cuts)
+       * 4C. SUPABASE CLOUD BRIDGE (Aligned 1:1 with Hardened spotifymore-curate)
        * ===================================================================== */
       function getDeviceHint() {
         const ua = navigator.userAgent || "";
@@ -1634,49 +2098,140 @@
         return "Web";
       }
 
+      async function sendFeedbackRowDirect(payload) {
+        const resp = await fetch(FEEDBACK_ENDPOINT, {
+          method: "POST",
+          keepalive: true,
+          headers: {
+            "apikey": SUPABASE_PUBLISHABLE_KEY,
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Prefer": "return=minimal"
+          },
+          body: JSON.stringify(payload)
+        });
+        return resp.ok;
+      }
+
+      async function flushFeedbackOutbox() {
+        if (!navigator.onLine) return;
+        const queue = loadOutbox();
+        if (!queue.length) return;
+        const remaining = [];
+        for (const item of queue) {
+          try {
+            const ok = await sendFeedbackRowDirect(item);
+            if (!ok) remaining.push(item);
+          } catch {
+            remaining.push(item);
+            break;
+          }
+        }
+        saveOutbox(remaining);
+        if (typeof updateDevDrawer === "function") updateDevDrawer();
+      }
+
+      window.addEventListener("online", () => {
+        flushFeedbackOutbox();
+      });
+
       async function logToSupabase(row) {
-        if (!navigator.onLine) return false;
-        try {
-          const resp = await fetch(FEEDBACK_ENDPOINT, {
-            method: "POST",
-            headers: {
-              "apikey": SUPABASE_PUBLISHABLE_KEY,
-              "Content-Type": "application/json",
-              "Prefer": "return=minimal"
-            },
-            body: JSON.stringify({ ...row, device_hint: getDeviceHint() })
-          });
-          return resp.ok;
-        } catch {
+        const payload = { ...row, device_hint: getDeviceHint() };
+        if (!navigator.onLine) {
+          const q = loadOutbox();
+          q.push(payload);
+          saveOutbox(q);
+          updateDevDrawer();
           return false;
+        }
+        try {
+          const ok = await sendFeedbackRowDirect(payload);
+          if (!ok) {
+            const q = loadOutbox();
+            q.push(payload);
+            saveOutbox(q);
+            updateDevDrawer();
+          }
+          return ok;
+        } catch {
+          const q = loadOutbox();
+          q.push(payload);
+          saveOutbox(q);
+          updateDevDrawer();
+          return false;
+        }
+      }
+
+      function updateDevDrawer() {
+        const analysis = state.lastAnalysis;
+        if (!analysis) return;
+        const target = computeAudioTarget(analysis, state.intent);
+        const b = analysis.bio;
+        const queued = loadOutbox().length;
+        el.devDrawer.innerHTML = `
+          <div><strong>[DEV AUDIT — v9 • Hidden from users]</strong></div>
+          <div>Engine: ${escHtml(state.aiStatus)} (${escHtml(state.aiDebug)})</div>
+          <div>SW: ${escHtml(swActiveVersion)} • Launch: ${escHtml(launchSource)} • Outbox: ${queued}</div>
+          <div>Stage 1 (Bayesian): V=${analysis.v1}, A=${analysis.a1}, Load=${analysis.load}</div>
+          <div>Stage 2 (Fine-tuned): V=${analysis.v}, A=${analysis.a}, D=${analysis.d} → Target V:${target.tV} A:${target.tA} Ac:${target.tAc} Inst:${target.tInst} BPM:${target.tBpm} Era:${target.tYear}</div>
+          <div>Biorhythm (t=${b.daysAlive}d): P=${b.P.toFixed(2)} E=${b.E.toFixed(2)} I=${b.I.toFixed(2)} Circ=${b.circadian.toFixed(2)}</div>
+          <div>Prior Decay: ${Math.round(analysis.decay * 100)}% (${state.profile.ratingsCount} ratings) • B₀: ${state.profile.b0 ? "Locked" : "None"}</div>
+          <div class="dev-actions">
+            <button type="button" id="devRetryAiBtn" class="dev-btn">↻ Retry AI Curate</button>
+            <button type="button" id="devFlushBtn" class="dev-btn">↑ Flush Outbox (${queued})</button>
+          </div>
+        `;
+        const retryBtn = document.getElementById("devRetryAiBtn");
+        if (retryBtn) {
+          retryBtn.addEventListener("click", () => {
+            state.aiCooldownUntil = 0;
+            fetchAiDeepCuts(state.lastAnalysis, computeAudioTarget(state.lastAnalysis, state.intent));
+          });
+        }
+        const flushBtn = document.getElementById("devFlushBtn");
+        if (flushBtn) {
+          flushBtn.addEventListener("click", () => {
+            flushFeedbackOutbox().then(() => showToast("Outbox synced"));
+          });
         }
       }
 
       async function fetchAiDeepCuts(analysis, target) {
         if (!navigator.onLine) {
           state.aiStatus = "offline";
+          state.aiDebug = "Device offline";
           updateEnginePill();
+          updateDevDrawer();
           return;
         }
+        const nowMs = Date.now();
+        if (nowMs < state.aiCooldownUntil) {
+          const waitSec = Math.ceil((state.aiCooldownUntil - nowMs) / 1000);
+          state.aiStatus = "offline";
+          state.aiDebug = `Rate cooldown (${waitSec}s left)`;
+          updateEnginePill();
+          updateDevDrawer();
+          return;
+        }
+
         const reqId = ++state.aiReqSeq;
+        const startedMs = performance.now();
         state.aiStatus = "loading";
+        state.aiDebug = "Requesting spotifymore-curate…";
         updateEnginePill();
+        updateDevDrawer();
 
         const ctrl = new AbortController();
-        const timer = setTimeout(() => ctrl.abort(), 12000);
+        const timer = setTimeout(() => ctrl.abort(), CLIENT_CURATE_TIMEOUT_MS);
 
         try {
-          const recentNames = state.recentTrackIds.map(id => {
-            const found = CATALOG.find(c => c.id === id);
-            return found ? `${found.title} - ${found.artist}` : id;
-          });
-
           const resp = await fetch(CURATE_ENDPOINT, {
             method: "POST",
             signal: ctrl.signal,
             headers: {
               "apikey": SUPABASE_PUBLISHABLE_KEY,
-              "Content-Type": "application/json"
+              "Content-Type": "application/json",
+              "Accept": "application/json"
             },
             body: JSON.stringify({
               genres: state.profile.genres,
@@ -1685,19 +2240,54 @@
               inputMode: analysis.primarySource,
               textSnippet: el.paperTextarea.value.trim().slice(0, 260),
               target,
-              recentTracks: recentNames
+              recentTracks: state.recentTrackLabels.slice(0, 14)
             })
           });
           clearTimeout(timer);
+          const ms = Math.round(performance.now() - startedMs);
 
           if (!resp.ok || reqId !== state.aiReqSeq) {
-            if (reqId === state.aiReqSeq) { state.aiStatus = "offline"; updateEnginePill(); }
+            if (reqId === state.aiReqSeq) {
+              if (resp.status === 429) {
+                const retryAfter = Number(resp.headers.get("retry-after") || "15");
+                state.aiCooldownUntil = Date.now() + clamp(retryAfter, 5, 60) * 1000;
+              }
+              const hint = resp.status === 401
+                ? "HTTP 401 (Verify JWT OFF / apikey)"
+                : resp.status === 403
+                ? "HTTP 403 (CORS origin rejected)"
+                : resp.status === 429
+                ? "HTTP 429 (Rate limited)"
+                : resp.status === 504
+                ? "HTTP 504 (Gemini upstream timeout)"
+                : `HTTP ${resp.status}`;
+              state.aiStatus = "offline";
+              state.aiDebug = `${hint} in ${ms}ms`;
+              updateEnginePill();
+              updateDevDrawer();
+            }
+            return;
+          }
+
+          const ct = resp.headers.get("content-type") || "";
+          if (!ct.includes("application/json")) {
+            if (reqId === state.aiReqSeq) {
+              state.aiStatus = "offline";
+              state.aiDebug = `Non-JSON response in ${ms}ms`;
+              updateEnginePill();
+              updateDevDrawer();
+            }
             return;
           }
 
           const data = await resp.json();
           if (!data || !data.ok || !Array.isArray(data.picks) || !data.picks.length) {
-            if (reqId === state.aiReqSeq) { state.aiStatus = "offline"; updateEnginePill(); }
+            if (reqId === state.aiReqSeq) {
+              state.aiStatus = "offline";
+              state.aiDebug = `Empty payload in ${ms}ms`;
+              updateEnginePill();
+              updateDevDrawer();
+            }
             return;
           }
 
@@ -1719,23 +2309,29 @@
               inst: target.tInst,
               vibe: p.vibe || "AI-curated mood match",
               isAi: true,
-              discovery: p.discovery || "gem",
-              fitPct: 97 - (idx % 3)
+              discovery: p.discovery === "anchor" ? "anchor" : "gem",
+              fitPct: 98 - (idx % 3)
             });
           });
 
           if (reqId !== state.aiReqSeq) return;
           state.aiPicksByGenre = grouped;
-          state.aiMoodLine = data.moodLine || "";
+          state.aiMoodLine = typeof data.moodLine === "string" ? data.moodLine : "";
           state.aiStatus = "live";
+          state.aiDebug = `HTTP 200 • ${data.picks.length} picks in ${ms}ms`;
           state.swapOffsets = {};
-          renderResults(false);
+          renderResults(true);
           showToast("✨ Fresh AI deep cuts loaded");
-        } catch {
+        } catch (err) {
           clearTimeout(timer);
+          const ms = Math.round(performance.now() - startedMs);
           if (reqId === state.aiReqSeq) {
             state.aiStatus = "offline";
+            state.aiDebug = (err && err.name === "AbortError")
+              ? `Client timeout (${ms}ms)`
+              : `Network/CORS error (${ms}ms)`;
             updateEnginePill();
+            updateDevDrawer();
           }
         }
       }
@@ -1744,20 +2340,32 @@
         if (state.aiStatus === "live") {
           el.enginePill.textContent = "✨ AI Deep Cuts";
           el.enginePill.className = "engine-pill ai-live";
+          el.picksSubLabel.textContent = "Fresh deep cuts + anchors";
         } else if (state.aiStatus === "loading") {
           el.enginePill.textContent = "✨ Finding deep cuts…";
           el.enginePill.className = "engine-pill";
+          el.picksSubLabel.textContent = "Curating live picks…";
         } else {
-          el.enginePill.textContent = "⚡ Instant";
-          el.enginePill.className = "engine-pill";
+          el.enginePill.textContent = navigator.onLine ? "⚡ Instant ↻" : "⚡ Offline";
+          el.enginePill.className = "engine-pill retryable";
+          el.picksSubLabel.textContent = "Matched to your genres";
         }
       }
 
+      el.enginePill.addEventListener("click", () => {
+        if (state.aiStatus === "offline" && state.lastAnalysis && navigator.onLine) {
+          fetchAiDeepCuts(state.lastAnalysis, computeAudioTarget(state.lastAnalysis, state.intent));
+        }
+      });
+
       /* =====================================================================
-       * 5. LIVE WEB AUDIO ACOUSTIC VOICE ENGINE + SPEECH RECOGNITION
+       * 5. ANDROID-SAFE VOICE CAPTURE (Fixes Android Chrome Mic Lock)
+       *    On Android/mobile, SpeechRecognition runs WITHOUT a competing
+       *    getUserMedia stream so transcription never silently mutes, while
+       *    capturing real-time cadence & speech-velocity telemetry.
        * ===================================================================== */
       let audioStream = null, audioCtx = null, analyser = null, rafId = null, speechRec = null;
-      let voiceAccumulator = null;
+      let voiceAccumulator = null, pulseTimer = null;
 
       function estimatePitchAutocorr(buf, sampleRate) {
         let rms = 0;
@@ -1785,8 +2393,9 @@
 
       function stopVoiceCapture() {
         if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+        if (pulseTimer) { clearInterval(pulseTimer); pulseTimer = null; }
         if (speechRec) {
-          try { speechRec.onend = null; speechRec.stop(); } catch {}
+          try { speechRec.onend = null; speechRec.onerror = null; speechRec.stop(); } catch {}
           speechRec = null;
         }
         if (audioStream) {
@@ -1800,15 +2409,31 @@
         analyser = null;
 
         let summary = null;
-        if (voiceAccumulator && voiceAccumulator.frames > 6) {
-          const durSec = Math.max(0.5, (performance.now() - voiceAccumulator.startMs) / 1000);
-          const meanRms = mean(voiceAccumulator.rmsList);
-          const sdRms = std(voiceAccumulator.rmsList, meanRms);
-          const meanF0 = mean(voiceAccumulator.f0List);
-          const sdF0 = std(voiceAccumulator.f0List, meanF0);
-          const meanZcr = mean(voiceAccumulator.zcrList);
-          const voicedRatio = voiceAccumulator.voicedFrames / voiceAccumulator.frames;
-          summary = { durSec, meanRms, sdRms, meanF0, sdF0, meanZcr, voicedRatio, frames: voiceAccumulator.frames };
+        if (voiceAccumulator) {
+          const durSec = Math.max(0.6, (performance.now() - voiceAccumulator.startMs) / 1000);
+          if (voiceAccumulator.frames > 6) {
+            const meanRms = mean(voiceAccumulator.rmsList);
+            const sdRms = std(voiceAccumulator.rmsList, meanRms);
+            const meanF0 = mean(voiceAccumulator.f0List);
+            const sdF0 = std(voiceAccumulator.f0List, meanF0);
+            const meanZcr = mean(voiceAccumulator.zcrList);
+            const voicedRatio = voiceAccumulator.voicedFrames / voiceAccumulator.frames;
+            summary = { durSec, meanRms, sdRms, meanF0, sdF0, meanZcr, voicedRatio, frames: voiceAccumulator.frames, mode: "acoustic" };
+          } else if (voiceAccumulator.wordEvents > 0) {
+            // Speech-cadence telemetry (Android single-lock safe mode)
+            const voicedRatio = clamp(voiceAccumulator.wordEvents / Math.max(2, durSec * 1.8), 0.25, 0.92);
+            summary = {
+              durSec,
+              meanRms: 0.055,
+              sdRms: 0.015,
+              meanF0: 0,
+              sdF0: 18,
+              meanZcr: 0.08,
+              voicedRatio,
+              frames: voiceAccumulator.wordEvents,
+              mode: "cadence"
+            };
+          }
         }
 
         const ctxName = state.activeMicContext;
@@ -1824,7 +2449,9 @@
         el.paperMicBtn.classList.remove("live");
         el.paperMicLabel.textContent = "Speak";
         if (ctxName === "cal" && summary) {
-          el.calStatus.textContent = `Baseline voice locked (${Math.round(summary.meanF0 || 145)} Hz avg, ${Math.round(summary.voicedRatio * 100)}% cadence).`;
+          el.calStatus.textContent = summary.meanF0
+            ? `Baseline voice locked (${Math.round(summary.meanF0)} Hz avg, ${Math.round(summary.voicedRatio * 100)}% cadence).`
+            : `Baseline voice cadence locked (${Math.round(summary.durSec)}s captured).`;
         }
       }
 
@@ -1834,7 +2461,15 @@
           return;
         }
         state.activeMicContext = targetContext;
-        voiceAccumulator = { startMs: performance.now(), frames: 0, voicedFrames: 0, rmsList: [], f0List: [], zcrList: [] };
+        voiceAccumulator = {
+          startMs: performance.now(),
+          frames: 0,
+          voicedFrames: 0,
+          wordEvents: 0,
+          rmsList: [],
+          f0List: [],
+          zcrList: []
+        };
 
         const targetTa = targetContext === "cal" ? el.calTextarea : el.paperTextarea;
         if (targetContext === "cal") {
@@ -1843,10 +2478,14 @@
         } else {
           if (state.inputMode !== "type") setMode("type");
           el.paperMicBtn.classList.add("live");
-          el.paperMicLabel.textContent = "Stop";
+          el.paperMicLabel.textContent = "Listening…";
         }
 
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const avoidDualMicLock = Boolean(SR && (isAndroidDevice() || isIosDevice()));
+
+        // 1. Desktop-only concurrent Web Audio analyser (skipped on mobile when SR is available so Android never mutes SR)
+        if (!avoidDualMicLock && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
           try {
             audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
             const AC = window.AudioContext || window.webkitAudioContext;
@@ -1876,26 +2515,58 @@
           } catch {}
         }
 
-        const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+        // 2. SpeechRecognition (Primary transcription + mobile cadence telemetry)
         if (SR) {
           try {
             speechRec = new SR();
             speechRec.lang = "en-GB";
-            speechRec.continuous = true;
+            speechRec.continuous = !isAndroidDevice(); // Android Chrome transcribes more reliably with continuous=false + auto-restart
             speechRec.interimResults = true;
-            const baseText = targetTa.value.trim();
+            let committedText = targetTa.value.trim();
+
+            if (targetContext === "cal" && avoidDualMicLock) {
+              pulseTimer = setInterval(() => {
+                if (state.activeMicContext !== "cal") return;
+                el.calMeterFill.style.width = `${22 + Math.round(Math.random() * 48)}%`;
+              }, 160);
+            }
+
             speechRec.onresult = evt => {
               let finalChunk = "", interimChunk = "";
-              for (let i = 0; i < evt.results.length; i++) {
-                if (evt.results[i].isFinal) finalChunk += evt.results[i][0].transcript + " ";
-                else interimChunk += evt.results[i][0].transcript;
+              for (let i = evt.resultIndex; i < evt.results.length; i++) {
+                const seg = evt.results[i][0].transcript;
+                if (evt.results[i].isFinal) finalChunk += seg + " ";
+                else interimChunk += seg;
               }
-              targetTa.value = (baseText ? baseText + " " : "") + (finalChunk + interimChunk).trim();
+              if (voiceAccumulator) voiceAccumulator.wordEvents++;
+              if (finalChunk.trim()) {
+                committedText = (committedText ? committedText + " " : "") + finalChunk.trim();
+              }
+              targetTa.value = (committedText + (interimChunk ? (committedText ? " " : "") + interimChunk : "")).trim();
+              if (targetContext === "cal" && avoidDualMicLock) {
+                el.calMeterFill.style.width = "82%";
+              }
             };
-            speechRec.onerror = () => {};
+
+            speechRec.onerror = evt => {
+              const code = evt && evt.error ? evt.error : "";
+              if (code === "not-allowed" || code === "service-not-allowed") {
+                showToast("Allow microphone access in Chrome to use Speak");
+                stopVoiceCapture();
+              } else if (code === "no-speech" && state.activeMicContext === targetContext) {
+                // Keep quiet on brief pause
+              }
+            };
+
             speechRec.onend = () => {
-              if (state.activeMicContext === targetContext) stopVoiceCapture();
+              if (state.activeMicContext === targetContext) {
+                if (isAndroidDevice() && speechRec) {
+                  try { speechRec.start(); return; } catch {}
+                }
+                stopVoiceCapture();
+              }
             };
+
             speechRec.start();
           } catch {
             showToast("Voice typing unavailable — type or use keyboard mic");
@@ -1977,6 +2648,7 @@
         el.resultsScreen.classList.add("hidden");
         el.calScreen.classList.add("hidden");
         el.setupScreen.classList.remove("hidden");
+        setThemeColor("#F4FBF7");
         window.scrollTo(0, 0);
       }
 
@@ -2017,7 +2689,7 @@
         state.calIkts = [];
         state.calVoiceSession = null;
         el.calTextarea.value = "";
-        el.calStatus.textContent = "Tip: Speaking captures your natural voice tone + words alongside today's rhythm.";
+        el.calStatus.textContent = "Tip: Speaking captures your natural voice pace + words alongside today's rhythm.";
         el.setupScreen.classList.add("hidden");
         el.calScreen.classList.remove("hidden");
         window.scrollTo(0, 0);
@@ -2090,7 +2762,7 @@
       });
 
       /* =====================================================================
-       * 7. LINED PAPER UI: TYPE + WRITE + DRAW (Transparent White Paper Fix)
+       * 7. LINED PAPER UI: TYPE + WRITE + DRAW
        * ===================================================================== */
       function showPaper() {
         stopVoiceCapture();
@@ -2099,6 +2771,8 @@
         el.calScreen.classList.add("hidden");
         el.resultsScreen.classList.add("hidden");
         el.paperScreen.classList.remove("hidden");
+        setThemeColor("#FFFFFF");
+        refreshInstallUi();
         if (state.inputMode !== "type") requestAnimationFrame(resizeCanvas);
       }
 
@@ -2388,7 +3062,8 @@
         const d = clamp(52 + (rmsRatio - 1) * 16 + (vs.voicedRatio - baseVoiced) * 14, 15, 92);
         const load = clamp(32 + Math.max(0, paceRatio - 1.15) * 32 + Math.max(0, vs.meanZcr - 0.11) * 180, 10, 92);
 
-        return { v, a, d, load, precision: b0v ? 0.62 : 0.42, wps, meanF0: vs.meanF0, rmsRatio };
+        const prec = vs.mode === "cadence" ? (b0v ? 0.42 : 0.30) : (b0v ? 0.62 : 0.42);
+        return { v, a, d, load, precision: prec, wps, meanF0: vs.meanF0, rmsRatio };
       }
 
       function channelInk(strokes, mode) {
@@ -2683,14 +3358,12 @@
           })
           .sort((a, b) => a.dist - b.dist);
 
-        // Prepend live AI deep cuts (if loaded) while deduplicating against offline catalog
         const aiList = (state.aiPicksByGenre[genre] || []).map(t => ({
           ...t,
           userRating: ratings[t.id] || 0
         }));
         const seenKeys = new Set(aiList.map(trackKey));
-        const merged = [...aiList, ...offlineRanked.filter(t => !seenKeys.has(trackKey(t)))];
-        return merged;
+        return [...aiList, ...offlineRanked.filter(t => !seenKeys.has(trackKey(t)))];
       }
 
       function applyTrackRating(track, stars, target) {
@@ -2710,7 +3383,6 @@
 
         saveProfile(p);
 
-        // Silent cloud log to Supabase
         logToSupabase({
           event_type: "track_rating",
           mood_tag: state.lastAnalysis?.tag || "",
@@ -2739,6 +3411,7 @@
         el.stateHeading.textContent = analysis.heading;
         el.stateDesc.textContent = state.aiMoodLine || analysis.desc;
         updateEnginePill();
+        refreshInstallUi();
 
         el.intentRow.querySelectorAll(".intent-btn").forEach(btn => {
           btn.classList.toggle("active", btn.dataset.intent === state.intent);
@@ -2781,7 +3454,9 @@
                 <span class="fit-meta">${pick.fitPct}% match • ${pick.bpm} BPM</span>
               </div>
               <div class="track-main-row">
-                <img class="cover-art" src="${artSrc}" data-art-key="${escHtml(key)}" alt="" loading="lazy" />
+                <div class="cover-wrap">
+                  <img class="cover-art" src="${artSrc}" data-art-key="${escHtml(key)}" alt="" loading="lazy" />
+                </div>
                 <div class="track-info">
                   <h3 class="track-name">${escHtml(pick.title)}</h3>
                   <p class="track-artist">${escHtml(pick.artist)} · ${pick.year}</p>
@@ -2805,7 +3480,7 @@
           `;
         }).join("");
 
-        // Build 12-Track Session Mix across chosen genres (interleaved round-robin, deduped)
+        // Build 12-Track Session Mix across chosen genres
         const mix = [];
         const mixKeys = new Set();
         const genres = state.profile.genres;
@@ -2841,9 +3516,20 @@
 
         if (recordRecent) {
           state.recentTrackIds = [...chosen.map(c => c.id), ...state.recentTrackIds].slice(0, 14);
+          const newLabels = chosen.map(c => `${c.title} - ${c.artist}`);
+          const mergedLabels = [];
+          const seenLbl = new Set();
+          for (const lbl of [...newLabels, ...state.recentTrackLabels]) {
+            const k = lbl.toLowerCase();
+            if (!seenLbl.has(k)) {
+              seenLbl.add(k);
+              mergedLabels.push(lbl);
+              if (mergedLabels.length >= 14) break;
+            }
+          }
+          state.recentTrackLabels = mergedLabels;
         }
 
-        // Wire card controls
         el.picksList.querySelectorAll(".star-btn").forEach(btn => {
           btn.addEventListener("click", () => {
             const tr = pickLookup[btn.dataset.track] || CATALOG.find(t => t.id === btn.dataset.track);
@@ -2863,7 +3549,6 @@
           btn.addEventListener("click", () => playPreviewByKey(btn.dataset.previewKey));
         });
 
-        // Fetch real album covers + 30s clips asynchronously for visible hero picks
         hydrateMediaForTracks(chosen);
         if (!el.mixBody.classList.contains("hidden")) hydrateMediaForTracks(mix);
 
@@ -2872,14 +3557,7 @@
         state.spotifyPrompt = `Create a Spotify playlist ${intentNames[state.intent]} (${analysis.tag} — around ${target.tBpm} BPM) blending ${state.profile.genres.join(", ")}. Use tracks like ${seedList} as the sonic anchor, mixing mostly fresh discoveries with a couple of familiar gems.`;
         state.shareText = `My Spotify More mood right now: ${analysis.tag}\n` + chosen.map(c => `• ${c.genre}: ${c.title} — ${c.artist}`).join("\n");
 
-        const b = analysis.bio;
-        el.devDrawer.innerHTML = `
-          <div><strong>[DEV AUDIT — Hidden from users]</strong></div>
-          <div>Engine: ${state.aiStatus} • Stage 1: V=${analysis.v1}, A=${analysis.a1}, Load=${analysis.load}</div>
-          <div>Stage 2: V=${analysis.v}, A=${analysis.a}, D=${analysis.d} → Target V:${target.tV} A:${target.tA} Ac:${target.tAc} Inst:${target.tInst} BPM:${target.tBpm} Era:${target.tYear}</div>
-          <div>Biorhythm (t=${b.daysAlive}d): P=${b.P.toFixed(2)} E=${b.E.toFixed(2)} I=${b.I.toFixed(2)} Circ=${b.circadian.toFixed(2)}</div>
-          <div>Prior Decay: ${Math.round(analysis.decay * 100)}% (${state.profile.ratingsCount} ratings) • B₀: ${state.profile.b0 ? "Locked" : "None"}</div>
-        `;
+        updateDevDrawer();
       }
 
       /* =====================================================================
@@ -2910,9 +3588,9 @@
         renderResults(true);
         el.paperScreen.classList.add("hidden");
         el.resultsScreen.classList.remove("hidden");
+        setThemeColor("#E8F4EE");
         window.scrollTo({ top: 0, behavior: "smooth" });
 
-        // Fire cloud AI deep-cut upgrade asynchronously (fails silently to offline engine if not deployed/offline)
         fetchAiDeepCuts(state.lastAnalysis, target);
       });
 
@@ -2997,7 +3675,7 @@
         });
         el.fbSendBtn.disabled = false;
         el.fbNoteInput.value = "";
-        showToast(sent ? "Feedback sent — thank you!" : "Saved on your phone — thank you!");
+        showToast(sent ? "Note saved — thank you!" : "Saved on your phone — thank you!");
       });
 
       // Secret triple-tap on mood badge to toggle hidden dev audit drawer
@@ -3006,6 +3684,7 @@
         clearTimeout(state.devTapTimer);
         if (state.devTapCount >= 3) {
           el.devDrawer.classList.toggle("hidden");
+          updateDevDrawer();
           state.devTapCount = 0;
         } else {
           state.devTapTimer = setTimeout(() => { state.devTapCount = 0; }, 500);
@@ -3018,6 +3697,8 @@
 
       // Boot
       setPrompt();
+      refreshInstallUi();
+      flushFeedbackOutbox();
       if (!state.profile || !state.profile.genres || state.profile.genres.length < 2) {
         openSetup(false);
       } else {
