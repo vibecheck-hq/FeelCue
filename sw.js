@@ -1,5 +1,5 @@
-const SW_VERSION = "v11.0.0";
-const CACHE_NAME = "feelcue-v11";
+const SW_VERSION = "v11.1.0";
+const CACHE_NAME = "feelcue-v11.1";
 const NAV_TIMEOUT_MS = 4000;
 
 const CORE_ASSETS = [
@@ -8,6 +8,7 @@ const CORE_ASSETS = [
   "./manifest.json",
   "./icon-192.png",
   "./icon-512.png",
+  "./icon-512-maskable.png",
   "./apple-touch-icon.png",
 ];
 
@@ -15,13 +16,14 @@ const MANAGED_PREFIXES = ["feelcue-", "spotifymore-", "mindpaper-"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
+    caches
+      .open(CACHE_NAME)
       .then((cache) =>
         Promise.allSettled(
           CORE_ASSETS.map((asset) =>
-            cache.add(new Request(asset, { cache: "reload" }))
+            cache.add(new Request(asset, { cache: "reload" })),
           ),
-        )
+        ),
       )
       .then(() => self.skipWaiting()),
   );
@@ -29,7 +31,8 @@ self.addEventListener("install", (event) => {
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys()
+    caches
+      .keys()
       .then((keys) =>
         Promise.all(
           keys
@@ -39,7 +42,7 @@ self.addEventListener("activate", (event) => {
                 MANAGED_PREFIXES.some((prefix) => key.startsWith(prefix)),
             )
             .map((key) => caches.delete(key)),
-        )
+        ),
       )
       .then(() => self.clients.claim()),
   );
@@ -61,10 +64,10 @@ function fetchWithTimeout(request, ms) {
     const controller = new AbortController();
     const timer = setTimeout(() => {
       controller.abort();
-      reject(new Error("Navigation fetch timed out"));
+      reject(new Error("Network timeout"));
     }, ms);
 
-    fetch(request, { cache: "no-store", signal: controller.signal })
+    fetch(request, { signal: controller.signal })
       .then((res) => {
         clearTimeout(timer);
         resolve(res);
@@ -76,67 +79,69 @@ function fetchWithTimeout(request, ms) {
   });
 }
 
+function isCacheableResponse(response) {
+  return (
+    response &&
+    response.status === 200 &&
+    response.type === "basic" &&
+    !response.redirected
+  );
+}
+
 self.addEventListener("fetch", (event) => {
-  const req = event.request;
-  if (req.method !== "GET") return;
+  const { request } = event;
 
-  const url = new URL(req.url);
+  // 1. Never intercept non-GET requests (POST to Edge Functions, Auth, Stripe, etc.)
+  if (request.method !== "GET") return;
 
-  // Strict cross-origin bypass (Supabase, iTunes previews/art, Spotify)
+  const url = new URL(request.url);
+
+  // 2. Never intercept cross-origin APIs (Supabase, Stripe, iTunes, CDNs)
   if (url.origin !== self.location.origin) return;
 
-  // 1. Navigation requests: network-first with 4s lie-fi timeout
-  if (req.mode === "navigate") {
+  // 3. Never cache sw.js itself so updates roll out immediately
+  if (url.pathname.endsWith("/sw.js")) return;
+
+  // 4. HTML navigations: Network-First with timeout, fallback to cached ./index.html
+  if (request.mode === "navigate") {
     event.respondWith(
-      fetchWithTimeout(req, NAV_TIMEOUT_MS)
-        .then((res) => {
-          if (res && res.ok) {
-            const copy = res.clone();
-            caches.open(CACHE_NAME).then((c) => c.put("./index.html", copy));
+      fetchWithTimeout(request, NAV_TIMEOUT_MS)
+        .then((networkRes) => {
+          if (isCacheableResponse(networkRes)) {
+            const copy = networkRes.clone();
+            event.waitUntil(
+              caches.open(CACHE_NAME).then((cache) => cache.put("./index.html", copy)),
+            );
           }
-          return res;
+          return networkRes;
         })
-        .catch(() =>
-          caches.match("./index.html").then((cached) =>
-            cached || caches.match("./")
-          )
-        ),
+        .catch(async () => {
+          const cached =
+            (await caches.match(request, { ignoreSearch: true })) ||
+            (await caches.match("./index.html")) ||
+            (await caches.match("./"));
+          return cached || Response.error();
+        }),
     );
     return;
   }
 
-  // 2. Icons & manifest: stale-while-revalidate
-  if (
-    url.pathname.endsWith(".png") ||
-    url.pathname.endsWith("manifest.json")
-  ) {
-    event.respondWith(
-      caches.open(CACHE_NAME).then((cache) =>
-        cache.match(req).then((cached) => {
-          const networkPromise = fetch(req)
-            .then((res) => {
-              if (res && res.ok) cache.put(req, res.clone());
-              return res;
-            })
-            .catch(() => cached);
-          return cached || networkPromise;
-        })
-      ),
-    );
-    return;
-  }
-
-  // 3. Other same-origin static files: cache fallback to network
+  // 5. Same-origin static assets: Stale-While-Revalidate
   event.respondWith(
-    caches.match(req).then((cached) =>
-      cached ||
-      fetch(req).then((res) => {
-        if (res && res.ok) {
-          const copy = res.clone();
-          caches.open(CACHE_NAME).then((c) => c.put(req, copy));
-        }
-        return res;
-      })
-    ),
+    caches.match(request).then((cachedRes) => {
+      const networkFetch = fetch(request)
+        .then((networkRes) => {
+          if (isCacheableResponse(networkRes)) {
+            const copy = networkRes.clone();
+            event.waitUntil(
+              caches.open(CACHE_NAME).then((cache) => cache.put(request, copy)),
+            );
+          }
+          return networkRes;
+        })
+        .catch(() => cachedRes);
+
+      return cachedRes || networkFetch;
+    }),
   );
 });
