@@ -1,127 +1,2476 @@
-<script type="module">
-  import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
-
-  const SUPABASE_URL = "https://qnnnnvlissdqdwnkgrao.supabase.co";
-  // Safe public browser key: paste your Supabase Publishable key (sb_publishable_...) or Legacy anon key
-  const SUPABASE_PUBLIC_KEY = "PASTE_YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY_HERE";
-
-  const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY, {
-    auth: {
-      persistSession: true,
-      autoRefreshToken: true,
-      detectSessionInUrl: true,
-    },
-  });
-
-  // 1. Silent zero-login auth: ensures every visitor has a real auth.users.id UUID
-  async function ensureSession() {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session?.access_token) return session;
-
-    const { data, error } = await supabase.auth.signInAnonymously();
-    if (error || !data.session) {
-      throw new Error(error?.message || "Anonymous sign-in failed. Enable Anonymous Sign-Ins in Supabase Auth.");
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta id="themeColorMeta" name="theme-color" content="#0B161A" />
+  <link rel="preconnect" href="https://qnnnnvlissdqdwmkgrao.supabase.co" crossorigin />
+  <link rel="preconnect" href="https://itunes.apple.com" crossorigin />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="FeelCue" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png" />
+  <title>FeelCue — Mood Picks for Spotify</title>
+  <style>
+    :root {
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --font-serif: Georgia, "Times New Roman", serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      --paper-bg: #FFFFFF;
+      --canvas-tint: #EFF7F6;
+      --line-blue: rgba(147, 197, 253, 0.44);
+      --margin-red: rgba(239, 68, 68, 0.30);
+      --ink: #0F172A;
+      --ink-soft: #334155;
+      --muted: #64748B;
+      --border: #DCE7E6;
+      --surface: #F8FCFB;
+      --brand-dark: #0B161A;
+      --brand-dark-2: #12242A;
+      --accent: #0D9488;
+      --accent-bright: #14B8A6;
+      --accent-mint: #2DD4BF;
+      --accent-deep: #0F766E;
+      --amber: #F59E0B;
+      --danger: #DC2626;
+      --spotify: #1DB954;
+      --sage-border: rgba(13, 148, 136, 0.25);
+      --line-h: 36px;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --shadow-card: 0 2px 4px rgba(11, 22, 26, 0.05), 0 12px 26px rgba(11, 22, 26, 0.08);
+      --shadow-hero: 0 4px 10px rgba(13, 148, 136, 0.12), 0 18px 36px -14px rgba(11, 22, 26, 0.18);
+      --shadow-pill: 0 2px 5px -1px rgba(11, 22, 26, 0.13), 0 1px 0 rgba(11, 22, 26, 0.05);
+      --shadow-cta: 0 10px 20px -6px rgba(13, 148, 136, 0.55), 0 2px 0 #0A5E56, inset 0 1px 0 rgba(255, 255, 255, 0.24);
+      --shadow-well: inset 0 2px 5px rgba(11, 22, 26, 0.06), 0 1px 0 rgba(255, 255, 255, 0.85);
     }
-    return data.session;
-  }
 
-  // 2. Fetch current credit balance (enforced by RLS: auth.uid() = user_id)
-  async function getCreditsBalance() {
-    const session = await ensureSession();
-    const { data, error } = await supabase
-      .from("user_credits")
-      .select("credits_balance, lifetime_purchased, lifetime_used")
-      .eq("user_id", session.user.id)
-      .maybeSingle();
+    *, *::before, *::after { box-sizing: border-box; }
 
-    if (error) throw error;
-    return data?.credits_balance ?? 0;
-  }
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100dvh;
+      width: 100%;
+      background: var(--canvas-tint);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
+      overscroll-behavior-y: contain;
+    }
 
-  // 3. Start Stripe Checkout via create-checkout Edge Function
-  async function startCheckout(packageId = "starter") {
-    const session = await ensureSession();
+    .hidden { display: none !important; }
 
-    const res = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "apikey": SUPABASE_PUBLIC_KEY,
-        "Authorization": `Bearer ${session.access_token}`,
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: inherit;
+      min-height: 44px;
+      transition: transform 0.1s ease, box-shadow 0.15s ease, background-color 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:active:not(:disabled) { transform: translateY(1.5px) scale(0.985); }
+    button:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    /* TOP COMMAND BAR */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: linear-gradient(180deg, var(--brand-dark) 0%, var(--brand-dark-2) 100%);
+      color: #F8FAFC;
+      padding: calc(0.65rem + var(--safe-top)) 1rem 0.65rem;
+      border-bottom: 1px solid rgba(45, 212, 191, 0.18);
+      box-shadow: 0 6px 20px rgba(11, 22, 26, 0.24);
+    }
+
+    .topbar-inner {
+      max-width: 780px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.65rem;
+    }
+
+    .brand-lockup {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent-mint), var(--accent));
+      color: var(--brand-dark);
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      font-size: 1.05rem;
+      letter-spacing: -0.04em;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(45, 212, 191, 0.35);
+    }
+
+    .brand-text h1 {
+      margin: 0;
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--amber);
+      display: inline-block;
+      box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.22);
+    }
+
+    .status-dot.ready {
+      background: var(--accent-mint);
+      box-shadow: 0 0 0 2px rgba(45, 212, 191, 0.28);
+    }
+
+    .status-dot.offline {
+      background: #94A3B8;
+      box-shadow: none;
+    }
+
+    .brand-sub {
+      margin: 2px 0 0;
+      font-size: 0.72rem;
+      color: rgba(226, 232, 240, 0.72);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      flex-shrink: 0;
+    }
+
+    .credit-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.38rem;
+      padding: 0 0.85rem;
+      height: 40px;
+      min-height: 40px;
+      border-radius: 999px;
+      background: rgba(45, 212, 191, 0.14);
+      border: 1px solid rgba(45, 212, 191, 0.42);
+      color: var(--accent-mint);
+      font-size: 0.8rem;
+      font-weight: 700;
+      font-family: var(--font-mono);
+    }
+
+    .credit-pill:hover { background: rgba(45, 212, 191, 0.22); }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      min-height: 40px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #E2E8F0;
+      display: grid;
+      place-items: center;
+      font-size: 1rem;
+    }
+
+    .icon-btn:hover { background: rgba(255, 255, 255, 0.16); }
+
+    /* MAIN SHELL */
+    .shell {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 1rem 0.95rem calc(2.4rem + var(--safe-bottom));
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    /* SETUP & CALIBRATION CARD */
+    .setup-card {
+      background: linear-gradient(180deg, #FFFFFF 0%, #F4FBFA 100%);
+      border: 1px solid var(--sage-border);
+      border-radius: 20px;
+      padding: 1.05rem 1.1rem;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .setup-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .step-pill {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--accent-deep);
+      background: rgba(20, 184, 166, 0.14);
+      padding: 0.22rem 0.55rem;
+      border-radius: 999px;
+      margin-bottom: 0.35rem;
+    }
+
+    .setup-title {
+      margin: 0;
+      font-size: 1.18rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+
+    .setup-sub {
+      margin: 0.2rem 0 0;
+      font-size: 0.83rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .chip-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+
+    .chip {
+      min-height: 36px;
+      padding: 0.35rem 0.78rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #FFFFFF;
+      color: var(--ink-soft);
+      font-size: 0.8rem;
+      font-weight: 600;
+      box-shadow: 0 1px 2px rgba(11, 22, 26, 0.04);
+    }
+
+    .chip.selected {
+      background: var(--brand-dark);
+      border-color: var(--brand-dark);
+      color: var(--accent-mint);
+    }
+
+    .setup-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-ghost {
+      padding: 0.45rem 0.9rem;
+      border-radius: 12px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      background: #FFFFFF;
+    }
+
+    .btn-dark {
+      padding: 0.5rem 1.1rem;
+      border-radius: 12px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      background: var(--brand-dark);
+      color: var(--accent-mint);
+      box-shadow: var(--shadow-pill);
+    }
+
+    /* CAPTURE STUDIO (LINED PAPER) */
+    .studio-card {
+      background: var(--paper-bg);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: var(--shadow-hero);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .mode-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.4rem;
+      padding: 0.65rem;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mode-tab {
+      border-radius: 14px;
+      padding: 0.55rem 0.4rem;
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+    }
+
+    .mode-tab.active {
+      background: var(--brand-dark);
+      color: var(--accent-mint);
+      box-shadow: var(--shadow-pill);
+    }
+
+    /* LINED PAPER SURFACE */
+    .paper-stage {
+      position: relative;
+      background-color: var(--paper-bg);
+      background-image:
+        linear-gradient(90deg, transparent 42px, var(--margin-red) 42px, var(--margin-red) 44px, transparent 44px),
+        repeating-linear-gradient(180deg, transparent 0px, transparent calc(var(--line-h) - 1px), var(--line-blue) calc(var(--line-h) - 1px), var(--line-blue) var(--line-h));
+      background-size: 100% 100%, 100% var(--line-h);
+      min-height: 252px;
+    }
+
+    .mood-textarea {
+      width: 100%;
+      min-height: 252px;
+      border: none;
+      outline: none;
+      resize: vertical;
+      background: transparent;
+      color: var(--ink);
+      font-family: var(--font-serif);
+      font-size: 1.08rem;
+      line-height: var(--line-h);
+      padding: 6px 1rem 12px 54px;
+      display: block;
+    }
+
+    .mood-textarea::placeholder {
+      color: #94A3B8;
+      font-style: italic;
+    }
+
+    /* VOICE PANEL */
+    .voice-stage {
+      padding: 1.25rem 1.1rem 1.1rem 54px;
+      min-height: 252px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 0.9rem;
+    }
+
+    .voice-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      flex-wrap: wrap;
+    }
+
+    .mic-btn {
+      width: 66px;
+      height: 66px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--accent-bright), var(--accent-deep));
+      color: #FFFFFF;
+      font-size: 1.45rem;
+      display: grid;
+      place-items: center;
+      box-shadow: var(--shadow-cta);
+      flex-shrink: 0;
+    }
+
+    .mic-btn.recording {
+      background: linear-gradient(135deg, #EF4444, #B91C1C);
+      box-shadow: 0 0 0 8px rgba(239, 68, 68, 0.2), 0 10px 20px -6px rgba(220, 38, 38, 0.55);
+      animation: pulseMic 1.2s infinite;
+    }
+
+    @keyframes pulseMic {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .voice-meta {
+      flex: 1;
+      min-width: 180px;
+    }
+
+    .voice-status {
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: var(--ink);
+    }
+
+    .voice-hint {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 2px;
+      line-height: 1.35;
+    }
+
+    .voice-transcript {
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+      line-height: var(--line-h);
+      color: var(--ink);
+      min-height: 72px;
+      word-break: break-word;
+    }
+
+    /* INK / S-PEN CANVAS PANEL */
+    .ink-stage {
+      position: relative;
+      height: 300px;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .ink-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+      -webkit-user-select: none;
+      user-select: none;
+      cursor: crosshair;
+      display: block;
+    }
+
+    .ink-hud {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      background: rgba(11, 22, 26, 0.84);
+      color: #E2E8F0;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 0.35rem 0.65rem;
+      border-radius: 10px;
+      display: flex;
+      gap: 0.65rem;
+      pointer-events: none;
+      backdrop-filter: blur(6px);
+    }
+
+    .ink-hud strong { color: var(--accent-mint); }
+
+    .ink-placeholder {
+      position: absolute;
+      left: 54px;
+      top: 10px;
+      right: 16px;
+      color: #94A3B8;
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 1rem;
+      line-height: var(--line-h);
+      pointer-events: none;
+    }
+
+    .ink-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      padding: 0.55rem 0.8rem;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+    }
+
+    .ink-tool-group {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .tool-btn {
+      min-height: 36px;
+      padding: 0.3rem 0.72rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #FFFFFF;
+      color: var(--ink-soft);
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+
+    .tool-btn.active {
+      background: var(--brand-dark);
+      border-color: var(--brand-dark);
+      color: var(--accent-mint);
+    }
+
+    /* QUICK PROMPTS + SHIFT + CTA */
+    .studio-footer {
+      padding: 0.9rem 1rem 1.05rem;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .prompt-strip {
+      display: flex;
+      gap: 0.45rem;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      scrollbar-width: none;
+    }
+
+    .prompt-strip::-webkit-scrollbar { display: none; }
+
+    .prompt-pill {
+      flex-shrink: 0;
+      min-height: 34px;
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      color: var(--ink-soft);
+      font-size: 0.76rem;
+      font-weight: 600;
+    }
+
+    .shift-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 0.45rem 0.75rem;
+      box-shadow: var(--shadow-well);
+    }
+
+    .shift-label {
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .shift-toggle {
+      display: inline-flex;
+      background: var(--canvas-tint);
+      padding: 3px;
+      border-radius: 11px;
+      gap: 3px;
+    }
+
+    .shift-opt {
+      min-height: 34px;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .shift-opt.active {
+      background: var(--brand-dark);
+      color: var(--accent-mint);
+    }
+
+    .cta-btn {
+      width: 100%;
+      min-height: 54px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, var(--accent-bright) 0%, var(--accent) 100%);
+      color: #FFFFFF;
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      box-shadow: var(--shadow-cta);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+    }
+
+    .cta-btn:hover:not(:disabled) {
+      filter: brightness(1.03);
+    }
+
+    /* BANNER / ALERTS */
+    .notice-bar {
+      padding: 0.75rem 0.95rem;
+      border-radius: 14px;
+      font-size: 0.82rem;
+      line-height: 1.45;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.75rem;
+      border: 1px solid var(--border);
+      background: #FFFFFF;
+    }
+
+    .notice-bar.success {
+      background: #ECFDF5;
+      border-color: #6EE7B7;
+      color: #065F46;
+    }
+
+    .notice-bar.warn {
+      background: #FFFBEB;
+      border-color: #FCD34D;
+      color: #92400E;
+    }
+
+    .notice-bar.error {
+      background: #FEF2F2;
+      border-color: #FCA5A5;
+      color: #991B1B;
+    }
+
+    /* RESULTS SECTION */
+    .results-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+    }
+
+    .mood-readout {
+      background: linear-gradient(135deg, var(--brand-dark) 0%, #16333B 100%);
+      color: #F8FAFC;
+      border-radius: 20px;
+      padding: 1.15rem 1.2rem;
+      border: 1px solid rgba(45, 212, 191, 0.25);
+      box-shadow: var(--shadow-card);
+    }
+
+    .readout-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.45rem;
+    }
+
+    .mood-badge {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--brand-dark);
+      background: var(--accent-mint);
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+    }
+
+    .source-tag {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: rgba(226, 232, 240, 0.7);
+    }
+
+    .readout-title {
+      margin: 0.2rem 0 0.35rem;
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .readout-summary {
+      margin: 0;
+      font-size: 0.88rem;
+      color: rgba(226, 232, 240, 0.86);
+      line-height: 1.5;
+    }
+
+    .readout-actions {
+      margin-top: 0.85rem;
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-spotify-all {
+      min-height: 40px;
+      padding: 0.45rem 0.95rem;
+      border-radius: 12px;
+      background: var(--spotify);
+      color: #071A0E;
+      font-size: 0.82rem;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      text-decoration: none;
+    }
+
+    .btn-copy-list {
+      min-height: 40px;
+      padding: 0.45rem 0.95rem;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #F8FAFC;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .track-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .track-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 0.85rem;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .track-main {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .track-art-wrap {
+      position: relative;
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      overflow: hidden;
+      background: linear-gradient(135deg, var(--brand-dark), var(--accent-deep));
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      color: var(--accent-mint);
+      font-weight: 800;
+      font-size: 1.15rem;
+    }
+
+    .track-art-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .track-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .track-title {
+      margin: 0;
+      font-size: 0.98rem;
+      font-weight: 800;
+      color: var(--ink);
+      line-height: 1.25;
+    }
+
+    .track-artist {
+      margin: 2px 0 0;
+      font-size: 0.83rem;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .track-reason {
+      margin: 0;
+      font-size: 0.82rem;
+      color: var(--ink-soft);
+      line-height: 1.45;
+      background: var(--surface);
+      border-left: 3px solid var(--accent);
+      padding: 0.45rem 0.65rem;
+      border-radius: 0 10px 10px 0;
+    }
+
+    .track-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .track-btn-row {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-preview {
+      min-height: 38px;
+      padding: 0.35rem 0.8rem;
+      border-radius: 10px;
+      background: var(--brand-dark);
+      color: var(--accent-mint);
+      font-size: 0.78rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .btn-preview.playing {
+      background: var(--accent);
+      color: #FFFFFF;
+    }
+
+    .btn-spotify {
+      min-height: 38px;
+      padding: 0.35rem 0.85rem;
+      border-radius: 10px;
+      background: rgba(29, 185, 84, 0.14);
+      border: 1px solid rgba(29, 185, 84, 0.38);
+      color: #116D31;
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .fb-row {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .fb-btn {
+      width: 38px;
+      height: 38px;
+      min-height: 38px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #FFFFFF;
+      font-size: 0.9rem;
+    }
+
+    .fb-btn.voted {
+      background: var(--brand-dark);
+      border-color: var(--brand-dark);
+      color: var(--accent-mint);
+    }
+
+    .audio-bar {
+      height: 4px;
+      width: 100%;
+      background: var(--canvas-tint);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .audio-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-mint));
+      transition: width 0.12s linear;
+    }
+
+    /* DRAWER / MODAL */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      background: rgba(11, 22, 26, 0.62);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 0.75rem;
+    }
+
+    @media (min-width: 640px) {
+      .modal-backdrop { align-items: center; }
+    }
+
+    .modal-sheet {
+      width: 100%;
+      max-width: 520px;
+      max-height: 88dvh;
+      overflow-y: auto;
+      background: #FFFFFF;
+      border-radius: 24px;
+      padding: 1.25rem;
+      box-shadow: 0 24px 50px rgba(11, 22, 26, 0.38);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.75rem;
+    }
+
+    .modal-head h2 {
+      margin: 0;
+      font-size: 1.12rem;
+      font-weight: 800;
+    }
+
+    .close-btn {
+      width: 38px;
+      height: 38px;
+      min-height: 38px;
+      border-radius: 10px;
+      background: var(--canvas-tint);
+      color: var(--ink);
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .billing-box {
+      background: linear-gradient(135deg, var(--brand-dark), #142C34);
+      color: #F8FAFC;
+      border-radius: 18px;
+      padding: 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .billing-price {
+      font-size: 1.75rem;
+      font-weight: 900;
+      color: var(--accent-mint);
+      letter-spacing: -0.03em;
+    }
+
+    .billing-meta {
+      font-size: 0.82rem;
+      color: rgba(226, 232, 240, 0.82);
+      line-height: 1.45;
+    }
+
+    .diag-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.45rem;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+    }
+
+    .diag-row {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.5rem 0.7rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 0.6rem;
+      word-break: break-all;
+    }
+
+    .diag-k { color: var(--muted); flex-shrink: 0; }
+    .diag-v { color: var(--ink); font-weight: 700; text-align: right; }
+
+    .history-item {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 0.8rem;
+      background: var(--surface);
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      text-align: left;
+      width: 100%;
+    }
+
+    .history-item:hover { border-color: var(--accent); }
+
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2.5px solid rgba(255, 255, 255, 0.35);
+      border-top-color: #FFFFFF;
+      border-radius: 999px;
+      animation: spin 0.7s linear infinite;
+      display: inline-block;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand-lockup">
+        <div class="brand-mark">FC</div>
+        <div class="brand-text">
+          <h1>FeelCue <span id="statusDot" class="status-dot" title="Connecting to Supabase"></span></h1>
+          <p class="brand-sub">Mood Picks for Spotify</p>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <button id="creditsBtn" class="credit-pill" type="button" aria-label="Credits and Upgrade">
+          <span>&#9889;</span>
+          <span id="creditsCount">...</span>
+        </button>
+        <button id="historyBtn" class="icon-btn" type="button" title="Saved Cues" aria-label="Saved Cues">&#128337;</button>
+        <button id="settingsBtn" class="icon-btn" type="button" title="Taste & Diagnostics" aria-label="Taste and Diagnostics">&#9881;</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell">
+    <div id="noticeArea" class="hidden"></div>
+
+    <section id="setupCard" class="setup-card">
+      <div class="setup-head">
+        <div>
+          <span class="step-pill">Quick Taste Calibration</span>
+          <h2 class="setup-title">Tune FeelCue to your ears</h2>
+          <p class="setup-sub">Tap a few genres you gravitate toward. Saved on your device — zero login needed.</p>
+        </div>
+      </div>
+      <div id="genreChips" class="chip-wrap"></div>
+      <div class="setup-footer">
+        <button id="skipSetupBtn" class="btn-ghost" type="button">Skip for now</button>
+        <button id="saveSetupBtn" class="btn-dark" type="button">Lock Taste Profile</button>
+      </div>
+    </section>
+
+    <section class="studio-card" aria-label="Mood Capture">
+      <div class="mode-bar" role="tablist">
+        <button id="tabText" class="mode-tab active" type="button" role="tab" aria-selected="true">&#9997; Type</button>
+        <button id="tabVoice" class="mode-tab" type="button" role="tab" aria-selected="false">&#127908; Voice</button>
+        <button id="tabInk" class="mode-tab" type="button" role="tab" aria-selected="false">&#128394; S-Pen Ink</button>
+      </div>
+
+      <div id="panelText" class="paper-stage">
+        <textarea
+          id="moodInput"
+          class="mood-textarea"
+          placeholder="How does right now actually feel? Write a sentence, a memory, a setting, or a feeling you cannot quite name..."
+          rows="7"
+        ></textarea>
+      </div>
+
+      <div id="panelVoice" class="paper-stage hidden">
+        <div class="voice-stage">
+          <div class="voice-controls">
+            <button id="micBtn" class="mic-btn" type="button" aria-label="Start or stop voice capture">&#127908;</button>
+            <div class="voice-meta">
+              <div id="voiceStatus" class="voice-status">Tap to speak your mood</div>
+              <div id="voiceHint" class="voice-hint">Live transcription writes straight onto your cue sheet.</div>
+            </div>
+          </div>
+          <div id="voiceTranscript" class="voice-transcript">Your spoken cue will appear here...</div>
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+            <button id="clearVoiceBtn" class="tool-btn" type="button">Clear Voice</button>
+            <button id="editVoiceInTextBtn" class="tool-btn" type="button">Edit as Text</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="panelInk" class="hidden">
+        <div id="inkStage" class="paper-stage ink-stage">
+          <div id="inkPlaceholder" class="ink-placeholder">Write or sketch how you feel with your S-Pen or finger — stroke velocity, pressure, and rhythm shape the soundtrack...</div>
+          <canvas id="inkCanvas" class="ink-canvas"></canvas>
+          <div class="ink-hud">
+            <span>Vel <strong id="hudVel">0.00</strong></span>
+            <span>Press <strong id="hudPress">0%</strong></span>
+            <span>Rhythm <strong id="hudTremor">0.00</strong></span>
+          </div>
+        </div>
+        <div class="ink-toolbar">
+          <div class="ink-tool-group">
+            <button id="inkPenBtn" class="tool-btn active" type="button">Pen</button>
+            <button id="inkEraserBtn" class="tool-btn" type="button">Eraser</button>
+            <button id="palmRejectBtn" class="tool-btn" type="button">S-Pen Only: OFF</button>
+          </div>
+          <div class="ink-tool-group">
+            <button id="inkUndoBtn" class="tool-btn" type="button">Undo</button>
+            <button id="inkClearBtn" class="tool-btn" type="button">Clear</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="studio-footer">
+        <div id="promptStrip" class="prompt-strip"></div>
+
+        <div class="shift-row">
+          <span class="shift-label">Soundtrack Direction</span>
+          <div class="shift-toggle" role="group" aria-label="Soundtrack direction">
+            <button id="shiftMatchBtn" class="shift-opt active" type="button">Match Mood</button>
+            <button id="shiftLiftBtn" class="shift-opt" type="button">Lift Me Up</button>
+          </div>
+        </div>
+
+        <button id="curateBtn" class="cta-btn" type="button">
+          <span id="curateBtnLabel">Curate Spotify Picks</span>
+        </button>
+      </div>
+    </section>
+
+    <section id="resultsSection" class="results-wrap hidden" aria-live="polite">
+      <div class="mood-readout">
+        <div class="readout-top">
+          <span id="readoutBadge" class="mood-badge">Curated Vibe</span>
+          <span id="readoutSource" class="source-tag">SpotifyMore-curate</span>
+        </div>
+        <h2 id="readoutTitle" class="readout-title">Your Soundtrack</h2>
+        <p id="readoutSummary" class="readout-summary"></p>
+        <div class="readout-actions">
+          <a id="openAllSpotifyLink" class="btn-spotify-all" href="https://open.spotify.com/" target="_blank" rel="noopener noreferrer">Open Vibe on Spotify</a>
+          <button id="copyTracklistBtn" class="btn-copy-list" type="button">Copy Tracklist</button>
+        </div>
+      </div>
+      <div id="trackList" class="track-list"></div>
+    </section>
+  </main>
+
+  <div id="billingModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="billingModalTitle">
+    <div class="modal-sheet">
+      <div class="modal-head">
+        <h2 id="billingModalTitle">FeelCue Credits & Checkout</h2>
+        <button class="close-btn" type="button" data-close="billingModal" aria-label="Close">&times;</button>
+      </div>
+      <div class="billing-box">
+        <span class="step-pill" style="background:rgba(45,212,191,0.18);color:#2DD4BF;width:fit-content;">Live Stripe Checkout</span>
+        <div class="billing-price">&pound;0.99 <span style="font-size:0.85rem;font-weight:600;color:#CBD5E1;">one-time pack</span></div>
+        <div class="billing-meta">
+          Unlock deep FeelCue mood curation with Apple Pay, Google Pay, or Card. Credits bind automatically to your zero-login device session.
+        </div>
+        <div style="font-family:var(--font-mono);font-size:0.78rem;color:#94A3B8;margin-top:0.25rem;">
+          Current Balance: <strong id="modalBalanceText" style="color:#2DD4BF;">0</strong> credits
+        </div>
+      </div>
+      <button id="checkoutTriggerBtn" class="cta-btn" type="button">Unlock FeelCue Pack (&pound;0.99)</button>
+      <button id="refreshBalanceBtn" class="btn-ghost" type="button">Refresh Credit Balance</button>
+    </div>
+  </div>
+
+  <div id="historyModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="historyModalTitle">
+    <div class="modal-sheet">
+      <div class="modal-head">
+        <h2 id="historyModalTitle">Saved Mood Cues</h2>
+        <button class="close-btn" type="button" data-close="historyModal" aria-label="Close">&times;</button>
+      </div>
+      <div id="historyList" style="display:flex;flex-direction:column;gap:0.6rem;"></div>
+      <button id="clearHistoryBtn" class="btn-ghost" type="button">Clear Local History</button>
+    </div>
+  </div>
+
+  <div id="settingsModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="settingsModalTitle">
+    <div class="modal-sheet">
+      <div class="modal-head">
+        <h2 id="settingsModalTitle">Taste & Live Diagnostics</h2>
+        <button class="close-btn" type="button" data-close="settingsModal" aria-label="Close">&times;</button>
+      </div>
+
+      <div>
+        <div style="font-size:0.8rem;font-weight:800;margin-bottom:0.45rem;color:var(--ink);">Favorite Genres</div>
+        <div id="settingsGenreChips" class="chip-wrap"></div>
+      </div>
+
+      <div>
+        <div style="font-size:0.8rem;font-weight:800;margin-bottom:0.45rem;color:var(--ink);">System Telemetry (Live)</div>
+        <div id="diagGrid" class="diag-grid"></div>
+      </div>
+
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+        <button id="runDiagBtn" class="btn-dark" type="button" style="flex:1;">Run Live Health Check</button>
+        <button id="forceRefreshSwBtn" class="btn-ghost" type="button">Update Cache</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
+
+    const SUPABASE_URL = "https://qnnnnvlissdqdwmkgrao.supabase.co";
+    const SUPABASE_PUBLIC_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFubm5udmxpc3NkcWR3bWtncmFvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc0MjY5MjcsImV4cCI6MjEwMzAwMjkyN30.LesQ_v4RJD5Gc4zOxociV8wl-fbSXnIerahwenYGv4k";
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
       },
-      body: JSON.stringify({ packageId }),
     });
 
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok || !data.url) {
-      throw new Error(data.error || `Checkout failed (HTTP ${res.status})`);
-    }
+    const GENRES = [
+      "Indie", "Acoustic", "Country", "Classical", "Electronic",
+      "Lo-Fi", "Alt Rock", "Soul & R&B", "Hip-Hop", "Ambient", "Folk", "Jazz"
+    ];
 
-    window.location.assign(data.url);
-  }
+    const QUICK_PROMPTS = [
+      "Late-night drive, bittersweet clarity",
+      "Need sharp focus and forward momentum",
+      "Rainy Sunday decompression",
+      "Wide-open stadium energy",
+      "Quietly exhausted, need warmth",
+      "Restless creative spark"
+    ];
 
-  // 4. Call Gemini curation Edge Function (SpotifyMore-curate)
-  async function curateMood(payload) {
-    const session = await ensureSession();
+    const STORAGE_KEYS = {
+      genres: "feelcue_genres_v1",
+      setupDone: "feelcue_setup_done_v1",
+      history: "feelcue_history_v1",
+      sessionId: "feelcue_local_sid_v1"
+    };
 
-    const res = await fetch(`${SUPABASE_URL}/functions/v1/SpotifyMore-curate`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "apikey": SUPABASE_PUBLIC_KEY,
-        "Authorization": `Bearer ${session.access_token}`,
+    const appState = {
+      mode: "text",
+      shift: "match",
+      genres: loadJSON(STORAGE_KEYS.genres, ["Indie", "Acoustic"]),
+      setupDone: localStorage.getItem(STORAGE_KEYS.setupDone) === "1",
+      history: loadJSON(STORAGE_KEYS.history, []),
+      localSessionId: getOrCreateLocalSessionId(),
+      authSession: null,
+      credits: 0,
+      lastResult: null,
+      lastApiStatus: "Idle",
+      lastError: "None",
+      swVersion: "Checking...",
+      isRecording: false,
+      recognition: null,
+      voiceText: "",
+      ink: {
+        isDrawing: false,
+        tool: "pen",
+        palmRejection: false,
+        strokes: [],
+        currentStroke: null,
+        lastStrokeTime: null,
+        metrics: {
+          strokeCount: 0,
+          avgVelocity: 0,
+          tremorScore: 0,
+          pauseLatencySec: 0,
+          avgPressure: 0,
+          maxPressure: 0
+        }
       },
-      body: JSON.stringify(payload),
-    });
+      audio: {
+        el: new Audio(),
+        activeIndex: -1
+      }
+    };
 
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      throw new Error(data.error || `Curation failed (HTTP ${res.status})`);
+    function loadJSON(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallback;
+      } catch {
+        return fallback;
+      }
     }
-    return data;
-  }
 
-  // 5. Handle return from Stripe Checkout (?checkout=success) with brief webhook poll
-  async function handleCheckoutReturn(onCreditsUpdated) {
-    const params = new URLSearchParams(window.location.search);
-    const status = params.get("checkout");
-    if (!status) return;
+    function saveJSON(key, value) {
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+      } catch {
+      }
+    }
 
-    // Clean query params without reloading
-    const cleanUrl = `${window.location.pathname}${window.location.hash}`;
-    window.history.replaceState({}, document.title, cleanUrl);
+    function getOrCreateLocalSessionId() {
+      let sid = localStorage.getItem(STORAGE_KEYS.sessionId);
+      if (!sid) {
+        sid = (typeof crypto !== "undefined" && crypto.randomUUID)
+          ? crypto.randomUUID()
+          : "fc-" + Date.now() + "-" + Math.random().toString(36).slice(2, 10);
+        localStorage.setItem(STORAGE_KEYS.sessionId, sid);
+      }
+      return sid;
+    }
 
-    if (status === "success") {
-      // Poll briefly (up to ~10s) to give Stripe's webhook time to credit Postgres
-      const initialBalance = await getCreditsBalance().catch(() => 0);
-      for (let i = 0; i < 5; i++) {
-        await new Promise((r) => setTimeout(r, 2000));
-        const latest = await getCreditsBalance().catch(() => initialBalance);
-        if (latest > initialBalance) {
-          onCreditsUpdated?.(latest);
-          return latest;
+    function escapeHtml(str) {
+      return String(str ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function showNotice(message, type = "warn", autoHideMs = 0) {
+      const area = document.getElementById("noticeArea");
+      area.className = `notice-bar ${type}`;
+      area.innerHTML = `<div>${escapeHtml(message)}</div><button type="button" style="min-height:28px;font-weight:800;padding:0 6px;" aria-label="Dismiss">&times;</button>`;
+      area.querySelector("button").addEventListener("click", () => {
+        area.classList.add("hidden");
+      });
+      if (autoHideMs > 0) {
+        setTimeout(() => {
+          area.classList.add("hidden");
+        }, autoHideMs);
+      }
+    }
+
+    function setConnectionDot(state) {
+      const dot = document.getElementById("statusDot");
+      dot.classList.remove("ready", "offline");
+      if (state === "ready") {
+        dot.classList.add("ready");
+        dot.title = "Supabase session active";
+      } else if (state === "offline") {
+        dot.classList.add("offline");
+        dot.title = "Offline mode";
+      } else {
+        dot.title = "Connecting...";
+      }
+    }
+
+    async function ensureSession() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.access_token) {
+        appState.authSession = session;
+        setConnectionDot("ready");
+        return session;
+      }
+
+      const { data, error } = await supabase.auth.signInAnonymously();
+      if (error || !data?.session) {
+        const msg = error?.message || "Anonymous sign-in failed. Enable Anonymous Sign-Ins in Supabase Auth.";
+        appState.lastError = msg;
+        throw new Error(msg);
+      }
+      appState.authSession = data.session;
+      setConnectionDot("ready");
+      return data.session;
+    }
+
+    async function getCreditsBalance() {
+      const session = await ensureSession();
+      const { data, error } = await supabase
+        .from("user_credits")
+        .select("credits_balance, lifetime_purchased, lifetime_used")
+        .eq("user_id", session.user.id)
+        .maybeSingle();
+
+      if (error) {
+        appState.lastError = `user_credits: ${error.message}`;
+        throw error;
+      }
+      const bal = data?.credits_balance ?? 0;
+      appState.credits = bal;
+      updateCreditsUI(bal);
+      return bal;
+    }
+
+    function updateCreditsUI(balance) {
+      document.getElementById("creditsCount").textContent = `${balance} cr`;
+      document.getElementById("modalBalanceText").textContent = String(balance);
+    }
+
+    async function startCheckout(packageId = "starter") {
+      const btn = document.getElementById("checkoutTriggerBtn");
+      const origText = btn.textContent;
+      btn.disabled = true;
+      btn.innerHTML = `<span class="spinner"></span><span>Opening Stripe Checkout...</span>`;
+      try {
+        const session = await ensureSession();
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "apikey": SUPABASE_PUBLIC_KEY,
+            "Authorization": `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({ packageId }),
+        });
+
+        appState.lastApiStatus = `create-checkout -> HTTP ${res.status}`;
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.url) {
+          const errMsg = data.error || `Checkout failed (HTTP ${res.status})`;
+          appState.lastError = errMsg;
+          throw new Error(errMsg);
+        }
+
+        window.location.assign(data.url);
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : String(err);
+        appState.lastError = msg;
+        showNotice(`Checkout error: ${msg}`, "error");
+        renderDiagnostics();
+      } finally {
+        btn.disabled = false;
+        btn.textContent = origText;
+      }
+    }
+
+    async function curateMood(payload) {
+      const session = await ensureSession();
+      const res = await fetch(`${SUPABASE_URL}/functions/v1/SpotifyMore-curate`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": SUPABASE_PUBLIC_KEY,
+          "Authorization": `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      appState.lastApiStatus = `SpotifyMore-curate -> HTTP ${res.status}`;
+      const rawText = await res.text();
+      let data = {};
+      try {
+        data = rawText ? JSON.parse(rawText) : {};
+      } catch {
+        data = { text: rawText };
+      }
+
+      if (!res.ok) {
+        const err = new Error(data.error || data.message || `Curation failed (HTTP ${res.status})`);
+        err.status = res.status;
+        err.payload = data;
+        appState.lastError = err.message;
+        throw err;
+      }
+
+      return data;
+    }
+
+    async function handleCheckoutReturn() {
+      const params = new URLSearchParams(window.location.search);
+      const status = params.get("checkout");
+      if (!status) return;
+
+      const cleanUrl = `${window.location.pathname}${window.location.hash}`;
+      window.history.replaceState({}, document.title, cleanUrl);
+
+      if (status === "cancelled") {
+        showNotice("Checkout was cancelled. No charge was made.", "warn", 5000);
+        return;
+      }
+
+      if (status === "success") {
+        showNotice("Payment received! Syncing your new FeelCue credits...", "success");
+        const initialBalance = await getCreditsBalance().catch(() => appState.credits);
+        for (let i = 0; i < 6; i++) {
+          await new Promise((r) => setTimeout(r, 2000));
+          const latest = await getCreditsBalance().catch(() => initialBalance);
+          if (latest > initialBalance) {
+            showNotice(`Credits unlocked! You now have ${latest} FeelCue credits.`, "success", 7000);
+            return;
+          }
+        }
+        const finalBal = await getCreditsBalance().catch(() => initialBalance);
+        showNotice(`Checkout complete. Current balance: ${finalBal} credits. Tap the credits pill to refresh if Stripe is still settling.`, "success", 8000);
+      }
+    }
+
+    function normalizeCurateResponse(raw, fallbackMoodText) {
+      let obj = raw;
+      if (typeof obj === "string") {
+        obj = extractJsonFromText(obj) || { summary: obj };
+      } else if (obj && typeof obj.text === "string" && !obj.tracks && !obj.picks && !obj.songs) {
+        const parsed = extractJsonFromText(obj.text);
+        if (parsed) obj = { ...obj, ...parsed };
+      } else if (obj && obj.data && typeof obj.data === "object") {
+        obj = { ...obj, ...obj.data };
+      } else if (obj && obj.result && typeof obj.result === "object") {
+        obj = { ...obj, ...obj.result };
+      }
+
+      const rawTracks =
+        obj?.tracks ||
+        obj?.picks ||
+        obj?.songs ||
+        obj?.playlist ||
+        obj?.recommendations ||
+        [];
+
+      const tracks = Array.isArray(rawTracks)
+        ? rawTracks
+            .map((t) => {
+              if (typeof t === "string") {
+                const parts = t.split(/\s[-–—]\s/);
+                return {
+                  title: (parts[0] || t).trim(),
+                  artist: (parts[1] || "Spotify Pick").trim(),
+                  reason: "Selected to match your current mood cue.",
+                  spotifyUrl: ""
+                };
+              }
+              return {
+                title: String(t.title || t.track || t.name || t.song || "Untitled Track").trim(),
+                artist: String(t.artist || t.artists || t.by || "Unknown Artist").trim(),
+                reason: String(t.reason || t.why || t.note || t.vibe || t.description || "Matched to your emotional cue.").trim(),
+                spotifyUrl: String(t.spotify_url || t.spotifyUrl || t.url || "").trim(),
+                artwork: String(t.artwork || t.image || t.albumArt || "").trim(),
+                previewUrl: String(t.preview_url || t.previewUrl || "").trim()
+              };
+            })
+            .filter((t) => t.title)
+        : [];
+
+      const moodLabel = String(
+        obj?.mood_label || obj?.moodLabel || obj?.vibe || obj?.mood || obj?.emotion || "Curated Mood"
+      ).trim();
+
+      const headline = String(
+        obj?.headline || obj?.playlist_title || obj?.playlistTitle || obj?.title || `Soundtrack for: ${moodLabel}`
+      ).trim();
+
+      const summary = String(
+        obj?.summary || obj?.reading || obj?.analysis || obj?.description || obj?.note ||
+        `Tailored picks shaped around "${fallbackMoodText.slice(0, 90)}".`
+      ).trim();
+
+      return { moodLabel, headline, summary, tracks, source: "Live AI (SpotifyMore-curate)" };
+    }
+
+    function extractJsonFromText(str) {
+      if (!str) return null;
+      const fenced = str.match(/```(?:json)?\s*([\s\S]*?)```/i);
+      const candidate = fenced ? fenced[1] : str;
+      const start = candidate.indexOf("{");
+      const end = candidate.lastIndexOf("}");
+      if (start !== -1 && end > start) {
+        try {
+          return JSON.parse(candidate.slice(start, end + 1));
+        } catch {
+          return null;
         }
       }
-      onCreditsUpdated?.(await getCreditsBalance().catch(() => initialBalance));
+      return null;
     }
-  }
 
-  // 6. Relative Service Worker registration (safe under /FeelCue/ on GitHub Pages)
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker
-        .register("./sw.js", { scope: "./" })
-        .catch((err) => console.warn("SW registration failed:", err));
+    function buildOfflineFallback(moodText, shift, kinematics) {
+      const lower = (moodText || "").toLowerCase();
+      let bucket = "reflective";
+      if (shift === "lift" || /gym|run|energy|pump|focus|work|stadium|drive|momentum|fast/.test(lower) || (kinematics && kinematics.avgVelocity > 1.1)) {
+        bucket = "momentum";
+      } else if (/rain|sleep|calm|tired|sunday|exhausted|peace|soft|chill|warm/.test(lower)) {
+        bucket = "warmth";
+      } else if (/heart|miss|sad|alone|lost|heavy|night|ache|bittersweet/.test(lower)) {
+        bucket = "bittersweet";
+      }
+
+      const banks = {
+        momentum: {
+          moodLabel: "Forward Momentum",
+          headline: "Clear-Headed Drive",
+          summary: "Steady pulse, clean guitars, and uplifting builds to carry you forward without noise.",
+          tracks: [
+            { title: "Tennessee Whiskey", artist: "Chris Stapleton", reason: "Soulful grit with grounded vocal presence." },
+            { title: "Fast Car", artist: "Luke Combs", reason: "Open-road urgency that builds without rushing." },
+            { title: "Midnight City", artist: "M83", reason: "High-voltage synth lift for late focus." },
+            { title: "Brandenburg Concerto No. 3 in G Major", artist: "Johann Sebastian Bach", reason: "Crisp architectural momentum for deep flow." },
+            { title: "Dog Days Are Over", artist: "Florence + The Machine", reason: "Percussive release that shifts heaviness into motion." }
+          ]
+        },
+        warmth: {
+          moodLabel: "Soft Decompression",
+          headline: "Rain-Glass & Warm Acoustic",
+          summary: "Low-friction, gentle instrumentation designed to quiet mental static and restore breathing room.",
+          tracks: [
+            { title: "Holocene", artist: "Bon Iver", reason: "Spacious acoustic stillness that lets thoughts settle." },
+            { title: "Cello Suite No. 1 in G Major: Prelude", artist: "Johann Sebastian Bach", reason: "Unrushed harmonic resonance for calm reset." },
+            { title: "Bloom", artist: "The Paper Kites", reason: "Warm fingerpicked pulse for quiet recovery." },
+            { title: "Pink Moon", artist: "Nick Drake", reason: "Intimate, unhurried melody with zero clutter." },
+            { title: "River", artist: "Leon Bridges", reason: "Deep soul warmth to soften a heavy day." }
+          ]
+        },
+        bittersweet: {
+          moodLabel: "Bittersweet Clarity",
+          headline: "After-Hours Honesty",
+          summary: "Songs that sit beside a complicated feeling honestly instead of forcing fake cheerfulness.",
+          tracks: [
+            { title: "Something in the Orange", artist: "Zach Bryan", reason: "Raw acoustic ache with clear emotional weight." },
+            { title: "The Night We Met", artist: "Lord Huron", reason: "Haunting nostalgia that captures unresolved longing." },
+            { title: "Motion Picture Soundtrack", artist: "Radiohead", reason: "Quiet catharsis for late-night reflection." },
+            { title: "I Remember Everything", artist: "Zach Bryan & Kacey Musgraves", reason: "Measured dialogue between memory and letting go." },
+            { title: "Skinny Love", artist: "Bon Iver", reason: "Fragile tension held together by stark acoustic grit." }
+          ]
+        },
+        reflective: {
+          moodLabel: "Quiet Focus",
+          headline: "Balanced Signal",
+          summary: "Textured, intentional tracks tuned to hold space while your thoughts organize themselves.",
+          tracks: [
+            { title: "Dreams", artist: "Fleetwood Mac", reason: "Hypnotic rhythm that keeps the mind steady." },
+            { title: "Wagon Wheel", artist: "Darius Rucker", reason: "Easygoing open-air cadence with warm lift." },
+            { title: "Intro", artist: "The xx", reason: "Minimalist drive ideal for thinking clearly." },
+            { title: "Goldberg Variations: Aria", artist: "Johann Sebastian Bach", reason: "Balanced contrapuntal calm." },
+            { title: "Harvest Moon", artist: "Neil Young", reason: "Golden-hour steadiness with timeless warmth." }
+          ]
+        }
+      };
+
+      return { ...banks[bucket], source: "Offline Fallback Engine" };
+    }
+
+    function spotifySearchUrl(track) {
+      if (track.spotifyUrl && /^https?:\/\//i.test(track.spotifyUrl)) {
+        return track.spotifyUrl;
+      }
+      const q = encodeURIComponent(`${track.title} ${track.artist}`);
+      return `https://open.spotify.com/search/${q}`;
+    }
+
+    async function enrichTrackViaItunes(track) {
+      if (track.previewUrl && track.artwork) return track;
+      try {
+        const term = encodeURIComponent(`${track.title} ${track.artist}`);
+        const res = await fetch(`https://itunes.apple.com/search?term=${term}&media=music&entity=song&limit=1`);
+        if (!res.ok) return track;
+        const json = await res.json();
+        const item = json?.results?.[0];
+        if (!item) return track;
+        return {
+          ...track,
+          artwork: track.artwork || (item.artworkUrl100 ? item.artworkUrl100.replace("100x100", "300x300") : ""),
+          previewUrl: track.previewUrl || item.previewUrl || ""
+        };
+      } catch {
+        return track;
+      }
+    }
+
+    function stopAudio() {
+      const a = appState.audio.el;
+      a.pause();
+      a.currentTime = 0;
+      appState.audio.activeIndex = -1;
+      document.querySelectorAll(".btn-preview").forEach((b) => {
+        b.classList.remove("playing");
+        b.textContent = "Preview 30s";
+      });
+      document.querySelectorAll(".audio-bar-fill").forEach((bar) => {
+        bar.style.width = "0%";
+      });
+    }
+
+    function toggleTrackPreview(index, previewUrl, btn, fillEl) {
+      const a = appState.audio.el;
+      if (appState.audio.activeIndex === index && !a.paused) {
+        stopAudio();
+        return;
+      }
+      stopAudio();
+      if (!previewUrl) {
+        showNotice("No 30s preview available for this track — tap Open in Spotify instead.", "warn", 3500);
+        return;
+      }
+      appState.audio.activeIndex = index;
+      btn.classList.add("playing");
+      btn.textContent = "Pause";
+      a.src = previewUrl;
+      a.play().catch(() => {
+        stopAudio();
+        showNotice("Could not start audio preview on this device.", "warn", 3500);
+      });
+      a.ontimeupdate = () => {
+        if (a.duration && appState.audio.activeIndex === index) {
+          fillEl.style.width = `${Math.min(100, (a.currentTime / a.duration) * 100)}%`;
+        }
+      };
+      a.onended = () => {
+        stopAudio();
+      };
+    }
+
+    async function sendTrackFeedback(track, rating, btnEl) {
+      btnEl.classList.add("voted");
+      try {
+        await supabase.from("spotifymore_feedback").insert({
+          session_id: appState.localSessionId,
+          track_title: track.title,
+          artist_name: track.artist,
+          rating: rating,
+          mood_label: appState.lastResult?.moodLabel || null
+        });
+      } catch {
+      }
+    }
+
+    async function renderResults(result) {
+      stopAudio();
+      appState.lastResult = result;
+
+      const sec = document.getElementById("resultsSection");
+      sec.classList.remove("hidden");
+
+      document.getElementById("readoutBadge").textContent = result.moodLabel;
+      document.getElementById("readoutSource").textContent = result.source;
+      document.getElementById("readoutTitle").textContent = result.headline;
+      document.getElementById("readoutSummary").textContent = result.summary;
+
+      const firstQuery = result.tracks[0]
+        ? `${result.tracks[0].title} ${result.tracks[0].artist}`
+        : result.moodLabel;
+      document.getElementById("openAllSpotifyLink").href =
+        `https://open.spotify.com/search/${encodeURIComponent(firstQuery)}`;
+
+      const listEl = document.getElementById("trackList");
+      listEl.innerHTML = "";
+
+      const enrichedTracks = await Promise.all(
+        result.tracks.map((t) => enrichTrackViaItunes(t))
+      );
+      appState.lastResult.tracks = enrichedTracks;
+
+      enrichedTracks.forEach((track, idx) => {
+        const card = document.createElement("article");
+        card.className = "track-card";
+        const spUrl = spotifySearchUrl(track);
+        const artHtml = track.artwork
+          ? `<img src="${escapeHtml(track.artwork)}" alt="${escapeHtml(track.title)}" loading="lazy" />`
+          : `<span>${idx + 1}</span>`;
+
+        card.innerHTML = `
+          <div class="track-main">
+            <div class="track-art-wrap">${artHtml}</div>
+            <div class="track-info">
+              <h3 class="track-title">${escapeHtml(track.title)}</h3>
+              <p class="track-artist">${escapeHtml(track.artist)}</p>
+            </div>
+          </div>
+          <p class="track-reason">${escapeHtml(track.reason)}</p>
+          <div class="audio-bar"><div class="audio-bar-fill"></div></div>
+          <div class="track-footer">
+            <div class="track-btn-row">
+              <button class="btn-preview" type="button">${track.previewUrl ? "Preview 30s" : "No Preview"}</button>
+              <a class="btn-spotify" href="${escapeHtml(spUrl)}" target="_blank" rel="noopener noreferrer">Open in Spotify</a>
+            </div>
+            <div class="fb-row">
+              <button class="fb-btn" type="button" title="Hits the spot" aria-label="Thumbs up">&#128077;</button>
+              <button class="fb-btn" type="button" title="Miss" aria-label="Thumbs down">&#128078;</button>
+            </div>
+          </div>
+        `;
+
+        const previewBtn = card.querySelector(".btn-preview");
+        const fillEl = card.querySelector(".audio-bar-fill");
+        if (!track.previewUrl) previewBtn.disabled = true;
+        previewBtn.addEventListener("click", () => {
+          toggleTrackPreview(idx, track.previewUrl, previewBtn, fillEl);
+        });
+
+        const fbBtns = card.querySelectorAll(".fb-btn");
+        fbBtns[0].addEventListener("click", () => sendTrackFeedback(track, 1, fbBtns[0]));
+        fbBtns[1].addEventListener("click", () => sendTrackFeedback(track, -1, fbBtns[1]));
+
+        listEl.appendChild(card);
+      });
+
+      sec.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function saveHistoryItem(promptText, result) {
+      const entry = {
+        id: Date.now(),
+        createdAt: new Date().toISOString(),
+        prompt: promptText.slice(0, 140),
+        result
+      };
+      appState.history = [entry, ...appState.history].slice(0, 20);
+      saveJSON(STORAGE_KEYS.history, appState.history);
+    }
+
+    function renderHistoryList() {
+      const box = document.getElementById("historyList");
+      if (!appState.history.length) {
+        box.innerHTML = `<div style="font-size:0.84rem;color:var(--muted);padding:0.75rem 0;">No saved mood cues yet. Your curations automatically archive here for offline replay.</div>`;
+        return;
+      }
+      box.innerHTML = "";
+      appState.history.forEach((item) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "history-item";
+        const dateStr = new Date(item.createdAt).toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        btn.innerHTML = `
+          <div style="display:flex;justify-content:space-between;width:100%;font-size:0.72rem;color:var(--muted);font-family:var(--font-mono);">
+            <span>${escapeHtml(item.result?.moodLabel || "Cue")}</span>
+            <span>${escapeHtml(dateStr)}</span>
+          </div>
+          <div style="font-weight:800;font-size:0.92rem;color:var(--ink);">${escapeHtml(item.result?.headline || "Saved Picks")}</div>
+          <div style="font-size:0.78rem;color:var(--ink-soft);">${escapeHtml(item.prompt || "Ink/Voice cue")}</div>
+        `;
+        btn.addEventListener("click", () => {
+          closeModal("historyModal");
+          renderResults(item.result);
+        });
+        box.appendChild(btn);
+      });
+    }
+
+    function renderGenreChips(containerId) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = "";
+      GENRES.forEach((g) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = `chip ${appState.genres.includes(g) ? "selected" : ""}`;
+        btn.textContent = g;
+        btn.addEventListener("click", () => {
+          if (appState.genres.includes(g)) {
+            appState.genres = appState.genres.filter((x) => x !== g);
+          } else {
+            appState.genres = [...appState.genres, g];
+          }
+          saveJSON(STORAGE_KEYS.genres, appState.genres);
+          renderGenreChips("genreChips");
+          renderGenreChips("settingsGenreChips");
+        });
+        container.appendChild(btn);
+      });
+    }
+
+    function renderPromptStrip() {
+      const strip = document.getElementById("promptStrip");
+      strip.innerHTML = "";
+      QUICK_PROMPTS.forEach((p) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "prompt-pill";
+        b.textContent = p;
+        b.addEventListener("click", () => {
+          switchMode("text");
+          document.getElementById("moodInput").value = p;
+          document.getElementById("moodInput").focus();
+        });
+        strip.appendChild(b);
+      });
+    }
+
+    function switchMode(mode) {
+      appState.mode = mode;
+      ["text", "voice", "ink"].forEach((m) => {
+        const tab = document.getElementById(`tab${m.charAt(0).toUpperCase() + m.slice(1)}`);
+        const panel = document.getElementById(`panel${m.charAt(0).toUpperCase() + m.slice(1)}`);
+        const isActive = m === mode;
+        tab.classList.toggle("active", isActive);
+        tab.setAttribute("aria-selected", String(isActive));
+        panel.classList.toggle("hidden", !isActive);
+      });
+      if (mode === "ink") {
+        requestAnimationFrame(() => resizeInkCanvas());
+      }
+    }
+
+    /* VOICE CAPTURE */
+    function initVoice() {
+      const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const micBtn = document.getElementById("micBtn");
+      const statusEl = document.getElementById("voiceStatus");
+      const hintEl = document.getElementById("voiceHint");
+      const transEl = document.getElementById("voiceTranscript");
+
+      if (!SpeechRec) {
+        statusEl.textContent = "Voice dictation unavailable in this browser";
+        hintEl.textContent = "Use Type or S-Pen Ink mode, or your Samsung keyboard microphone.";
+        micBtn.disabled = true;
+        return;
+      }
+
+      const rec = new SpeechRec();
+      rec.continuous = true;
+      rec.interimResults = true;
+      rec.lang = "en-GB";
+      appState.recognition = rec;
+
+      rec.onstart = () => {
+        appState.isRecording = true;
+        micBtn.classList.add("recording");
+        statusEl.textContent = "Listening... tap again to stop";
+      };
+
+      rec.onresult = (event) => {
+        let finalStr = "";
+        let interimStr = "";
+        for (let i = 0; i < event.results.length; i++) {
+          const r = event.results[i];
+          if (r.isFinal) finalStr += r[0].transcript + " ";
+          else interimStr += r[0].transcript;
+        }
+        const combined = (finalStr + interimStr).trim();
+        appState.voiceText = combined;
+        transEl.textContent = combined || "Listening...";
+      };
+
+      rec.onerror = (e) => {
+        appState.isRecording = false;
+        micBtn.classList.remove("recording");
+        statusEl.textContent = `Voice paused (${e.error})`;
+      };
+
+      rec.onend = () => {
+        appState.isRecording = false;
+        micBtn.classList.remove("recording");
+        statusEl.textContent = appState.voiceText ? "Cue captured — tap Curate or record more" : "Tap to speak your mood";
+      };
+
+      micBtn.addEventListener("click", () => {
+        if (appState.isRecording) {
+          rec.stop();
+        } else {
+          try {
+            rec.start();
+          } catch {
+            rec.stop();
+          }
+        }
+      });
+
+      document.getElementById("clearVoiceBtn").addEventListener("click", () => {
+        appState.voiceText = "";
+        transEl.textContent = "Your spoken cue will appear here...";
+      });
+
+      document.getElementById("editVoiceInTextBtn").addEventListener("click", () => {
+        if (appState.voiceText) {
+          document.getElementById("moodInput").value = appState.voiceText;
+        }
+        switchMode("text");
+      });
+    }
+
+    /* 240HZ S-PEN INK CANVAS & KINEMATICS */
+    const inkCanvas = document.getElementById("inkCanvas");
+    const inkCtx = inkCanvas.getContext("2d");
+    const inkStage = document.getElementById("inkStage");
+
+    function resizeInkCanvas() {
+      const rect = inkStage.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      inkCanvas.width = Math.round(rect.width * dpr);
+      inkCanvas.height = Math.round(rect.height * dpr);
+      inkCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      redrawInk();
+    }
+
+    function redrawInk() {
+      const rect = inkStage.getBoundingClientRect();
+      inkCtx.clearRect(0, 0, rect.width, rect.height);
+      inkCtx.lineCap = "round";
+      inkCtx.lineJoin = "round";
+      const all = [...appState.ink.strokes];
+      if (appState.ink.currentStroke) all.push(appState.ink.currentStroke);
+
+      document.getElementById("inkPlaceholder").classList.toggle("hidden", all.length > 0);
+
+      for (const stroke of all) {
+        const pts = stroke.points;
+        if (!pts.length) continue;
+        inkCtx.save();
+        if (stroke.tool === "eraser") {
+          inkCtx.globalCompositeOperation = "destination-out";
+          inkCtx.strokeStyle = "rgba(0,0,0,1)";
+        } else {
+          inkCtx.globalCompositeOperation = "source-over";
+          inkCtx.strokeStyle = "#0F172A";
+        }
+        if (pts.length === 1) {
+          inkCtx.beginPath();
+          inkCtx.arc(pts[0].x, pts[0].y, Math.max(1.5, pts[0].pressure * 3), 0, Math.PI * 2);
+          inkCtx.fillStyle = inkCtx.strokeStyle;
+          inkCtx.fill();
+        } else {
+          for (let i = 1; i < pts.length; i++) {
+            const p0 = pts[i - 1];
+            const p1 = pts[i];
+            inkCtx.beginPath();
+            inkCtx.moveTo(p0.x, p0.y);
+            inkCtx.lineTo(p1.x, p1.y);
+            inkCtx.lineWidth = stroke.tool === "eraser" ? 18 : Math.max(1.4, p1.pressure * 4.4);
+            inkCtx.stroke();
+          }
+        }
+        inkCtx.restore();
+      }
+    }
+
+    function extractPointerPoint(e) {
+      const rect = inkStage.getBoundingClientRect();
+      let p = typeof e.pressure === "number" ? e.pressure : 0.5;
+      if (e.pointerType === "mouse" || p === 0) p = e.buttons > 0 ? 0.55 : 0.5;
+      return {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+        pressure: p,
+        time: e.timeStamp || performance.now()
+      };
+    }
+
+    function recomputeInkMetrics() {
+      const all = [...appState.ink.strokes];
+      if (appState.ink.currentStroke) all.push(appState.ink.currentStroke);
+      const penStrokes = all.filter((s) => s.tool === "pen");
+
+      let totalPts = 0;
+      let velSum = 0;
+      let velCount = 0;
+      let pressSum = 0;
+      let maxP = 0;
+      let pauseSum = 0;
+      let pauseCount = 0;
+      let tremorSum = 0;
+      let angleCount = 0;
+
+      for (const s of penStrokes) {
+        if (s.pauseBeforeMs > 30 && s.pauseBeforeMs < 15000) {
+          pauseSum += s.pauseBeforeMs;
+          pauseCount++;
+        }
+        const pts = s.points;
+        for (let i = 0; i < pts.length; i++) {
+          const pt = pts[i];
+          totalPts++;
+          pressSum += pt.pressure;
+          if (pt.pressure > maxP) maxP = pt.pressure;
+          if (i > 0) {
+            const prev = pts[i - 1];
+            const dist = Math.hypot(pt.x - prev.x, pt.y - prev.y);
+            const dt = Math.max(0.5, pt.time - prev.time);
+            velSum += dist / dt;
+            velCount++;
+          }
+          if (i >= 2) {
+            const p0 = pts[i - 2];
+            const p1 = pts[i - 1];
+            const p2 = pts[i];
+            const a1 = Math.atan2(p1.y - p0.y, p1.x - p0.x);
+            const a2 = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+            let da = Math.abs(a2 - a1);
+            if (da > Math.PI) da = 2 * Math.PI - da;
+            tremorSum += da;
+            angleCount++;
+          }
+        }
+      }
+
+      const m = {
+        strokeCount: penStrokes.length,
+        avgVelocity: velCount > 0 ? +(velSum / velCount).toFixed(2) : 0,
+        tremorScore: angleCount > 0 ? +((tremorSum / angleCount) * 2.5).toFixed(2) : 0,
+        pauseLatencySec: pauseCount > 0 ? +(pauseSum / pauseCount / 1000).toFixed(2) : 0,
+        avgPressure: totalPts > 0 ? +(pressSum / totalPts).toFixed(3) : 0,
+        maxPressure: +maxP.toFixed(3)
+      };
+
+      appState.ink.metrics = m;
+      document.getElementById("hudVel").textContent = m.avgVelocity.toFixed(2);
+      document.getElementById("hudPress").textContent = `${Math.round(m.avgPressure * 100)}%`;
+      document.getElementById("hudTremor").textContent = m.tremorScore.toFixed(2);
+    }
+
+    function initInkPad() {
+      inkCanvas.addEventListener("pointerdown", (e) => {
+        if (appState.ink.palmRejection && e.pointerType !== "pen") return;
+        e.preventDefault();
+        inkCanvas.setPointerCapture(e.pointerId);
+        const now = e.timeStamp || performance.now();
+        const pause = appState.ink.lastStrokeTime ? Math.max(0, now - appState.ink.lastStrokeTime) : 0;
+        appState.ink.isDrawing = true;
+        appState.ink.currentStroke = {
+          tool: appState.ink.tool,
+          pauseBeforeMs: pause,
+          points: [extractPointerPoint(e)]
+        };
+        redrawInk();
+      });
+
+      inkCanvas.addEventListener("pointermove", (e) => {
+        if (!appState.ink.isDrawing || !appState.ink.currentStroke) return;
+        if (appState.ink.palmRejection && e.pointerType !== "pen") return;
+        e.preventDefault();
+        const events = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
+        for (const ev of events) {
+          appState.ink.currentStroke.points.push(extractPointerPoint(ev));
+        }
+        redrawInk();
+        recomputeInkMetrics();
+      });
+
+      const endStroke = (e) => {
+        if (!appState.ink.isDrawing) return;
+        e.preventDefault();
+        appState.ink.isDrawing = false;
+        if (appState.ink.currentStroke && appState.ink.currentStroke.points.length > 0) {
+          appState.ink.strokes.push(appState.ink.currentStroke);
+          appState.ink.lastStrokeTime = performance.now();
+        }
+        appState.ink.currentStroke = null;
+        redrawInk();
+        recomputeInkMetrics();
+      };
+
+      inkCanvas.addEventListener("pointerup", endStroke);
+      inkCanvas.addEventListener("pointercancel", endStroke);
+
+      document.getElementById("inkPenBtn").addEventListener("click", () => {
+        appState.ink.tool = "pen";
+        document.getElementById("inkPenBtn").classList.add("active");
+        document.getElementById("inkEraserBtn").classList.remove("active");
+      });
+
+      document.getElementById("inkEraserBtn").addEventListener("click", () => {
+        appState.ink.tool = "eraser";
+        document.getElementById("inkEraserBtn").classList.add("active");
+        document.getElementById("inkPenBtn").classList.remove("active");
+      });
+
+      document.getElementById("palmRejectBtn").addEventListener("click", (e) => {
+        appState.ink.palmRejection = !appState.ink.palmRejection;
+        e.currentTarget.classList.toggle("active", appState.ink.palmRejection);
+        e.currentTarget.textContent = `S-Pen Only: ${appState.ink.palmRejection ? "ON" : "OFF"}`;
+      });
+
+      document.getElementById("inkUndoBtn").addEventListener("click", () => {
+        appState.ink.strokes.pop();
+        redrawInk();
+        recomputeInkMetrics();
+      });
+
+      document.getElementById("inkClearBtn").addEventListener("click", () => {
+        appState.ink.strokes = [];
+        appState.ink.currentStroke = null;
+        redrawInk();
+        recomputeInkMetrics();
+      });
+
+      window.addEventListener("resize", () => {
+        if (appState.mode === "ink") resizeInkCanvas();
+      });
+    }
+
+    function captureInkSnapshot() {
+      if (!appState.ink.strokes.length) return null;
+      const off = document.createElement("canvas");
+      off.width = inkCanvas.width;
+      off.height = inkCanvas.height;
+      const octx = off.getContext("2d");
+      octx.fillStyle = "#FFFFFF";
+      octx.fillRect(0, 0, off.width, off.height);
+      octx.drawImage(inkCanvas, 0, 0);
+      return off.toDataURL("image/jpeg", 0.72);
+    }
+
+    /* MAIN CURATION FLOW */
+    async function runCuration() {
+      const textVal = document.getElementById("moodInput").value.trim();
+      const voiceVal = appState.voiceText.trim();
+      const hasInk = appState.ink.strokes.length > 0;
+
+      let activeText = "";
+      if (appState.mode === "text") activeText = textVal || voiceVal;
+      else if (appState.mode === "voice") activeText = voiceVal || textVal;
+      else activeText = textVal || voiceVal || (hasInk ? `Handwritten S-Pen cue (velocity ${appState.ink.metrics.avgVelocity} px/ms, pressure ${Math.round(appState.ink.metrics.avgPressure * 100)}%, rhythm ${appState.ink.metrics.tremorScore})` : "");
+
+      if (!activeText && !hasInk) {
+        showNotice("Write a mood line, tap Voice, or sketch with your S-Pen first.", "warn", 4000);
+        return;
+      }
+
+      const btn = document.getElementById("curateBtn");
+      btn.disabled = true;
+      btn.innerHTML = `<span class="spinner"></span><span>Curating your mood picks...</span>`;
+
+      const payload = {
+        mood: activeText,
+        text: activeText,
+        input: activeText,
+        prompt: activeText,
+        transcript: voiceVal || undefined,
+        mode: appState.mode,
+        direction: appState.shift,
+        shift: appState.shift,
+        genres: appState.genres,
+        kinematics: hasInk ? appState.ink.metrics : undefined,
+        inkImageBase64: hasInk ? captureInkSnapshot() : undefined,
+        session_id: appState.localSessionId,
+        user_id: appState.authSession?.user?.id || undefined
+      };
+
+      try {
+        if (!navigator.onLine) {
+          const offlineRes = buildOfflineFallback(activeText, appState.shift, hasInk ? appState.ink.metrics : null);
+          showNotice("You are offline — showing instant local mood picks.", "warn", 5000);
+          await renderResults(offlineRes);
+          saveHistoryItem(activeText, offlineRes);
+          return;
+        }
+
+        const raw = await curateMood(payload);
+        const normalized = normalizeCurateResponse(raw, activeText);
+
+        if (!normalized.tracks.length) {
+          const fallback = buildOfflineFallback(activeText, appState.shift, hasInk ? appState.ink.metrics : null);
+          fallback.summary = normalized.summary || fallback.summary;
+          fallback.source = "Hybrid Fallback (Edge returned 0 tracks)";
+          await renderResults(fallback);
+          saveHistoryItem(activeText, fallback);
+        } else {
+          await renderResults(normalized);
+          saveHistoryItem(activeText, normalized);
+          getCreditsBalance().catch(() => {});
+        }
+      } catch (err) {
+        if (err && (err.status === 402 || /credit|payment|upgrade/i.test(err.message || ""))) {
+          showNotice("You are out of FeelCue credits. Unlock a £0.99 pack to continue.", "warn");
+          openModal("billingModal");
+        } else {
+          const fallback = buildOfflineFallback(activeText, appState.shift, hasInk ? appState.ink.metrics : null);
+          showNotice(`Live AI unavailable (${err.message}). Loaded instant fallback picks — open Settings to inspect diagnostics.`, "warn");
+          await renderResults(fallback);
+          saveHistoryItem(activeText, fallback);
+        }
+        renderDiagnostics();
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<span id="curateBtnLabel">Curate Spotify Picks</span>`;
+      }
+    }
+
+    /* MODALS & DIAGNOSTICS */
+    function openModal(id) {
+      document.getElementById(id).classList.remove("hidden");
+      if (id === "historyModal") renderHistoryList();
+      if (id === "settingsModal") renderDiagnostics();
+      if (id === "billingModal") getCreditsBalance().catch(() => {});
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.add("hidden");
+    }
+
+    function renderDiagnostics() {
+      const grid = document.getElementById("diagGrid");
+      const rows = [
+        ["Supabase Project", "qnnnnvlissdqdwmkgrao"],
+        ["Network", navigator.onLine ? "Online" : "Offline"],
+        ["Anon Auth User", appState.authSession?.user?.id || "Not signed in"],
+        ["Credits Balance", String(appState.credits)],
+        ["Service Worker", appState.swVersion],
+        ["Last API Status", appState.lastApiStatus],
+        ["Last Error", appState.lastError]
+      ];
+      grid.innerHTML = rows
+        .map(([k, v]) => `<div class="diag-row"><span class="diag-k">${escapeHtml(k)}</span><span class="diag-v">${escapeHtml(v)}</span></div>`)
+        .join("");
+    }
+
+    async function checkSwVersion() {
+      if (!("serviceWorker" in navigator)) {
+        appState.swVersion = "Unsupported";
+        return;
+      }
+      try {
+        const reg = await navigator.serviceWorker.ready;
+        const worker = reg.active;
+        if (!worker) {
+          appState.swVersion = "Registering...";
+          return;
+        }
+        const channel = new MessageChannel();
+        channel.port1.onmessage = (event) => {
+          if (event.data?.version) {
+            appState.swVersion = `${event.data.version} (${event.data.cache})`;
+            renderDiagnostics();
+          }
+        };
+        worker.postMessage({ type: "GET_VERSION" }, [channel.port2]);
+      } catch {
+        appState.swVersion = "Unavailable";
+      }
+    }
+
+    /* WIRE UP EVENTS */
+    document.getElementById("tabText").addEventListener("click", () => switchMode("text"));
+    document.getElementById("tabVoice").addEventListener("click", () => switchMode("voice"));
+    document.getElementById("tabInk").addEventListener("click", () => switchMode("ink"));
+
+    document.getElementById("shiftMatchBtn").addEventListener("click", () => {
+      appState.shift = "match";
+      document.getElementById("shiftMatchBtn").classList.add("active");
+      document.getElementById("shiftLiftBtn").classList.remove("active");
     });
-  }
 
-  // Expose cleanly for your existing UI buttons in index.html
-  window.FeelCueBackend = {
-    supabase,
-    ensureSession,
-    getCreditsBalance,
-    startCheckout,
-    curateMood,
-    handleCheckoutReturn,
-  };
-</script>
+    document.getElementById("shiftLiftBtn").addEventListener("click", () => {
+      appState.shift = "lift";
+      document.getElementById("shiftLiftBtn").classList.add("active");
+      document.getElementById("shiftMatchBtn").classList.remove("active");
+    });
+
+    document.getElementById("skipSetupBtn").addEventListener("click", () => {
+      localStorage.setItem(STORAGE_KEYS.setupDone, "1");
+      document.getElementById("setupCard").classList.add("hidden");
+    });
+
+    document.getElementById("saveSetupBtn").addEventListener("click", () => {
+      saveJSON(STORAGE_KEYS.genres, appState.genres);
+      localStorage.setItem(STORAGE_KEYS.setupDone, "1");
+      document.getElementById("setupCard").classList.add("hidden");
+      showNotice("Taste profile saved to your device.", "success", 3000);
+    });
+
+    document.getElementById("curateBtn").addEventListener("click", runCuration);
+    document.getElementById("creditsBtn").addEventListener("click", () => openModal("billingModal"));
+    document.getElementById("historyBtn").addEventListener("click", () => openModal("historyModal"));
+    document.getElementById("settingsBtn").addEventListener("click", () => openModal("settingsModal"));
+
+    document.getElementById("checkoutTriggerBtn").addEventListener("click", () => startCheckout("starter"));
+    document.getElementById("refreshBalanceBtn").addEventListener("click", async () => {
+      try {
+        const bal = await getCreditsBalance();
+        showNotice(`Balance synced: ${bal} credits.`, "success", 3000);
+      } catch (e) {
+        showNotice(`Sync failed: ${e.message}`, "error");
+      }
+    });
+
+    document.getElementById("copyTracklistBtn").addEventListener("click", async () => {
+      if (!appState.lastResult?.tracks?.length) return;
+      const lines = appState.lastResult.tracks.map((t, i) => `${i + 1}. ${t.title} — ${t.artist}`).join("\n");
+      try {
+        await navigator.clipboard.writeText(`${appState.lastResult.headline}\n${lines}`);
+        showNotice("Tracklist copied to clipboard.", "success", 3000);
+      } catch {
+        showNotice("Could not access clipboard automatically.", "warn", 3000);
+      }
+    });
+
+    document.getElementById("clearHistoryBtn").addEventListener("click", () => {
+      appState.history = [];
+      saveJSON(STORAGE_KEYS.history, []);
+      renderHistoryList();
+    });
+
+    document.getElementById("runDiagBtn").addEventListener("click", async () => {
+      try {
+        await ensureSession();
+        const bal = await getCreditsBalance();
+        appState.lastError = "None";
+        appState.lastApiStatus = `Auth + user_credits OK (${bal} cr)`;
+        showNotice("Supabase Auth and user_credits are healthy.", "success", 4000);
+      } catch (err) {
+        appState.lastError = err.message;
+        showNotice(`Health check failed: ${err.message}`, "error");
+      }
+      renderDiagnostics();
+    });
+
+    document.getElementById("forceRefreshSwBtn").addEventListener("click", async () => {
+      if ("serviceWorker" in navigator) {
+        const regs = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(regs.map((r) => r.update()));
+        window.location.reload();
+      }
+    });
+
+    document.querySelectorAll("[data-close]").forEach((btn) => {
+      btn.addEventListener("click", () => closeModal(btn.getAttribute("data-close")));
+    });
+
+    document.querySelectorAll(".modal-backdrop").forEach((bd) => {
+      bd.addEventListener("click", (e) => {
+        if (e.target === bd) bd.classList.add("hidden");
+      });
+    });
+
+    window.addEventListener("online", () => {
+      setConnectionDot(appState.authSession ? "ready" : "connecting");
+    });
+    window.addEventListener("offline", () => setConnectionDot("offline"));
+
+    /* REGISTER RELATIVE SERVICE WORKER */
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker
+          .register("./sw.js", { scope: "./" })
+          .then(() => checkSwVersion())
+          .catch((err) => {
+            appState.swVersion = `Err: ${err.message}`;
+          });
+      });
+    }
+
+    /* INITIALIZE APP */
+    async function boot() {
+      if (appState.setupDone) {
+        document.getElementById("setupCard").classList.add("hidden");
+      }
+      renderGenreChips("genreChips");
+      renderGenreChips("settingsGenreChips");
+      renderPromptStrip();
+      initVoice();
+      initInkPad();
+
+      if (!navigator.onLine) {
+        setConnectionDot("offline");
+        updateCreditsUI(0);
+        return;
+      }
+
+      try {
+        await ensureSession();
+        await getCreditsBalance();
+        await handleCheckoutReturn();
+      } catch (err) {
+        appState.lastError = err.message;
+        updateCreditsUI(0);
+        showNotice(`Backend notice: ${err.message}`, "warn");
+      }
+      renderDiagnostics();
+    }
+
+    window.FeelCueBackend = {
+      supabase,
+      ensureSession,
+      getCreditsBalance,
+      startCheckout,
+      curateMood,
+      handleCheckoutReturn
+    };
+
+    boot();
+  </script>
+</body>
+</html>
