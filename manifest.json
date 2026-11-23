@@ -1,8 +1,8 @@
 {
-  "id": "/feelcue",
+  "id": "./",
   "name": "FeelCue — Mood Picks for Spotify",
   "short_name": "FeelCue",
-  "description": "Zero-login, offline-first mood-to-music curator that turns voice, handwriting, drawings, and quick games into tailored Spotify track picks.",
+  "description": "Zero-login, offline-first mood-to-music curator that turns voice, text, and mood into curated Spotify picks.",
   "start_url": "./?source=pwa",
   "scope": "./",
   "display": "standalone",
@@ -30,7 +30,7 @@
       "purpose": "any"
     },
     {
-      "src": "./icon-512.png",
+      "src": "./icon-512-maskable.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
